@@ -1,0 +1,1 @@
+export const securityHeaders = (req, res, next) => next();

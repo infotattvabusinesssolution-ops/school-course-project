@@ -1,0 +1,1 @@
+export const getCertificate = async (req, res) => {};
