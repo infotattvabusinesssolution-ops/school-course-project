@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRMISA - Import & Export Courses | Nurturing Passion</title>
+    <meta name="description" content="South Africa's leading online academy for Import & Export education. Master international trade, customs, shipping, and launch your business with a free registered company." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN Fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              crmisa: {
+                navy: "#0d2859",
+                darkNavy: "#091c3e",
+                accentNavy: "#1c3c78",
+                blue: "#2b569a",
+                lightBlue: "#eef5ff",
+                sky: "#3b82f6",
+                badgeRed: "#ef4444",
+                green: "#22c55e",
+              }
+            },
+            fontFamily: {
+              sans: ['Poppins', 'Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-gray-50 text-slate-900 antialiased selection:bg-crmisa-navy selection:text-white overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
