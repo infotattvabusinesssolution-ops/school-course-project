@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronDownIcon } from '../components/icons/Icons';
-import { PlayCircle, Check, Users, BarChart, ArrowLeft, Video, Award, Clock } from 'lucide-react';
+import { PlayCircle, Check, Users, BarChart, ArrowLeft, Video, Award, Clock, Star } from 'lucide-react';
 import { courseService } from '../services/courseService';
+import reviewService from '../services/reviewService';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/axios';
 
@@ -11,8 +12,10 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   const navigate = useNavigate();
   const [expandedModule, setExpandedModule] = useState(initialModuleId);
   const [course, setCourse] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -21,7 +24,11 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         try {
           const res = await api.get('/student/courses');
           const enrolledCourses = res.data.data;
-          setIsEnrolled(enrolledCourses.some(e => e.course && e.course._id === courseId));
+          const currentEnrollment = enrolledCourses.find(e => e.course && e.course._id === courseId);
+          if (currentEnrollment) {
+            setIsEnrolled(true);
+            setIsCompleted(currentEnrollment.status === 'COMPLETED' || currentEnrollment.completionPercentage >= 100);
+          }
         } catch (err) {
           console.error("Failed to check enrollment:", err);
         }
@@ -44,7 +51,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   };
 
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchCourseAndReviews = async () => {
       try {
         setLoading(true);
         if (!courseId) return;
@@ -53,13 +60,16 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         if (res.data?.modules?.length > 0 && initialModuleId === null) {
           setExpandedModule(res.data.modules[0]._id);
         }
+
+        const reviewRes = await reviewService.getCourseReviews(courseId);
+        setReviews(reviewRes.data || []);
       } catch (error) {
-        console.error("Failed to load course details:", error);
+        console.error("Failed to load course details or reviews:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchCourse();
+    fetchCourseAndReviews();
   }, [courseId, initialModuleId]);
 
   const toggleAccordion = (id) => {
@@ -137,8 +147,9 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
               {/* Meta Info */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-600">
                 <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-md">
-                  <span className="font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '5.0'}</span>
-                  <span>({course.totalEnrollments || 0} reviews)</span>
+                  <Star className="w-4 h-4 text-amber-500 fill-current" />
+                  <span className="font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+                  <span>({course.reviewCount || 0} reviews)</span>
                 </div>
                 <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-md">
                   <Users className="w-4 h-4" />
@@ -278,6 +289,59 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                 )}
               </div>
             </section>
+
+            {/* Student Reviews Section */}
+            <section className="pt-8 border-t border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Student Reviews</h2>
+              
+              <div className="flex items-center gap-4 mb-8 bg-slate-50 p-6 border border-slate-200 rounded-lg">
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</div>
+                  <div className="flex items-center justify-center gap-1 my-2 text-amber-500">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className={`w-4 h-4 ${star <= Math.round(course.averageRating || 0) ? 'fill-current' : 'text-slate-300'}`} />
+                    ))}
+                  </div>
+                  <div className="text-sm text-slate-500">Course Rating</div>
+                </div>
+              </div>
+
+              {reviews.length === 0 ? (
+                <div className="p-8 text-center text-slate-500 border border-slate-200 bg-slate-50">
+                  No reviews yet. Be the first to review this course after you complete it!
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {reviews.map((review) => (
+                    <div key={review._id} className="border-b border-slate-100 pb-6 last:border-b-0 last:pb-0">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                          {review.student?.avatar ? (
+                            <img src={review.student.avatar} alt={review.student?.name} className="w-12 h-12 rounded-full object-cover" />
+                          ) : (
+                            <span className="text-blue-700 font-bold text-lg">
+                              {review.student?.name?.charAt(0) || 'U'}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-bold text-slate-900">{review.student?.name || 'Anonymous User'}</h4>
+                            <span className="text-xs text-slate-400">• {new Date(review.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex items-center gap-1 mb-3 text-amber-500">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className={`w-3.5 h-3.5 ${star <= review.rating ? 'fill-current' : 'text-slate-300'}`} />
+                            ))}
+                          </div>
+                          <p className="text-slate-600 text-sm leading-relaxed">{review.comment}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
 
           {/* Right Column (Flat Sticky Sidebar) */}
@@ -300,7 +364,14 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                   <span className="text-3xl font-bold text-slate-900">₹{course.price}</span>
                 </div>
 
-                {isEnrolled ? (
+                {isCompleted ? (
+                  <button
+                    onClick={() => navigate(`/course-player/${courseId}?tab=review`)}
+                    className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
+                  >
+                    <Star className="w-5 h-5 fill-current" /> Review Course
+                  </button>
+                ) : isEnrolled ? (
                   <button
                     onClick={() => navigate(`/course-player/${courseId}`)}
                     className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors mb-4"
@@ -345,7 +416,14 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         <div className="flex flex-col">
           <span className="text-xl font-bold text-slate-900">₹{course.price}</span>
         </div>
-        {isEnrolled ? (
+        {isCompleted ? (
+          <button
+            onClick={() => navigate(`/course-player/${courseId}?tab=review`)}
+            className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-center flex items-center justify-center gap-2"
+          >
+            <Star className="w-4 h-4 fill-current" /> Review Course
+          </button>
+        ) : isEnrolled ? (
           <button
             onClick={() => navigate(`/course-player/${courseId}`)}
             className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-center"

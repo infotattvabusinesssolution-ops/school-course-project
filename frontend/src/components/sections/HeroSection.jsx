@@ -84,7 +84,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
             >
               <EyeIcon className="w-5 h-5" />
             </button>
@@ -140,6 +140,9 @@ function RegisterForm() {
     password: '',
     confirmPassword: ''
   });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -236,23 +239,41 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-bold text-slate-800 mb-1">Password</label>
-            <input
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-800 mb-1">Confirm</label>
-            <input
-              type="password"
-              required
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                required
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -325,11 +346,11 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
               transition={{ duration: 0.4 }}
             >
               <div className="flex flex-col items-start text-left w-full max-w-2xl px-4 mt-8 lg:mt-0">
-                <h1 className="text-crmisa-navy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] uppercase">
-                  MASTER
+                <h1 className="text-crmisa-navy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1]">
+                  Master
                 </h1>
-                <h2 className="text-blue-600 text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] uppercase pt-2">
-                  GLOBAL TRADE
+                <h2 className="text-blue-600 text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] pt-2">
+                  Global trade
                 </h2>
                 <p className="mt-6 text-slate-500 text-base md:text-lg font-medium max-w-lg leading-relaxed">
                   South Africa's leading online academy for Import & Export education.
@@ -404,16 +425,22 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-sky-500/20 rounded-full blur-[100px] -z-10"
           />
 
-          <motion.img 
-            src="/hero/container-blue.png" 
-            alt="CRMISA Logistics" 
+          <motion.div
+            initial={{ y: "-100vh", opacity: 0 }}
             animate={{ 
-               y: 0, 
-               scale: isAuthMode ? 1.1 : 1.35 
+               y: isLoginMode ? -80 : 0, 
+               opacity: 1,
+               scale: isAuthMode ? 0.95 : 1.15 
             }}
-            transition={{ type: "tween", ease: "easeInOut", duration: 0.6 }}
-            className="absolute top-0 z-10 w-full max-w-lg lg:max-w-xl drop-shadow-2xl object-contain animate-swing origin-top"
-          />
+            transition={{ type: "spring", bounce: 0.15, duration: 2.5, delay: 0.1 }}
+            className="absolute top-0 z-10 w-full max-w-lg lg:max-w-xl"
+          >
+            <img 
+              src="/hero/crmisa-stu.png" 
+              alt="CRMISA Logistics" 
+              className="w-full drop-shadow-2xl object-contain animate-swing origin-top"
+            />
+          </motion.div>
 
           <AnimatePresence>
             {isAuthMode && (
@@ -439,9 +466,14 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
 
         {/* Mobile Container Image (Only shown in Hero Mode on mobile) */}
         {!isAuthMode && (
-          <div className="flex lg:hidden w-full justify-center mt-auto relative z-10">
-             <img src="/student/download (17)-Photoroom.png" alt="CRMISA Student" className="w-[110%] max-w-[350px] drop-shadow-2xl origin-bottom object-bottom" />
-          </div>
+          <motion.div 
+            initial={{ y: "-100vh", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", bounce: 0.15, duration: 2.5, delay: 0.2 }}
+            className="flex lg:hidden w-full justify-center mt-auto relative z-10"
+          >
+             <img src="/student/download (17)-Photoroom.png" alt="CRMISA Student" className="w-[95%] max-w-[300px] drop-shadow-2xl origin-bottom object-bottom" />
+          </motion.div>
         )}
 
       </div>

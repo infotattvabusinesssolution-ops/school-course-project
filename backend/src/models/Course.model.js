@@ -35,6 +35,14 @@ const lessonSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  reviewCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const moduleSchema = new mongoose.Schema({
@@ -128,8 +136,13 @@ const courseSchema = new mongoose.Schema(
     },
     averageRating: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
+      default: 0,
+    },
+    reviewCount: {
+      type: Number,
+      default: 0,
     },
     totalEnrollments: {
       type: Number,

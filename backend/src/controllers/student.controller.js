@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Enrollment from "../models/Enrollment.model.js";
+import EbookPurchase from "../models/EbookPurchase.model.js";
 import Progress from "../models/Progress.model.js";
 import ActivityLog from "../models/ActivityLog.model.js";
 import { Course } from "../models/Course.model.js";
@@ -292,5 +293,25 @@ export const syncLessonProgress = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     progress: progressObj
+  });
+});
+
+// @desc    Get student's purchased ebooks
+// @route   GET /api/student/purchased-ebooks
+// @access  Private (Student)
+export const getPurchasedEbooks = asyncHandler(async (req, res) => {
+  const studentId = req.user._id;
+
+  const purchases = await EbookPurchase.find({
+    student: studentId,
+    status: "PAID",
+  })
+    .sort({ purchasedAt: -1 })
+    .populate("ebook");
+
+  res.status(200).json({
+    success: true,
+    count: purchases.length,
+    purchases,
   });
 });

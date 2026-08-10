@@ -8,6 +8,7 @@ import TestimonialsSection from '../components/sections/TestimonialsSection';
 import HowItWorksSection from '../components/sections/HowItWorksSection';
 import JoinCertifiedSection from '../components/sections/JoinCertifiedSection';
 import ContactSection from '../components/sections/ContactSection';
+import FaqSection from '../components/sections/FaqSection';
 
 
 export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
@@ -53,6 +54,7 @@ export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isR
             <HowItWorksSection onOpenRegister={onOpenRegister} />
             {/* Join & Get Certified Section inserted right after How It Works */}
             <JoinCertifiedSection onOpenRegister={onOpenRegister} />
+            <FaqSection />
             {/* Contact Section inserted right before Footer */}
             <ContactSection />
           </div>

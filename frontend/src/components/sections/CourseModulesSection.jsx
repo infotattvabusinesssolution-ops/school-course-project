@@ -3,9 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { BookOpen, Star, ChevronRight, BarChart } from 'lucide-react';
 import { courseService } from '../../services/courseService';
 
+import { useAuth } from '../../context/AuthContext';
+import api from '../../lib/axios';
+
 export default function CourseModulesSection({ onOpenEnrol }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [courses, setCourses] = useState([]);
+  const [enrollmentsMap, setEnrollmentsMap] = useState(new Map());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,7 +18,25 @@ export default function CourseModulesSection({ onOpenEnrol }) {
       try {
         setLoading(true);
         const res = await courseService.getPublishedCourses();
-        setCourses((res.data.courses || []).slice(0, 4));
+        // slice(0, 3) to fit lg:grid-cols-3 nicely
+        setCourses((res.data.courses || []).slice(0, 3));
+        
+        if (user) {
+          try {
+            const enrollRes = await api.get('/student/courses');
+            const map = new Map();
+            (enrollRes.data.data || []).forEach(e => {
+              const cId = e.course?._id || e.course;
+              map.set(cId, {
+                isEnrolled: true,
+                isCompleted: e.status === "COMPLETED" || e.completionPercentage === 100
+              });
+            });
+            setEnrollmentsMap(map);
+          } catch (err) {
+            console.error("Failed to load student enrollments for section:", err);
+          }
+        }
       } catch (error) {
         console.error("Failed to load courses for section:", error);
       } finally {
@@ -21,7 +44,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
       }
     };
     fetchCourses();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
@@ -59,84 +82,113 @@ export default function CourseModulesSection({ onOpenEnrol }) {
           </div>
         </div>
 
-        {/* Course Cards — exact same design as CoursesPage */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {courses.map((course, idx) => (
-            <div
-              key={course._id}
-              data-aos="fade-up"
-              data-aos-delay={(idx + 1) * 100}
-              className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group"
-              onClick={() => navigate(`/courses/${course._id}`)}
-            >
-              {/* Thumbnail */}
-              <div className="relative h-48 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
-                {course.thumbnailUrl ? (
-                  <img
-                    src={course.thumbnailUrl}
-                    alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="w-10 h-10 text-slate-300" />
+        {/* Course Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {courses.map((course, idx) => {
+            const enrollment = enrollmentsMap.get(course._id);
+            const isEnrolled = !!enrollment;
+            const isCompleted = enrollment?.isCompleted;
+
+            return (
+              <div
+                key={course._id}
+                data-aos="fade-up"
+                data-aos-delay={(idx + 1) * 100}
+                className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group shadow-sm hover:shadow-md"
+                onClick={() => navigate(`/courses/${course._id}`)}
+              >
+                {/* Thumbnail */}
+                <div className="relative h-60 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                  {course.thumbnailUrl ? (
+                    <img
+                      src={course.thumbnailUrl}
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <BookOpen className="w-12 h-12 text-slate-300" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Body */}
+                <div className="p-6 flex flex-col flex-1">
+
+                  {/* Meta */}
+                  <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-3 uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5">
+                      <BarChart className="w-4 h-4 text-slate-400" />
+                      <span>{course.level}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen className="w-4 h-4 text-slate-400" />
+                      <span>{course.modules?.length || 0} Modules</span>
+                    </div>
                   </div>
-                )}
 
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                    {course.title}
+                  </h3>
 
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-3 text-amber-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm font-bold text-slate-900">
+                      {course.averageRating ? course.averageRating.toFixed(1) : '0.0'}
+                    </span>
+                    <span className="text-sm text-slate-500 ml-1">({course.reviewCount || 0})</span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-slate-600 line-clamp-3 mb-6 flex-1 leading-relaxed">
+                    {course.description}
+                  </p>
+
+                  {/* Price + Action */}
+                  <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
+                    <span className="text-2xl font-bold text-slate-900">₹{course.price}</span>
+                    
+                    {isCompleted ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/course-player/${course._id}?tab=review`);
+                        }}
+                        className="bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 px-4 py-2 text-sm font-bold transition-colors flex items-center gap-1 shadow-sm"
+                      >
+                        <Star className="w-4 h-4 fill-current" />
+                        <span>Review</span>
+                      </button>
+                    ) : isEnrolled ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/course-player/${course._id}`);
+                        }}
+                        className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1 shadow-sm"
+                      >
+                        <span>Start Learning</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenEnrol(course.title, course.price, course._id);
+                        }}
+                        className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
+                      >
+                        <span>Enrol</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-
-              {/* Card Body */}
-              <div className="p-5 flex flex-col flex-1">
-
-                {/* Meta */}
-                <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-3 uppercase tracking-wider">
-                  <div className="flex items-center gap-1.5">
-                    <BarChart className="w-4 h-4 text-slate-400" />
-                    <span>{course.level}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <BookOpen className="w-4 h-4 text-slate-400" />
-                    <span>{course.modules?.length || 0} Modules</span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-base font-bold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
-                  {course.title}
-                </h3>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 mb-3">
-                  <Star className="w-4 h-4 text-slate-900 fill-slate-900" />
-                  <span className="text-sm font-bold text-slate-900">
-                    {course.averageRating ? course.averageRating.toFixed(1) : '5.0'}
-                  </span>
-                  <span className="text-sm text-slate-500 ml-1">({course.totalEnrollments || 0})</span>
-                </div>
-
-                {/* Description */}
-                <p className="text-sm text-slate-600 line-clamp-3 mb-4 flex-1 leading-relaxed">
-                  {course.description}
-                </p>
-
-                {/* Price + Enroll */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
-                  <span className="text-xl font-bold text-slate-900">₹{course.price}</span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenEnrol(course.title, course.price, course._id);
-                    }}
-                    className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
-                  >
-                    Enrol
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

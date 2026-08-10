@@ -6,9 +6,12 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const adminNavItems = [
-    { id: 0, icon: "dashboard", label: "Overview & Courses" },
+    { id: 0, icon: "dashboard", label: "Overview" },
+    { id: 5, icon: "video_library", label: "Course Management" },
     { id: 1, icon: "group", label: "User Management" },
     { id: 2, icon: "payments", label: "Enrollments & Financials" },
+    { id: 3, icon: "forum", label: "Forum Management" },
+    { id: 4, icon: "auto_stories", label: "E-book Management" },
   ];
 
   return (
@@ -65,23 +68,31 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
           </div>
         </div>
         <div className="flex flex-col gap-2 flex-grow">
-          {adminNavItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setMobileOpen(false);
-              }}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-label-md text-label-md transition-all duration-200 active:scale-98 w-full text-left ${
-                activeTab === item.id
-                  ? "bg-secondary-container text-on-secondary-container font-bold"
-                  : "text-on-surface-variant hover:bg-surface-container-high"
-              }`}
-            >
-              <span className="material-symbols-outlined">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {adminNavItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setMobileOpen(false);
+                }}
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 w-full text-left ${
+                  isActive
+                    ? "bg-slate-900 text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium"
+                }`}
+              >
+                <span
+                  className="material-symbols-outlined text-[22px]"
+                  style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                >
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
         <div className="mt-auto">
           <button
@@ -124,20 +135,28 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
           </div>
         </div>
         <div className="flex flex-col gap-2 flex-grow">
-          {adminNavItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-label-md text-label-md transition-all duration-200 active:scale-98 w-full text-left ${
-                activeTab === item.id
-                  ? "bg-secondary-container text-on-secondary-container font-bold"
-                  : "text-on-surface-variant hover:bg-surface-container-high"
-              }`}
-            >
-              <span className="material-symbols-outlined">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {adminNavItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 w-full text-left ${
+                  isActive
+                    ? "bg-slate-900 text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium"
+                }`}
+              >
+                <span
+                  className="material-symbols-outlined text-[22px]"
+                  style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                >
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
         <div className="mt-auto flex flex-col gap-4">
           <button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, useNavigationType } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
@@ -23,19 +23,58 @@ import ContactPage from "./pages/ContactPage";
 import DashboardPage from "./pages/DashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminCreateCoursePage from "./pages/AdminCreateCoursePage";
+import AdminEbookCreatePage from "./pages/AdminEbookCreatePage";
 import CoursePlayerPage from "./pages/CoursePlayerPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsConditionsPage from "./pages/TermsConditionsPage";
 import FaqPage from "./pages/FaqPage";
+import VerifyCertificatePage from "./pages/VerifyCertificatePage";
+import CertificatePage from "./pages/CertificatePage";
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const navigationType = useNavigationType(); // 'PUSH' | 'POP' | 'REPLACE'
 
-  // Scroll to top on route change
+  // Smart scroll restoration:
+  // - On PUSH (forward link click): scroll to top
+  // - On POP (back/forward button): restore saved scroll position
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
+  useEffect(() => {
+    const key = location.key; // unique key per history entry
+    let restoreTimer = null;
+
+    if (navigationType === 'POP') {
+      // Restore saved scroll position — use setTimeout to wait for React to finish rendering
+      const saved = sessionStorage.getItem(`scroll-${key}`);
+      if (saved) {
+        restoreTimer = setTimeout(() => {
+          window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
+        }, 80);
+      }
+    } else {
+      // PUSH or REPLACE — scroll to top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    // Save scroll on every scroll event, keyed by this route's history key
+    const handleScroll = () => {
+      sessionStorage.setItem(`scroll-${key}`, String(window.scrollY));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      // Save the last scroll position when leaving this route
+      sessionStorage.setItem(`scroll-${key}`, String(window.scrollY));
+      window.removeEventListener('scroll', handleScroll);
+      if (restoreTimer) clearTimeout(restoreTimer);
+    };
+  }, [location.key, navigationType]);
 
   // Use AOS
   useAOS(location.pathname);
@@ -199,6 +238,15 @@ export default function App() {
             }
           />
           <Route
+            path="/ebooks"
+            element={
+              <EbookPage
+                onAddToCart={handleAddToCart}
+                onAddToWishlist={handleAddToWishlist}
+              />
+            }
+          />
+          <Route
             path="/ebook/:id"
             element={<EbookDetailPage onAddToCart={handleAddToCart} />}
           />
@@ -209,6 +257,8 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsConditionsPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/verify-certificate/:certificateId" element={<VerifyCertificatePage />} />
+          <Route path="/certificate/:certificateId" element={<CertificatePage />} />
 
           {/* Student Routes */}
           <Route
@@ -230,10 +280,18 @@ export default function App() {
             path="/admin/course/:id/edit"
             element={<AdminCreateCoursePage />}
           />
+          <Route
+            path="/admin/ebook/create"
+            element={<AdminEbookCreatePage />}
+          />
+          <Route
+            path="/admin/ebook/:id/edit"
+            element={<AdminEbookCreatePage />}
+          />
         </Routes>
       </main>
 
-      {location.pathname === "/" && <Footer />}
+      {!hideLayout && <Footer />}
 
       <CartModal
         isOpen={isCartModalOpen}

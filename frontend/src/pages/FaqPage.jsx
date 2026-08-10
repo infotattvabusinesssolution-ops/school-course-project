@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HelpCircle, ChevronDown, ArrowLeft, Search } from "lucide-react";
 
 export default function FaqPage() {
+  const navigate = useNavigate();
   const [openIdx, setOpenIdx] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -47,14 +48,14 @@ export default function FaqPage() {
     <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Back Link */}
-        <Link
-          to="/"
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Home
-        </Link>
+          Back
+        </button>
 
         {/* Header */}
         <div className="border-b border-slate-200 pb-8 mb-8">

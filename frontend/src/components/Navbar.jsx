@@ -15,11 +15,11 @@ export default function Navbar({
   const navigate = useNavigate();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About Us', path: '/#about' },
+    { name: 'About Us', path: '/about' },
     { name: 'Courses', path: '/courses' },
     { name: 'E-book', path: '/ebook' },
-    { name: 'Contact Us', path: '/#contact' },
+    { name: 'Forum', path: '/forum' },
+    { name: 'Contact Us', path: '/contact' },
   ];
 
   const courseDropdownItems = [

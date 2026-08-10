@@ -32,7 +32,7 @@ const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 // ─── Custom Video Player ──────────────────────────────────────────────────────
 
-export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgress }) {
+export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgress, startTime = 0 }) {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -82,10 +82,19 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
   };
 
   const handleLoadedMetadata = () => {
-    setDuration(videoRef.current?.duration ?? 0);
+    const v = videoRef.current;
+    if (!v) return;
+    
+    setDuration(v.duration);
+    
+    if (startTime > 0 && startTime < v.duration) {
+      v.currentTime = startTime;
+      setCurrentTime(startTime);
+    }
+    
     setLoading(false);
     if (autoPlay) {
-      videoRef.current?.play().then(() => setPlaying(true)).catch(() => {});
+      v.play().then(() => setPlaying(true)).catch(() => {});
     }
   };
 

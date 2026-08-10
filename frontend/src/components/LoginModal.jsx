@@ -86,13 +86,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
                 <EyeIcon className="w-5 h-5" />
               </button>
             </div>
-            
-            {/* Forgot Password link */}
-            <div className="text-right pt-2">
-              <a href="#" className="text-xs font-semibold text-slate-600 hover:text-slate-900 underline underline-offset-2">
-                Forgot Password ?
-              </a>
-            </div>
           </div>
 
           {/* Submit Button matching Image 2 */}

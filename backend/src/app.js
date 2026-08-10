@@ -13,6 +13,10 @@ import publicRoutes from './routes/public.routes.js';
 import studentRoutes from './routes/student.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import interactionRoutes from './routes/interaction.routes.js';
+import forumRoutes from './routes/forum.routes.js';
+import ebookRoutes from './routes/ebook.routes.js';
+import certificateRoutes from './routes/certificate.routes.js';
+import reviewRoutes from './routes/review.routes.js';
 
 const app = express();
 
@@ -46,10 +50,14 @@ app.use('/api/student', studentRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/interactions', interactionRoutes);
+app.use('/api/forum', forumRoutes);
+app.use('/api', ebookRoutes);
+app.use('/api/certificates', certificateRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Base route
 app.get('/', (req, res) => {
-  res.send('Skillwell API is running...');
+  res.send('CRMISA API is running...');
 });
 
 // Error handling

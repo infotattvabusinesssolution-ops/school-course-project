@@ -2,11 +2,15 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, BookOpen, Star, ChevronRight, Check, BarChart } from 'lucide-react';
 import { courseService } from '../services/courseService';
+import { useAuth } from '../context/AuthContext';
+import api from '../lib/axios';
 
 export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [enrollmentsMap, setEnrollmentsMap] = useState(new Map());
   
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,6 +27,23 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
         setLoading(true);
         const res = await courseService.getPublishedCourses();
         setCourses(res.data.courses || []);
+
+        if (user) {
+          try {
+            const enrollRes = await api.get('/student/courses');
+            const map = new Map();
+            (enrollRes.data.data || []).forEach(e => {
+              const cId = e.course?._id || e.course;
+              map.set(cId, {
+                isEnrolled: true,
+                isCompleted: e.status === "COMPLETED" || e.completionPercentage === 100
+              });
+            });
+            setEnrollmentsMap(map);
+          } catch (err) {
+            console.error("Failed to load student enrollments:", err);
+          }
+        }
       } catch (error) {
         console.error("Failed to load courses:", error);
       } finally {
@@ -30,7 +51,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
       }
     };
     fetchCourses();
-  }, []);
+  }, [user]);
 
   // Close filter dropdown when clicking outside
   useEffect(() => {
@@ -184,14 +205,19 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCourses.map((course) => (
+            {filteredCourses.map((course) => {
+              const enrollment = enrollmentsMap.get(course._id);
+              const isEnrolled = !!enrollment;
+              const isCompleted = enrollment?.isCompleted;
+
+              return (
               <div 
                 key={course._id}
-                className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group"
+                className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group shadow-sm hover:shadow-md"
                 onClick={() => navigate(`/courses/${course._id}`)}
               >
                 {/* Flat Image Container */}
-                <div className="relative h-48 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                <div className="relative h-60 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
                   {course.thumbnailUrl ? (
                     <img 
                       src={course.thumbnailUrl} 
@@ -226,10 +252,10 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                     {course.title}
                   </h3>
                   
-                  <div className="flex items-center gap-1 mb-4">
-                    <Star className="w-4 h-4 text-slate-900 fill-slate-900" />
-                    <span className="text-sm font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '5.0'}</span>
-                    <span className="text-sm text-slate-500 ml-1">({course.totalEnrollments || 0})</span>
+                  <div className="flex items-center gap-1 mb-4 text-amber-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+                    <span className="text-sm text-slate-500 ml-1">({course.reviewCount || 0})</span>
                   </div>
 
                   <p className="text-sm text-slate-600 line-clamp-3 mb-6 flex-1 leading-relaxed">
@@ -237,24 +263,48 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                   </p>
 
                   {/* Footer Actions */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                  <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
                     <span className="text-2xl font-bold text-slate-900">₹{course.price}</span>
                     
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenEnrol(course.title, `₹${course.price}`);
-                        onAddToCart(course);
-                      }}
-                      className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
-                    >
-                      Enrol
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                    {isCompleted ? (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/course-player/${course._id}?tab=review`);
+                        }}
+                        className="bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 px-4 py-2 text-sm font-bold transition-colors flex items-center gap-1 shadow-sm"
+                      >
+                        <Star className="w-4 h-4 fill-current" />
+                        <span>Review</span>
+                      </button>
+                    ) : isEnrolled ? (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/course-player/${course._id}`);
+                        }}
+                        className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+                      >
+                        <span>Start Learning</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onOpenEnrol) onOpenEnrol(course.title, `₹${course.price}`, course._id);
+                        }}
+                        className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
+                      >
+                        <span>Enrol</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         )}
       </div>

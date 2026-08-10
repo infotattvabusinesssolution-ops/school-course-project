@@ -33,15 +33,28 @@ export function useAOS(dependency = null) {
     const elements = document.querySelectorAll('[data-aos]');
     elements.forEach((el) => observer.observe(el));
 
-    // Secondary pass after a short tick to capture dynamic component renders
-    const timer = setTimeout(() => {
-      document.querySelectorAll('[data-aos]:not(.aos-animate)').forEach((el) => {
-        observer.observe(el);
+    // Use MutationObserver to detect dynamically added [data-aos] elements (e.g. from network requests)
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            if (node.hasAttribute('data-aos')) {
+              observer.observe(node);
+            }
+            const childElements = node.querySelectorAll('[data-aos]');
+            childElements.forEach((el) => observer.observe(el));
+          }
+        });
       });
-    }, 150);
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
-      clearTimeout(timer);
+      mutationObserver.disconnect();
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
