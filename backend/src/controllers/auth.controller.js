@@ -5,7 +5,6 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import crypto from 'crypto';
-import { auth } from '../config/firebase-admin.js';
 
 export const signup = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
@@ -85,82 +84,4 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, req.user, 'Current user retrieved'));
-});
-
-export const googleAuth = asyncHandler(async (req, res) => {
-  const { idToken, role } = req.body;
-
-  if (!idToken) {
-    throw new ApiError(400, 'Firebase ID token is required');
-  }
-
-  if (!auth) {
-    throw new ApiError(500, 'Firebase Admin is not configured on the server');
-  }
-
-  let decodedToken;
-  try {
-    decodedToken = await auth.verifyIdToken(idToken);
-  } catch (error) {
-    throw new ApiError(401, 'Invalid or expired Firebase ID token');
-  }
-
-  const { email, name, picture: photoUrl } = decodedToken;
-
-  let user = await User.findOne({ email });
-
-  if (user) {
-    if (user.status === 'BLOCKED') {
-      throw new ApiError(403, 'Account is blocked');
-    }
-    
-    // User exists, log them in
-    const token = generateToken(res, user._id);
-    
-    res.status(200).json(new ApiResponse(200, {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token,
-    }, 'User logged in successfully'));
-  } else {
-    // User doesn't exist, create them
-    const randomPassword = crypto.randomBytes(16).toString('hex');
-    const selectedRole = role || 'STUDENT';
-
-    if (selectedRole === 'ADMIN') {
-      throw new ApiError(403, 'Admin registration is not allowed via public endpoint');
-    }
-    
-    try {
-      user = await User.create({
-        name: name || 'Google User',
-        email,
-        passwordHash: randomPassword,
-        role: selectedRole,
-      });
-    } catch (err) {
-      console.error("User.create Error:", err);
-      throw new ApiError(500, err.message || "Failed to create user");
-    }
-
-    if (user) {
-      if (user.role === 'STUDENT') {
-        await StudentProfile.create({ userId: user._id });
-      }
-
-      const token = generateToken(res, user._id);
-
-      res.status(201).json(new ApiResponse(201, {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token,
-      }, 'User registered successfully via Google'));
-    } else {
-      throw new ApiError(400, 'Invalid user data');
-    }
-  }
 });

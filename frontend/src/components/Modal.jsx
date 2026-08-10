@@ -23,26 +23,26 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "ma
       {/* Backdrop overlay */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity animate-fade-in"
       />
 
-      {/* Modal Container */}
-      <div className={`relative w-full ${maxWidth} bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all animate-slide-up z-10 my-8`}>
+      {/* Modal Container - Flat design without shadows */}
+      <div className={`relative w-full ${maxWidth} bg-white border border-slate-200 overflow-hidden transform transition-all animate-slide-up z-10 my-8`}>
         
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-crmisa-navy text-white">
-          <h3 className="text-lg font-bold tracking-tight">{title}</h3>
+        {/* Modal Header - Light theme */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-white">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
             aria-label="Close modal"
           >
-            <XIcon className="w-6 h-6" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 max-h-[80vh] overflow-y-auto">
+        <div className="p-6 sm:p-8 max-h-[80vh] overflow-y-auto font-sans text-slate-800">
           {children}
         </div>
 

@@ -1,49 +1,63 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ChevronDownIcon, MenuIcon, XIcon } from './icons/Icons';
 
 export default function Navbar({ 
-  activePage, 
-  setActivePage,
   onOpenLogin, 
-  setSelectedModuleId,
   isLoggedIn,
   user,
   onLogout
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const navLinks = [
-    { name: 'Home', id: 'home' },
-    { name: 'About Us', id: 'about' },
-    { name: 'Courses', id: 'coursedetails', hasDropdown: true },
-    { name: 'E-book', id: 'ebook' },
-    { name: 'Contact Us', id: 'contact' },
+    { name: 'Home', path: '/' },
+    { name: 'About Us', path: '/#about' },
+    { name: 'Courses', path: '/courses' },
+    { name: 'E-book', path: '/ebook' },
+    { name: 'Contact Us', path: '/#contact' },
   ];
 
   const courseDropdownItems = [
-    { name: 'Enrol Now For Our Import & Export Course', moduleId: 1 },
-    { name: 'International Trade Bodies', moduleId: 2 },
-    { name: 'Incoterms', moduleId: 3 },
-    { name: 'Modes of Transport', moduleId: 4 },
-    { name: 'Export and Import Procedures', moduleId: 5 },
-    { name: 'Customs Procedures', moduleId: 6 },
-    { name: 'Cross Trades Module', moduleId: 7 },
+    { name: 'Enrol Now For Our Import & Export Course' },
+    { name: 'International Trade Bodies' },
+    { name: 'Incoterms' },
+    { name: 'Modes of Transport' },
+    { name: 'Export and Import Procedures' },
+    { name: 'Customs Procedures' },
+    { name: 'Cross Trades Module' },
   ];
 
-  const handleNavClick = (id) => {
-    setActivePage(id);
+  const handleNavClick = (path) => {
+    if (path.startsWith('/#')) {
+      const targetId = path.substring(2);
+      if (location.pathname === '/') {
+        // Already on home, just scroll
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Navigate to home then it will scroll (needs useEffect in HomePage)
+        navigate(path);
+      }
+    } else {
+      navigate(path);
+    }
     setMobileMenuOpen(false);
     setCoursesDropdownOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDropdownItemClick = (item) => {
     setCoursesDropdownOpen(false);
     setMobileMenuOpen(false);
-    if (setSelectedModuleId) setSelectedModuleId(item.moduleId);
-    setActivePage('coursedetails');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Since course modules aren't heavily tracked by ID here, 
+    // we can just send to /courses where users can select courses.
+    navigate('/courses');
   };
 
   return (
@@ -53,7 +67,7 @@ export default function Navbar({
           
           {/* Logo Section */}
           <div 
-            onClick={() => handleNavClick('home')}
+            onClick={() => handleNavClick('/')}
             className="flex items-center space-x-3 cursor-pointer group py-1"
           >
             <div className="relative w-12 h-12 bg-gradient-to-br from-crmisa-navy via-crmisa-accentNavy to-crmisa-darkNavy rounded-xl flex items-center justify-center p-2 shadow-md group-hover:scale-105 transition-transform duration-300">
@@ -78,18 +92,18 @@ export default function Navbar({
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-            {navLinks.map((link) => (
-              <div key={link.id} className="relative group">
+            {navLinks.map((link, i) => (
+              <div key={i} className="relative group">
                 <button
                   onClick={() => {
                     if (link.hasDropdown) {
                       setCoursesDropdownOpen(!coursesDropdownOpen);
                     } else {
-                      handleNavClick(link.id);
+                      handleNavClick(link.path);
                     }
                   }}
                   className={`flex items-center space-x-1 font-normal text-base transition-colors duration-200 py-1 border-b ${
-                    activePage === link.id
+                    location.pathname === link.path || (link.path === '/courses' && location.pathname.startsWith('/courses'))
                       ? 'text-crmisa-navy border-crmisa-navy'
                       : 'text-slate-700 hover:text-crmisa-navy border-transparent'
                   }`}
@@ -109,7 +123,7 @@ export default function Navbar({
                           key={idx}
                           onClick={() => handleDropdownItemClick(item)}
                           className={`w-full text-left px-5 py-3.5 text-sm font-normal transition-colors duration-150 ${
-                            item.moduleId === 1
+                            idx === 0
                               ? 'text-slate-900 font-medium hover:bg-crmisa-lightBlue hover:text-crmisa-navy'
                               : 'text-slate-700 hover:bg-slate-50 hover:text-crmisa-navy'
                           }`}
@@ -131,9 +145,9 @@ export default function Navbar({
                 <button
                   onClick={() => {
                     if (user?.role === 'ADMIN') {
-                      setActivePage('admin-dashboard');
+                      navigate('/admin/dashboard');
                     } else {
-                      setActivePage('dashboard');
+                      navigate('/dashboard');
                     }
                   }}
                   className="text-base font-bold text-crmisa-navy hover:text-blue-600 px-3 py-1.5 transition-colors"
@@ -175,18 +189,18 @@ export default function Navbar({
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-xl animate-fade-in absolute w-full top-16 sm:top-20">
           <nav className="flex flex-col space-y-2">
-            {navLinks.map((link) => (
-              <div key={link.id}>
+            {navLinks.map((link, i) => (
+              <div key={i}>
                 <button
                   onClick={() => {
                     if (link.hasDropdown) {
                       setCoursesDropdownOpen(!coursesDropdownOpen);
                     } else {
-                      handleNavClick(link.id);
+                      handleNavClick(link.path);
                     }
                   }}
                   className={`w-full flex justify-between items-center px-3 py-2.5 rounded-lg text-base font-normal transition-colors ${
-                    activePage === link.id
+                    location.pathname === link.path || (link.path === '/courses' && location.pathname.startsWith('/courses'))
                       ? 'bg-crmisa-lightBlue text-crmisa-navy font-medium'
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
@@ -219,9 +233,9 @@ export default function Navbar({
                   onClick={() => {
                     setMobileMenuOpen(false);
                     if (user?.role === 'ADMIN') {
-                      setActivePage('admin-dashboard');
+                      navigate('/admin/dashboard');
                     } else {
-                      setActivePage('dashboard');
+                      navigate('/dashboard');
                     }
                   }}
                   className="w-full py-2.5 bg-crmisa-navy text-white font-bold rounded-xl text-center"

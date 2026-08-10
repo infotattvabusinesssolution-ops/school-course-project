@@ -1,105 +1,111 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { BookOpen, Clock, Users, Video, ArrowRight } from 'lucide-react';
 
-export default function JoinCertifiedSection({ onOpenRegister }) {
+export default function JoinCertifiedSection() {
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
+  const navigate = useNavigate();
+
   const stats = [
     {
       id: 1,
       number: "10+",
       label: "Exam Categories",
-      icon: (
-        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-        </svg>
-      )
+      icon: BookOpen,
     },
     {
       id: 2,
       number: "1.2K+",
       label: "Mins. Watched",
-      icon: (
-        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-        </svg>
-      )
+      icon: Clock,
     },
     {
       id: 3,
       number: "5+",
       label: "Educators",
-      icon: (
-        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-        </svg>
-      )
+      icon: Users,
     },
     {
       id: 4,
       number: "9+",
       label: "Video Lessons",
-      icon: (
-        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-      )
+      icon: Video,
     }
   ];
 
+  const handleButtonClick = () => {
+    if (isLoggedIn) {
+      navigate('/courses');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
-    <section className="py-12 lg:py-24 bg-white text-slate-800 relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-white text-slate-800 border-t border-slate-200 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Title, Description & CTA Button */}
+          {/* Left Column: Title, Description & Dynamic CTA Button */}
           <div className="lg:col-span-5 space-y-6" data-aos="fade-right" data-aos-duration="800">
             
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Join & Get Certified
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-[2px] bg-yellow-400"></div>
+                <span className="text-sm sm:text-base font-semibold text-slate-500 uppercase tracking-widest">
+                  Join & Get Certified
+                </span>
+              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl mb-4">
+                Unlimited access to<br />structured courses
               </h2>
-              <div className="w-24 h-1 bg-crmisa-navy rounded-full"></div>
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">
+                Get unlimited access to structured courses & doubt clearing sessions.
+              </p>
             </div>
 
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-              Get unlimited access to structured courses & doubt clearing sessions
-            </p>
-
-            <div>
+            <div className="pt-2">
               <button
-                onClick={onOpenRegister}
-                className="px-7 py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-extrabold rounded-lg shadow-md hover:shadow-xl transition-all duration-300 text-sm tracking-wide transform hover:-translate-y-0.5"
+                onClick={handleButtonClick}
+                className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2 group"
               >
-                Register Now
+                <span>{isLoggedIn ? 'Courses' : 'Register Now'}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
           </div>
 
-          {/* Right Column: 2x2 Stat Cards Grid */}
+          {/* Right Column: 2x2 Redesigned Stat Cards Grid */}
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-2 gap-3 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               
-              {stats.map((stat, idx) => (
-                <div 
-                  key={stat.id}
-                  data-aos="zoom-in"
-                  data-aos-delay={(idx + 1) * 100}
-                  className="group bg-white text-slate-900 hover:bg-crmisa-navy hover:text-white rounded-2xl p-4 sm:p-6 shadow-md border border-slate-100 hover:border-crmisa-accentNavy flex flex-col sm:flex-row items-center sm:space-x-4 space-y-3 sm:space-y-0 text-center sm:text-left hover:shadow-2xl hover:scale-105 cursor-pointer transition-all duration-300"
-                >
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-sky-100 border border-sky-200 group-hover:bg-sky-300/30 group-hover:border-sky-300/40 text-sky-500 group-hover:text-sky-200 flex items-center justify-center shrink-0 p-2 sm:p-3 transition-colors duration-300">
-                    {stat.icon}
+              {stats.map((stat, idx) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div 
+                    key={stat.id}
+                    data-aos="zoom-in"
+                    data-aos-delay={(idx + 1) * 100}
+                    className="bg-white rounded-xl p-6 border border-slate-200 hover:border-slate-400 transition-colors flex items-center gap-4 group cursor-pointer"
+                    onClick={handleButtonClick}
+                  >
+                    <div className="w-12 h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <IconComponent className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                        {stat.number}
+                      </h3>
+                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-0.5">
+                        {stat.label}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl sm:text-3xl font-black text-crmisa-navy group-hover:text-white tracking-tight transition-colors duration-300">
-                      {stat.number}
-                    </h3>
-                    <p className="text-[10px] sm:text-sm font-semibold text-slate-500 group-hover:text-slate-200 transition-colors duration-300">
-                      {stat.label}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
 
             </div>
           </div>
@@ -109,4 +115,3 @@ export default function JoinCertifiedSection({ onOpenRegister }) {
     </section>
   );
 }
-

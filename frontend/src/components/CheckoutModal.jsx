@@ -1,154 +1,194 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import { CheckIcon } from './icons/Icons';
+import api from '../lib/axios';
 
 export default function CheckoutModal({ 
   isOpen, 
   onClose, 
   courseTitle = "Import & Export Full Course", 
-  coursePrice = "R15000", 
+  coursePrice = 15000, 
+  courseId,
   onPaymentSuccess 
 }) {
-  const [hasCoupon, setHasCoupon] = useState('no');
-  const [couponCode, setCouponCode] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('payfast');
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+
+  const navigate = useNavigate();
 
   // Ensure safe string rendering in case an event object was passed
-  const safeTitle = typeof courseTitle === 'string' ? courseTitle : "Import & Export Full Course";
-  const safePrice = typeof coursePrice === 'string' ? coursePrice : "R15000";
+  const safeTitle = typeof courseTitle === 'string' ? courseTitle : "Course";
+  // Remove any non-numeric characters in case a formatted string was passed
+  const safePrice = String(coursePrice).replace(/[^0-9.]/g, '');
 
-  const handleProceed = (e) => {
-    e.preventDefault();
-    setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
-      setSuccess(true);
-      if (onPaymentSuccess) onPaymentSuccess();
-      setTimeout(() => {
-        setSuccess(false);
-        onClose();
-      }, 2500);
-    }, 1500);
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   };
 
+  const handleProceed = async (e) => {
+    e.preventDefault();
+    if (!courseId) {
+      alert("Invalid course ID");
+      return;
+    }
+    
+    setProcessing(true);
+
+    try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        setProcessing(false);
+        return;
+      }
+
+      // Create order on backend
+      const { data } = await api.post("/payments/create-razorpay-order", {
+        courseId,
+      });
+
+      if (!data.success) {
+        alert("Server error. Please try again.");
+        setProcessing(false);
+        return;
+      }
+
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Skillwell",
+        description: `Enroll in ${safeTitle}`,
+        order_id: data.orderId,
+        handler: async function (response) {
+          try {
+            const verifyRes = await api.post("/payments/verify-razorpay-payment", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+            });
+
+            if (verifyRes.data.success) {
+              setSuccess(true);
+              if (onPaymentSuccess) onPaymentSuccess();
+              setTimeout(() => {
+                setSuccess(false);
+                onClose();
+                navigate(`/course-player/${courseId}`);
+              }, 2000);
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Payment verification failed.");
+          }
+        },
+        prefill: {
+          name: "Student",
+          email: "student@example.com",
+        },
+        theme: {
+          color: "#0f172a", // slate-900
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+      rzp1.on('payment.failed', function (response) {
+        alert(`Payment failed: ${response.error.description}`);
+      });
+      rzp1.open();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to initialize payment");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const isFormValid = agreeTerms && agreePrivacy && !processing;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Course Checkout" maxWidth="max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} title="Course Checkout" maxWidth="max-w-lg">
       {success ? (
         <div className="py-8 text-center space-y-4">
-          <div className="w-16 h-16 bg-[#1c3c78] text-white rounded-full flex items-center justify-center mx-auto shadow-xl animate-bounce">
+          <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto animate-bounce">
             <CheckIcon className="w-10 h-10" />
           </div>
-          <h4 className="text-2xl font-extrabold text-slate-900">Payment Successful!</h4>
+          <h4 className="text-2xl font-bold text-slate-900">Payment Successful!</h4>
           <p className="text-sm text-slate-600 max-w-xs mx-auto">
-            You are enrolled in <span className="font-bold text-slate-900">{safeTitle}</span>. Your portal credentials have been emailed to you.
+            You are enrolled in <span className="font-bold text-slate-900">{safeTitle}</span>. Redirecting to the course player...
           </p>
         </div>
       ) : (
         <div className="py-2 space-y-6">
           
-          {/* Header Title matching Image 1 */}
           <div className="text-center space-y-1">
-            <h3 className="text-2xl sm:text-3xl font-black text-[#1c3c78] leading-tight">
-              Checkout - {safeTitle}
+            <h3 className="text-2xl font-bold text-slate-900 leading-tight">
+              Checkout
             </h3>
+            <p className="text-sm text-slate-500 font-medium">
+              {safeTitle}
+            </p>
           </div>
 
           <form onSubmit={handleProceed} className="space-y-6">
             
-            {/* Course Price Section matching Image 1 */}
-            <div className="space-y-1">
-              <span className="block text-sm font-bold text-slate-800">
-                Course Price:
+            <div className="bg-slate-50 p-4 border border-slate-200 rounded-md text-center">
+              <span className="block text-sm font-medium text-slate-500 mb-1">
+                Total Price
               </span>
-              <span className="block text-2xl font-black text-green-500 tracking-tight">
-                {safePrice}
+              <span className="block text-3xl font-bold text-slate-900">
+                ₹{safePrice}
               </span>
             </div>
 
-            {/* Coupon Radio Options matching Image 1 */}
-            <div className="space-y-2">
-              <label className="block text-sm font-bold text-slate-800">
-                Do you have a coupon code?
+            <div className="space-y-3 pt-4 border-t border-slate-200">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                />
+                <span className="text-sm text-slate-600 leading-snug">
+                  I have read and agree to the <a href="#" className="text-blue-600 hover:underline">Terms & Conditions</a> of this platform.
+                </span>
               </label>
-              <div className="space-y-1.5 pl-1">
-                <label className="flex items-center space-x-2 text-sm text-slate-700 font-medium cursor-pointer">
-                  <input
-                    type="radio"
-                    name="coupon"
-                    value="yes"
-                    checked={hasCoupon === 'yes'}
-                    onChange={() => setHasCoupon('yes')}
-                    className="w-4 h-4 text-[#1c3c78] focus:ring-[#1c3c78]"
-                  />
-                  <span>Yes</span>
-                </label>
-                <label className="flex items-center space-x-2 text-sm text-slate-700 font-medium cursor-pointer">
-                  <input
-                    type="radio"
-                    name="coupon"
-                    value="no"
-                    checked={hasCoupon === 'no'}
-                    onChange={() => setHasCoupon('no')}
-                    className="w-4 h-4 text-[#1c3c78] focus:ring-[#1c3c78]"
-                  />
-                  <span>No</span>
-                </label>
-              </div>
 
-              {hasCoupon === 'yes' && (
-                <div className="pt-2 animate-fade-in">
-                  <input
-                    type="text"
-                    placeholder="Enter Coupon Code"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs font-semibold focus:ring-1 focus:ring-[#1c3c78]"
-                  />
-                </div>
-              )}
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreePrivacy}
+                  onChange={(e) => setAgreePrivacy(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                />
+                <span className="text-sm text-slate-600 leading-snug">
+                  I agree to the <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a> and consent to the processing of my data.
+                </span>
+              </label>
             </div>
 
-            {/* Select Payment Method matching Image 1 */}
-            <div className="space-y-2">
-              <label className="block text-sm font-bold text-slate-800">
-                Select Payment Method:
-              </label>
-              <div className="space-y-2 pl-1">
-                <label className="flex items-center space-x-2 text-sm text-slate-700 font-medium cursor-pointer">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="payfast"
-                    checked={paymentMethod === 'payfast'}
-                    onChange={() => setPaymentMethod('payfast')}
-                    className="w-4 h-4 text-[#1c3c78] focus:ring-[#1c3c78]"
-                  />
-                  <span>PayFast Payment</span>
-                </label>
-                <label className="flex items-center space-x-2 text-sm text-slate-700 font-medium cursor-pointer">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="direct"
-                    checked={paymentMethod === 'direct'}
-                    onChange={() => setPaymentMethod('direct')}
-                    className="w-4 h-4 text-[#1c3c78] focus:ring-[#1c3c78]"
-                  />
-                  <span>Direct Payment</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Proceed to Payment Button matching Image 1 */}
-            <div className="pt-2">
+            <div className="pt-4">
               <button
                 type="submit"
-                disabled={processing}
-                className="w-full py-3.5 bg-[#1c3c78] hover:bg-crmisa-navy text-white font-extrabold rounded-lg shadow-md transition-all duration-200 text-base tracking-wide"
+                disabled={!isFormValid}
+                className={`w-full py-3.5 font-bold text-base transition-colors ${
+                  isFormValid 
+                    ? 'bg-slate-900 hover:bg-slate-800 text-white' 
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
               >
-                {processing ? 'Processing Payment...' : 'Proceed to Payment'}
+                {processing ? 'Processing...' : 'Pay securely with Razorpay'}
               </button>
             </div>
 

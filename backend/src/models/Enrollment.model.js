@@ -34,7 +34,10 @@ const enrollmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    stripeSessionId: {
+    razorpayOrderId: {
+      type: String,
+    },
+    razorpayPaymentId: {
       type: String,
     },
     expiresAt: {
@@ -49,7 +52,7 @@ const enrollmentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate enrollments for the exact same checkout session
-enrollmentSchema.index({ stripeSessionId: 1 }, { unique: true, sparse: true });
+// Prevent duplicate enrollments for the exact same order
+enrollmentSchema.index({ razorpayOrderId: 1 }, { unique: true, sparse: true });
 
 export default mongoose.model("Enrollment", enrollmentSchema);

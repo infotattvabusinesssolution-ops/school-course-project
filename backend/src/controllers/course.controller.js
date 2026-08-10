@@ -1,4 +1,5 @@
 import { Course } from '../models/Course.model.js';
+import Enrollment from '../models/Enrollment.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -8,7 +9,7 @@ import { uploadOnCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js
 // @route   POST /api/courses
 // @access  Private (Admin)
 export const createCourse = asyncHandler(async (req, res) => {
-  const { title, subtitle, description, category, level, language, price } = req.body;
+  const { title, subtitle, description, category, level, language, price, thumbnailUrl, thumbnailPublicId, modules, status } = req.body;
 
   if (!title || !description || !category || !level) {
     throw new ApiError(400, 'Please provide all required basic course details');
@@ -22,11 +23,14 @@ export const createCourse = asyncHandler(async (req, res) => {
     level,
     language,
     price: price || 0,
+    thumbnailUrl,
+    thumbnailPublicId,
+    modules: modules || [],
     admin: req.user._id,
-    status: 'DRAFT',
+    status: status || 'DRAFT',
   });
 
-  res.status(201).json(new ApiResponse(201, course, 'Course draft created successfully'));
+  res.status(201).json(new ApiResponse(201, course, 'Course created successfully'));
 });
 
 // @desc    Get all courses for the admin
@@ -48,9 +52,22 @@ export const getCourseById = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Course not found');
   }
 
-  // Check if admin owns the course (or just return since there's only one admin context)
-  if (course.admin.toString() !== req.user._id.toString() && req.user.role !== 'ADMIN') {
-    throw new ApiError(403, 'Not authorized to access this course');
+  // Check if admin owns the course or user is ADMIN or user is enrolled
+  let isAuthorized = false;
+  if (req.user.role === 'ADMIN') {
+    isAuthorized = true;
+  } else if (course.admin.toString() === req.user._id.toString()) {
+    isAuthorized = true;
+  } else {
+    // Check if enrolled
+    const enrollment = await Enrollment.findOne({ student: req.user._id, course: course._id, status: 'ACTIVE' });
+    if (enrollment) {
+      isAuthorized = true;
+    }
+  }
+
+  if (!isAuthorized) {
+    throw new ApiError(403, 'Not authorized to access this course. Please enroll first.');
   }
 
   res.status(200).json(new ApiResponse(200, course, 'Course fetched successfully'));
@@ -180,6 +197,27 @@ export const uploadCourseVideo = asyncHandler(async (req, res) => {
   }, 'Video uploaded successfully'));
 });
 
+// @desc    Upload course image (general utility for course thumbnails)
+// @route   POST /api/courses/upload-image
+// @access  Private (Admin)
+export const uploadCourseImage = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, 'Please upload an image file');
+  }
+
+  const imageLocalPath = req.file.path;
+  const image = await uploadOnCloudinary(imageLocalPath);
+
+  if (!image) {
+    throw new ApiError(500, 'Error uploading image to Cloudinary');
+  }
+
+  res.status(200).json(new ApiResponse(200, {
+    imageUrl: image.secure_url,
+    imagePublicId: image.public_id,
+  }, 'Image uploaded successfully'));
+});
+
 // @desc    Get all published courses (Public)
 // @route   GET /api/public/courses
 // @access  Public
@@ -240,8 +278,20 @@ export const getPublicCourseDetails = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Course not found');
   }
 
-  // For public view, we don't send private video URLs or sensitive data.
-  // In a real app, we would exclude modules/lessons video content URLs.
+  // Convert course document to plain object so we can modify it
+  const courseObj = course.toObject();
 
-  res.status(200).json(new ApiResponse(200, course, 'Course details fetched successfully'));
+  // Strip private video URLs for public view
+  if (courseObj.modules && courseObj.modules.length > 0) {
+    courseObj.modules.forEach(module => {
+      if (module.lessons && module.lessons.length > 0) {
+        module.lessons.forEach(lesson => {
+          delete lesson.videoUrl;
+          delete lesson.videoPublicId;
+        });
+      }
+    });
+  }
+
+  res.status(200).json(new ApiResponse(200, courseObj, 'Course details fetched successfully'));
 });

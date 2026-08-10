@@ -1,16 +1,21 @@
-import Stripe from "stripe";
+import Razorpay from "razorpay";
+import crypto from "crypto";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Course } from "../models/Course.model.js";
 import Enrollment from "../models/Enrollment.model.js";
 import Progress from "../models/Progress.model.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_mock");
+// Initialize Razorpay instance
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || "mock_key_id",
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "mock_key_secret",
+});
 
-// @desc    Create Stripe Checkout Session
-// @route   POST /api/payments/create-checkout-session
+// @desc    Create Razorpay Order
+// @route   POST /api/payments/create-razorpay-order
 // @access  Private (Student)
-export const createCheckoutSession = asyncHandler(async (req, res, next) => {
+export const createRazorpayOrder = asyncHandler(async (req, res, next) => {
   const { courseId } = req.body;
   const studentId = req.user._id;
 
@@ -30,71 +35,66 @@ export const createCheckoutSession = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "You are already actively enrolled in this course");
   }
 
-  // Create Stripe Checkout Session
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
-    success_url: `${process.env.FRONTEND_URL || "http://localhost:5173"}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.FRONTEND_URL || "http://localhost:5173"}/checkout/cancel?course_id=${courseId}`,
-    client_reference_id: studentId.toString(),
-    customer_email: req.user.email,
-    metadata: {
+  // Create Razorpay Order
+  const amount = Math.round(course.price * 100); // Amount in smallest currency unit (paise for INR)
+  
+  const options = {
+    amount,
+    currency: "INR", // Change to your preferred currency if needed
+    receipt: `rcpt_${courseId.toString().slice(-8)}_${Date.now().toString().slice(-8)}`,
+    notes: {
       courseId: courseId.toString(),
       studentId: studentId.toString(),
     },
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: course.title,
-            description: course.subtitle,
-            images: course.thumbnailUrl ? [course.thumbnailUrl] : [],
-          },
-          unit_amount: Math.round(course.price * 100), // Stripe expects cents
-        },
-        quantity: 1,
-      },
-    ],
-  });
+  };
 
-  res.status(200).json({
-    success: true,
-    sessionId: session.id,
-    url: session.url,
-  });
+  try {
+    const order = await razorpay.orders.create(options);
+    
+    res.status(200).json({
+      success: true,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID, // Send public key to frontend
+    });
+  } catch (error) {
+    console.error("Razorpay Order Error:", error);
+    throw new ApiError(500, "Failed to create payment order");
+  }
 });
 
-// @desc    Verify Checkout Session and Enroll Student
-// @route   POST /api/payments/verify-checkout-session
+// @desc    Verify Razorpay Payment and Enroll Student
+// @route   POST /api/payments/verify-razorpay-payment
 // @access  Private (Student)
-export const verifyCheckoutSession = asyncHandler(async (req, res, next) => {
+export const verifyRazorpayPayment = asyncHandler(async (req, res, next) => {
   try {
-    const { sessionId } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
+    const studentId = req.user._id;
 
-    if (!sessionId) {
-      throw new ApiError(400, "Session ID is required");
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courseId) {
+      throw new ApiError(400, "Missing required payment parameters");
     }
 
-    // Retrieve session from Stripe
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    // Verify signature
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
+      .update(body.toString())
+      .digest("hex");
 
-    if (!session || session.payment_status !== "paid") {
-      throw new ApiError(400, "Payment not completed or invalid session");
+    if (expectedSignature !== razorpay_signature) {
+      throw new ApiError(400, "Invalid payment signature");
     }
 
-    const courseId = session.metadata.courseId;
-    const studentId = session.metadata.studentId;
-
-    // Make sure it matches the logged in user
-    if (studentId !== req.user._id.toString()) {
-      throw new ApiError(403, "Not authorized to verify this session");
-    }
-
-    let enrollment = await Enrollment.findOne({ stripeSessionId: sessionId });
+    // Double-check if the payment is already recorded
+    let enrollment = await Enrollment.findOne({ razorpayOrderId: razorpay_order_id });
 
     if (!enrollment) {
       const course = await Course.findById(courseId);
+      if (!course) {
+        throw new ApiError(404, "Course not found");
+      }
       
       let expiresAt = null;
       if (course.validityPeriod) {
@@ -102,41 +102,40 @@ export const verifyCheckoutSession = asyncHandler(async (req, res, next) => {
         expiresAt.setMonth(expiresAt.getMonth() + course.validityPeriod);
       }
 
-      // 1. Create Enrollment (handle potential concurrent duplicate requests)
+      // 1. Create Enrollment
       try {
         enrollment = await Enrollment.create({
           student: studentId,
           course: courseId,
           enrolledAt: new Date(),
           status: "ACTIVE",
-          stripeSessionId: sessionId,
+          razorpayOrderId: razorpay_order_id,
+          razorpayPaymentId: razorpay_payment_id,
           expiresAt: expiresAt,
-          amountPaid: session.amount_total ? session.amount_total / 100 : 0,
+          amountPaid: course.price, 
         });
 
         // 1.5 Increment Course totalEnrollments and totalRevenue
         await Course.findByIdAndUpdate(courseId, {
           $inc: { 
             totalEnrollments: 1,
-            totalRevenue: session.amount_total ? session.amount_total / 100 : 0
+            totalRevenue: course.price
           }
         });
       } catch (createErr) {
-        // If it's a duplicate key error (11000) for stripeSessionId, it means another request just created it.
-        // We can safely ignore and just return success.
         if (createErr.code === 11000) {
-          const courseDetails = await Course.findById(courseId).populate('instructor', 'name email');
-          const existingEnroll = await Enrollment.findOne({ stripeSessionId: sessionId });
+          // Already verified in concurrent request
+          const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
           return res.status(200).json({
             success: true,
             message: "Enrollment already verified",
             courseId,
             course: courseDetails,
             invoice: {
-              invoiceNumber: session.payment_intent || sessionId.substring(0, 14),
-              orderTime: existingEnroll ? existingEnroll.enrolledAt : new Date(),
-              paymentMethod: "Card (Stripe)",
-              amountPaid: session.amount_total ? session.amount_total / 100 : 0,
+              invoiceNumber: razorpay_payment_id,
+              orderTime: new Date(),
+              paymentMethod: "Razorpay",
+              amountPaid: course.price,
             }
           });
         }
@@ -157,7 +156,7 @@ export const verifyCheckoutSession = asyncHandler(async (req, res, next) => {
       });
     }
 
-    const courseDetails = await Course.findById(courseId).populate('instructor', 'name email');
+    const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
 
     res.status(200).json({
       success: true,
@@ -165,14 +164,14 @@ export const verifyCheckoutSession = asyncHandler(async (req, res, next) => {
       courseId,
       course: courseDetails,
       invoice: {
-        invoiceNumber: session.payment_intent || sessionId.substring(0, 14),
+        invoiceNumber: razorpay_payment_id,
         orderTime: enrollment.enrolledAt,
-        paymentMethod: "Card (Stripe)",
-        amountPaid: session.amount_total ? session.amount_total / 100 : 0,
+        paymentMethod: "Razorpay",
+        amountPaid: enrollment.amountPaid,
       }
     });
   } catch (err) {
-    console.error("VERIFY CHECKOUT SESSION ERROR:", err);
+    console.error("VERIFY RAZORPAY PAYMENT ERROR:", err);
     throw err;
   }
 });

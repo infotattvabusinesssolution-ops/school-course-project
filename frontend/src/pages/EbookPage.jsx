@@ -6,7 +6,7 @@ export default function EbookPage({ onAddToCart, onAddToWishlist, onSelectEbook 
     {
       id: 1,
       title: "CRMISA – How to Find Buyers Worldwide Marketing, Fairs, B2B Portals & Smart Outreach",
-      price: "R499",
+      price: "₹499",
       coverTitle: "FROM LOCAL TO GLOBAL: HOW TO WIN BUYERS ACROSS BORDERS",
       subtitle: "Learn the core practices, procedures and documents required in any international merchandise transaction.",
       description: "Learn the core practices, procedures and documents required in any international merchandise transaction",
@@ -15,7 +15,7 @@ export default function EbookPage({ onAddToCart, onAddToWishlist, onSelectEbook 
     {
       id: 2,
       title: "CRMISA – Shipping Mastery Containers, Freight Rates & Customs Without the Jargon",
-      price: "R499",
+      price: "₹499",
       coverTitle: "UNFOLDING THE CHAPTERS OF SHIPPING SUCCESS",
       subtitle: "Learn the core practices, procedures and documents required in any international merchandise transaction.",
       description: "Learn the core practices, procedures and documents required in any international merchandise transaction",
@@ -24,7 +24,7 @@ export default function EbookPage({ onAddToCart, onAddToWishlist, onSelectEbook 
     {
       id: 3,
       title: "CRMISA – Customs Clearance & Import Export Documentation",
-      price: "R499",
+      price: "₹499",
       coverTitle: "CUSTOMS CLEARANCE & IMPORT EXPORT DOCUMENTATION",
       subtitle: "Learn the core practices, procedures and documents required in any international merchandise transaction.",
       description: "Learn the core practices, procedures and documents required in any international merchandise transaction",
@@ -33,7 +33,7 @@ export default function EbookPage({ onAddToCart, onAddToWishlist, onSelectEbook 
     {
       id: 4,
       title: "CRMISA – Trade Finance & Payment Methods",
-      price: "R499",
+      price: "₹499",
       coverTitle: "TRADE FINANCE & PAYMENT METHODS",
       subtitle: "Learn the core practices, procedures and documents required in any international merchandise transaction.",
       description: "Learn the core practices, procedures and documents required in any international merchandise transaction",

@@ -1,106 +1,140 @@
-import React from 'react';
-import { BookOpenIcon } from '../icons/Icons';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BookOpen, Star, ChevronRight, BarChart } from 'lucide-react';
+import { courseService } from '../../services/courseService';
 
 export default function CourseModulesSection({ onOpenEnrol }) {
-  const modules = [
-    {
-      id: 1,
-      title: "Import & Export Full Course",
-      lessons: "18 lessons",
-      price: "R15000",
-      image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      id: 2,
-      title: "International Trade Bodies",
-      lessons: "3 lessons",
-      price: "R3000",
-      image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Incoterms",
-      lessons: "3 lessons",
-      price: "R3000",
-      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Modes of Transport",
-      lessons: "3 lessons",
-      price: "R3000",
-      image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=600&auto=format&fit=crop"
-    }
-  ];
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const res = await courseService.getPublishedCourses();
+        setCourses((res.data.courses || []).slice(0, 4));
+      } catch (error) {
+        console.error("Failed to load courses for section:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-12 lg:py-24 bg-white flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+      </section>
+    );
+  }
+
+  if (courses.length === 0) return null;
 
   return (
     <section className="py-12 lg:py-24 bg-white text-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header matching Video */}
-        <div className="mb-10 space-y-2" data-aos="fade-up">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Course Modules
-          </h2>
-          <div className="w-24 h-1 bg-crmisa-navy rounded-full"></div>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium pt-1">
-            Certificate program in import and export management
-          </p>
+
+        {/* Section Header */}
+        <div className="mb-12" data-aos="fade-up">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-[2px] bg-yellow-400"></div>
+            <span className="text-sm sm:text-base font-semibold text-slate-500 uppercase tracking-widest">
+              Course Modules
+            </span>
+          </div>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+              Certificate program in<br />import and export management
+            </h2>
+            <button
+              onClick={() => navigate('/courses')}
+              className="shrink-0 flex items-center gap-2 border border-slate-900 text-slate-900 px-5 py-2.5 text-sm font-semibold hover:bg-slate-900 hover:text-white transition-colors mb-2"
+            >
+              View All
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        {/* 4 Cards - Horizontal Swipe on Mobile, Grid on Desktop */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 lg:pb-0 lg:grid lg:grid-cols-4 gap-4 lg:gap-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {modules.map((item, idx) => (
-            <div 
-              key={item.id}
+        {/* Course Cards — exact same design as CoursesPage */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {courses.map((course, idx) => (
+            <div
+              key={course._id}
               data-aos="fade-up"
               data-aos-delay={(idx + 1) * 100}
-              className="min-w-[85vw] sm:min-w-[45vw] lg:min-w-0 snap-center shrink-0 group bg-white rounded-2xl border-2 border-slate-200 hover:border-crmisa-navy shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer hover:-translate-y-1"
+              className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group"
+              onClick={() => navigate(`/courses/${course._id}`)}
             >
-              {/* Card Image */}
-              <div className="relative h-48 overflow-hidden bg-slate-100">
-                <img 
-                  src={item.image} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+              {/* Thumbnail */}
+              <div className="relative h-48 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                {course.thumbnailUrl ? (
+                  <img
+                    src={course.thumbnailUrl}
+                    alt={course.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <BookOpen className="w-10 h-10 text-slate-300" />
+                  </div>
+                )}
+
+
               </div>
 
-              {/* Card Body with Smooth Navy Fill Transition */}
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4 bg-white group-hover:bg-crmisa-navy transition-colors duration-300">
-                
-                <div className="space-y-2">
-                  {/* Lessons Metadata */}
-                  <div className="flex items-center space-x-1.5 text-xs text-slate-500 group-hover:text-slate-200 font-semibold transition-colors duration-300">
-                    <BookOpenIcon className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors duration-300" />
-                    <span>{item.lessons}</span>
-                  </div>
+              {/* Card Body */}
+              <div className="p-5 flex flex-col flex-1">
 
-                  {/* Title */}
-                  <h3 className="font-extrabold text-base text-slate-900 group-hover:text-white leading-snug transition-colors duration-300">
-                    {item.title}
-                  </h3>
+                {/* Meta */}
+                <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-3 uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5">
+                    <BarChart className="w-4 h-4 text-slate-400" />
+                    <span>{course.level}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4 text-slate-400" />
+                    <span>{course.modules?.length || 0} Modules</span>
+                  </div>
                 </div>
 
-                {/* Price & Action Button */}
-                <div className="pt-4 border-t border-slate-100 group-hover:border-white/20 flex items-center justify-between transition-colors duration-300">
-                  <span className="text-base sm:text-lg font-black text-slate-900 group-hover:text-white transition-colors duration-300">
-                    {item.price}
-                  </span>
+                {/* Title */}
+                <h3 className="text-base font-bold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                  {course.title}
+                </h3>
 
+                {/* Rating */}
+                <div className="flex items-center gap-1 mb-3">
+                  <Star className="w-4 h-4 text-slate-900 fill-slate-900" />
+                  <span className="text-sm font-bold text-slate-900">
+                    {course.averageRating ? course.averageRating.toFixed(1) : '5.0'}
+                  </span>
+                  <span className="text-sm text-slate-500 ml-1">({course.totalEnrollments || 0})</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-slate-600 line-clamp-3 mb-4 flex-1 leading-relaxed">
+                  {course.description}
+                </p>
+
+                {/* Price + Enroll */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                  <span className="text-xl font-bold text-slate-900">₹{course.price}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onOpenEnrol();
+                      onOpenEnrol(course.title, course.price, course._id);
                     }}
-                    className="px-5 py-2 bg-crmisa-navy text-white group-hover:bg-white group-hover:text-crmisa-navy font-bold rounded-xl text-xs shadow-md transition-all duration-300 transform group-hover:scale-105"
+                    className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
                   >
-                    Enroll Now
+                    Enrol
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-
               </div>
-
             </div>
           ))}
         </div>
@@ -109,4 +143,3 @@ export default function CourseModulesSection({ onOpenEnrol }) {
     </section>
   );
 }
-

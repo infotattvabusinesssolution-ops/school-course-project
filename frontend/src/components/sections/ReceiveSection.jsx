@@ -1,139 +1,91 @@
 import React from 'react';
-import { CheckIcon, ChevronRightIcon } from '../icons/Icons';
+import { CheckIcon } from '../icons/Icons';
 
-export default function ReceiveSection({ onOpenEnrol }) {
-  const receiveList = [
-    "Import & Export Course",
-    "Certificate of Completion",
-    "FREE Company Registration",
-    "FREE Professional Website",
-    "Step-by-Step Guidance",
-    "Supplier & Buyer Tips"
-  ];
-
+export default function ReceiveSection() {
   const courseBulletList = [
     "Import & Export Procedures",
     "International Trade Bodies",
-    "Incoterms",
-    "Modes of Transport",
+    "Incoterms & Transport",
     "Custom Procedures",
     "Cross Trade Modules",
     "Free Company Registration",
-    "Tax Number",
-    "Free Website",
-    "Import & Export License"
+    "Free Professional Website",
+    "Import & Export License Guidance",
+    "Step-by-Step Mentorship",
+    "Supplier & Buyer Tips"
   ];
 
   return (
-    <section className="py-12 lg:py-24 bg-white text-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="w-full bg-slate-50 text-slate-800 flex flex-col lg:flex-row">
+      
+      {/* Left Side: Full Bleed Image */}
+      <div className="w-full lg:w-1/2 min-h-[400px] lg:min-h-[700px] relative overflow-hidden group">
+        {/* Dark overlay for aesthetic */}
+        <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/60 via-transparent to-transparent z-10"></div>
         
-        {/* Top Carousel Dots Indicator matching Image 4 */}
-        <div className="flex justify-center items-center space-x-2 mb-10">
-          <div className="w-3 h-3 rounded-full bg-sky-300"></div>
-          <div className="w-3 h-3 rounded-full bg-crmisa-navy"></div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-          
-          {/* Left Column: Navy Course Banner Box with R15 000* Price & Student Image */}
-          <div className="lg:col-span-6 flex justify-center w-full mt-4 lg:mt-0 order-2 lg:order-1" data-aos="fade-right" data-aos-duration="800">
-            <div className="relative w-full max-w-lg bg-gradient-to-br from-crmisa-darkNavy via-crmisa-navy to-crmisa-accentNavy text-white rounded-3xl p-5 sm:p-8 shadow-2xl overflow-hidden border border-slate-700">
-              
-              {/* Top Title Banner */}
-              <div className="relative z-10 mb-6">
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white uppercase">
-                  Import & Export<br />
-                  <span className="text-sky-300">Full Course</span>
-                </h3>
-                <div className="w-12 h-1 bg-sky-400 mt-2 rounded-full"></div>
-              </div>
-
-              {/* Grid content inside card */}
-              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-4 items-end">
-                
-                {/* Left checklist of modules */}
-                <div className="col-span-1 sm:col-span-7 space-y-2">
-                  {courseBulletList.map((item, idx) => (
-                    <div key={idx} className="flex items-center space-x-2">
-                      <div className="w-4 h-4 rounded-full bg-sky-400 text-crmisa-navy flex items-center justify-center shrink-0 font-bold text-[9px]">
-                        ✓
-                      </div>
-                      <span className="text-[11px] sm:text-xs font-semibold text-slate-100 leading-tight">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Right Student Portrait overlapping background */}
-                <div className="col-span-1 sm:col-span-5 relative h-48 sm:h-64 flex items-end">
-                  <img
-                    src="/student/image.png"
-                    alt="Student Enrolling in CRMISA"
-                    className="w-full h-full object-cover object-top rounded-2xl border-2 border-white/30 shadow-xl"
-                  />
-                </div>
-
-              </div>
-
-              {/* Price Tag & Enrol Now Button matching Image 4 */}
-              <div className="relative z-10 mt-6 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <span className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                    R15 000<span className="text-sky-300 text-xl font-bold">*</span>
-                  </span>
-                  <span className="block text-[10px] text-slate-300 uppercase tracking-wider">All-Inclusive Tuition</span>
-                </div>
-
-                <button
-                  onClick={onOpenEnrol}
-                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-white text-crmisa-navy hover:bg-sky-50 font-extrabold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm tracking-wide group"
-                >
-                  <div className="w-6 h-6 rounded-full bg-crmisa-navy text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <ChevronRightIcon className="w-4 h-4" />
-                  </div>
-                  <span>Enrol now</span>
-                </button>
-              </div>
-
-            </div>
+        <img
+          src="/student/image copy 2.png"
+          alt="Student Enrolling in CRMISA"
+          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700"
+        />
+        
+        {/* Floating verification badge */}
+        <div className="absolute bottom-12 left-8 sm:left-12 z-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl flex items-center space-x-3">
+          <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+            <CheckIcon className="w-5 h-5 text-white" />
           </div>
-
-          {/* Right Column: "What You Will Receive" Checklist - Replica of Image 4 */}
-          <div className="lg:col-span-6 space-y-8 order-1 lg:order-2" data-aos="fade-left" data-aos-duration="800">
-            
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight uppercase">
-                What You Will Receive
-              </h2>
-              <div className="w-16 h-1.5 bg-crmisa-navy rounded-full"></div>
-            </div>
-
-            {/* Checkmarked benefits list */}
-            <div className="space-y-4">
-              {receiveList.map((item, idx) => (
-                <div 
-                  key={idx}
-                  data-aos="fade-left"
-                  data-aos-delay={(idx + 1) * 80}
-                  className="flex items-center space-x-4 p-3.5 rounded-xl hover:bg-crmisa-lightBlue transition-colors group cursor-pointer"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0 shadow">
-                    <CheckIcon className="w-4 h-4" />
-                  </div>
-                  <span className="text-base sm:text-lg font-bold text-slate-800 group-hover:text-crmisa-navy transition-colors">
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-
+          <div className="text-white">
+            <p className="font-bold text-sm">Verified Curriculum</p>
+            <p className="text-xs text-slate-200 opacity-90">Industry Standard</p>
           </div>
-
         </div>
-
       </div>
+
+      {/* Right Side: Text Content */}
+      <div className="w-full lg:w-1/2 flex items-center relative overflow-hidden">
+        
+        {/* Decorative elements behind the text */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-sky-200 rounded-full blur-[150px] opacity-40 mix-blend-multiply pointer-events-none"></div>
+        <div className="absolute bottom-0 left-10 w-96 h-96 bg-indigo-100 rounded-full blur-[150px] opacity-50 mix-blend-multiply pointer-events-none"></div>
+        
+        {/* Constrain the text width so it doesn't stretch too far on ultrawide monitors */}
+        <div className="max-w-2xl w-full p-8 sm:p-12 lg:p-20 xl:px-24 mx-auto lg:ml-0 relative z-10">
+          
+          {/* Header */}
+          <div className="mb-10 lg:mb-12" data-aos="fade-up">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-0.5 bg-yellow-400"></div>
+              <span className="text-sm sm:text-base font-semibold text-slate-500 uppercase tracking-widest">
+                Program Benefits
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+              What You Will<br />Receive
+            </h2>
+          </div>
+
+          {/* Checklist Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+            {courseBulletList.map((item, idx) => (
+              <div 
+                key={idx} 
+                className="flex items-start space-x-4 group"
+                data-aos="fade-left"
+                data-aos-delay={(idx % 5) * 100}
+              >
+                <div className="w-7 h-7 rounded-full bg-white shadow-sm border border-slate-100 text-sky-500 flex items-center justify-center shrink-0 group-hover:bg-sky-500 group-hover:text-white group-hover:shadow-md transition-all duration-300">
+                  <CheckIcon className="w-4 h-4" />
+                </div>
+                <span className="text-base sm:text-lg font-semibold text-slate-700 leading-tight pt-0.5">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+      
     </section>
   );
 }

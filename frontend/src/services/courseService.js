@@ -1,4 +1,4 @@
-import api from "../lib/axios.js";
+import api from "../utils/api";
 
 const API_URL = "/courses";
 
@@ -22,6 +22,20 @@ export const courseService = {
     } catch (error) {
       console.error(
         "Error fetching published courses",
+        error.response?.data || error,
+      );
+      throw error.response?.data || error;
+    }
+  },
+
+  // Get a public course details
+  getPublicCourseDetails: async (id) => {
+    try {
+      const response = await api.get(`/public/courses/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching public course details",
         error.response?.data || error,
       );
       throw error.response?.data || error;
@@ -94,6 +108,18 @@ export const courseService = {
     const formData = new FormData();
     formData.append("video", file);
     const response = await api.post("/courses/upload-video", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  // Upload an image without a course ID (for creation)
+  uploadImage: async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const response = await api.post("/courses/upload-image", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BookOpenIcon,
   AwardBadgeIcon,
   CheckIcon,
   UserIcon,
 } from "../components/icons/Icons";
-import { courseService } from "../services/courseService";
+import { PlayCircle } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import api from "../lib/axios";
 
 export default function DashboardPage({
   onLogout,
@@ -13,113 +16,110 @@ export default function DashboardPage({
   setSelectedCourseId,
 }) {
   const [activeTab, setActiveTab] = useState("courses");
-  const [courses, setCourses] = useState([]);
+  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchDashboard = async () => {
       try {
-        const data = await courseService.getPublishedCourses();
-        setCourses(data.data.courses || []);
+        const { data } = await api.get("/student/dashboard");
+        setDashboardData(data.data);
       } catch (err) {
-        console.error("Failed to fetch courses:", err);
+        console.error("Failed to fetch dashboard:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchCourses();
+    fetchDashboard();
   }, []);
 
-  const studentInfo = {
-    name: "Alex Morgan",
-    email: "alex.morgan@example.co.za",
-    studentId: "CRMISA-2026-8842",
-    enrolledDate: "January 2026",
-    status: "Active Student",
-    companyName: "Morgan Global Trade Pty Ltd (CIPC Registered)",
-    websiteUrl: "www.morganglobaltrade.co.za",
-  };
+  const enrolledCourses = dashboardData?.continueLearning || [];
+  const stats = dashboardData?.stats || { enrolledCourses: 0, completedCourses: 0, certificatesEarned: 0 };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 animate-fade-in py-10 lg:py-14">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Top Header Banner Card */}
-        <div className="bg-gradient-to-r from-crmisa-darkNavy via-crmisa-navy to-crmisa-accentNavy text-white rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="relative z-10 space-y-2">
-            <div className="inline-flex items-center space-x-2 bg-sky-400/20 border border-sky-300/30 text-sky-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-              <span>{studentInfo.status}</span>
+    <div className="min-h-screen bg-white text-slate-800 font-sans pb-16">
+      
+      {/* Light Header Section */}
+      <div className="pt-28 pb-10 lg:pt-32 lg:pb-12 border-b border-slate-200 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-2 bg-green-50 text-green-700 border border-green-200 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                <span>Active Student</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+                Welcome back, {user?.name || "Student"}!
+              </h1>
+              <p className="text-sm text-slate-500 font-medium">
+                <span className="font-semibold text-slate-700">Email:</span> {user?.email}
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Welcome back, {studentInfo.name}!
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-200 font-medium">
-              Student ID:{" "}
-              <span className="font-bold text-sky-300">
-                {studentInfo.studentId}
-              </span>{" "}
-              | Enrolled: {studentInfo.enrolledDate}
-            </p>
-          </div>
 
-          <div className="relative z-10 flex items-center space-x-3">
-            <button
-              onClick={onLogout}
-              className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl text-xs border border-white/20 shadow backdrop-blur-sm transition-all"
-            >
-              Sign Out
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={onLogout}
+                className="px-5 py-2.5 bg-white text-slate-700 font-semibold rounded-md border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors text-sm"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* 4 Stat Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center space-x-4">
-            <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
-              <BookOpenIcon className="w-7 h-7" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-10">
+        
+        {/* 4 Stat Metric Cards - Flat Design */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white border border-slate-200 p-5 flex items-center space-x-4">
+            <div className="w-12 h-12 bg-slate-50 text-slate-500 flex items-center justify-center border border-slate-100 shrink-0">
+              <BookOpenIcon className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-slate-900">3</h3>
-              <p className="text-xs font-semibold text-slate-500">
+              <h3 className="text-2xl font-bold text-slate-900">{stats.enrolledCourses}</h3>
+              <p className="text-xs font-medium text-slate-500">
                 Enrolled Courses
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center space-x-4">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-              <AwardBadgeIcon className="w-7 h-7" />
+          <div className="bg-white border border-slate-200 p-5 flex items-center space-x-4">
+            <div className="w-12 h-12 bg-slate-50 text-slate-500 flex items-center justify-center border border-slate-100 shrink-0">
+              <AwardBadgeIcon className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-slate-900">2</h3>
-              <p className="text-xs font-semibold text-slate-500">
+              <h3 className="text-2xl font-bold text-slate-900">{stats.certificatesEarned}</h3>
+              <p className="text-xs font-medium text-slate-500">
                 Certificates Earned
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center space-x-4">
-            <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-              <CheckIcon className="w-7 h-7" />
+          <div className="bg-white border border-slate-200 p-5 flex items-center space-x-4">
+            <div className="w-12 h-12 bg-slate-50 text-slate-500 flex items-center justify-center border border-slate-100 shrink-0">
+              <CheckIcon className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-slate-900">21 / 24</h3>
-              <p className="text-xs font-semibold text-slate-500">
-                Lessons Completed
+              <h3 className="text-2xl font-bold text-slate-900">{stats.completedCourses}</h3>
+              <p className="text-xs font-medium text-slate-500">
+                Courses Completed
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center space-x-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
-              <UserIcon className="w-7 h-7" />
+          <div className="bg-white border border-slate-200 p-5 flex items-center space-x-4">
+            <div className="w-12 h-12 bg-slate-50 text-slate-500 flex items-center justify-center border border-slate-100 shrink-0">
+              <UserIcon className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-slate-900">
-                CIPC Registered
+              <h3 className="text-2xl font-bold text-slate-900 uppercase">
+                {user?.role || "Student"}
               </h3>
-              <p className="text-xs font-semibold text-slate-500">
-                Company Status
+              <p className="text-xs font-medium text-slate-500">
+                Account Type
               </p>
             </div>
           </div>
@@ -129,9 +129,9 @@ export default function DashboardPage({
         <div className="flex border-b border-slate-200 space-x-6">
           <button
             onClick={() => setActiveTab("courses")}
-            className={`pb-3 text-sm font-extrabold transition-colors border-b-2 ${
+            className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
               activeTab === "courses"
-                ? "border-crmisa-navy text-crmisa-navy"
+                ? "border-slate-900 text-slate-900"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -139,81 +139,85 @@ export default function DashboardPage({
           </button>
           <button
             onClick={() => setActiveTab("benefits")}
-            className={`pb-3 text-sm font-extrabold transition-colors border-b-2 ${
+            className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
               activeTab === "benefits"
-                ? "border-crmisa-navy text-crmisa-navy"
+                ? "border-slate-900 text-slate-900"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
-            Included Benefits (Company & Website)
+            Included Benefits
           </button>
         </div>
 
         {/* Tab 1: My Courses */}
         {activeTab === "courses" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
-              <div className="col-span-3 text-center py-10 text-slate-500 font-bold">
-                Loading your courses...
+              <div className="col-span-full py-16 flex justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
               </div>
-            ) : courses.length === 0 ? (
-              <div className="col-span-3 text-center py-10 text-slate-500 font-bold">
-                You are not enrolled in any courses yet.
+            ) : enrolledCourses.length === 0 ? (
+              <div className="col-span-full text-center py-20 border border-slate-200 bg-slate-50">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">No courses yet</h3>
+                <p className="text-slate-500 mb-6">You haven't enrolled in any courses yet.</p>
+                <button
+                  onClick={() => navigate("/courses")}
+                  className="px-6 py-2.5 bg-slate-900 text-white font-medium text-sm transition-colors hover:bg-slate-800"
+                >
+                  Browse Courses
+                </button>
               </div>
             ) : (
-              courses.map((course) => (
+              enrolledCourses.map((course) => (
                 <div
-                  key={course._id}
-                  className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between"
+                  key={course.courseId}
+                  className="bg-white border border-slate-200 flex flex-col group cursor-pointer hover:border-slate-300 transition-colors"
+                  onClick={() => navigate(`/course-player/${course.courseId}`)}
                 >
-                  <div className="relative h-44 bg-slate-100">
-                    <img
-                      src={
-                        course.thumbnailUrl ||
-                        "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop"
-                      }
-                      alt={course.title}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="relative h-48 bg-slate-100 overflow-hidden border-b border-slate-200">
+                    {course.thumbnailUrl ? (
+                       <img
+                         src={course.thumbnailUrl}
+                         alt={course.title}
+                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                       />
+                    ) : (
+                       <div className="w-full h-full flex items-center justify-center">
+                          <PlayCircle className="w-10 h-10 text-slate-300" />
+                       </div>
+                    )}
                     <span
-                      className={`absolute top-3 right-3 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase shadow bg-crmisa-navy text-white`}
+                      className="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 uppercase bg-white/90 backdrop-blur-sm text-slate-900 border border-slate-200"
                     >
-                      In Progress
+                      {course.completionPercentage >= 100 ? "Completed" : "In Progress"}
                     </span>
                   </div>
 
-                  <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <h3 className="font-extrabold text-base text-slate-900 leading-snug">
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="space-y-1 mb-6">
+                      <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">{course.category}</span>
+                      <h3 className="font-bold text-base text-slate-900 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
                         {course.title}
                       </h3>
-                      <p className="text-xs text-slate-500 font-semibold">
-                        0 of{" "}
-                        {course.modules?.reduce(
-                          (acc, mod) => acc + mod.lessons.length,
-                          0,
-                        ) || 0}{" "}
-                        lessons finished
-                      </p>
-
-                      {/* Progress Bar */}
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div
-                          className="bg-crmisa-navy h-full rounded-full transition-all duration-500"
-                          style={{ width: `0%` }}
-                        ></div>
-                      </div>
                     </div>
 
-                    <button
-                      onClick={() => {
-                        setSelectedCourseId(course._id);
-                        setActivePage("course-player");
-                      }}
-                      className="w-full py-2.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold rounded-xl text-xs shadow transition-colors"
-                    >
-                      Continue Learning
-                    </button>
+                    <div className="mt-auto space-y-3">
+                      <div className="flex justify-between text-xs text-slate-500 font-medium">
+                        <span>Progress</span>
+                        <span>{course.completionPercentage}%</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-1.5 overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-500 ${course.completionPercentage >= 100 ? 'bg-green-500' : 'bg-blue-600'}`}
+                          style={{ width: `${course.completionPercentage}%` }}
+                        ></div>
+                      </div>
+                      <button
+                        className="w-full py-2 bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-sm group-hover:bg-slate-900 group-hover:border-slate-900 group-hover:text-white transition-colors"
+                      >
+                        {course.completionPercentage >= 100 ? "Review Course" : "Continue Learning"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
@@ -224,48 +228,47 @@ export default function DashboardPage({
         {/* Tab 2: Included Benefits */}
         {activeTab === "benefits" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md space-y-4">
-              <div className="flex items-center space-x-3 text-emerald-600">
+            <div className="bg-white border border-slate-200 p-6 space-y-4">
+              <div className="flex items-center space-x-3 text-slate-700">
                 <CheckIcon className="w-6 h-6" />
                 <h3 className="text-lg font-bold text-slate-900">
                   Registered Business Entity
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                As part of your enrollment, CRMISA has completed your official
-                CIPC company registration.
+              <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                Access your official CIPC company registration details.
               </p>
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+              <div className="p-4 bg-slate-50 border border-slate-200 text-xs space-y-2">
                 <p>
-                  <strong className="text-slate-900">Entity:</strong>{" "}
-                  {studentInfo.companyName}
+                  <strong className="text-slate-900 font-semibold">Entity:</strong>{" "}
+                  Pending Setup
                 </p>
                 <p>
-                  <strong className="text-slate-900">Reg Status:</strong> Active
-                  & Verified
+                  <strong className="text-slate-900 font-semibold">Reg Status:</strong>{" "}
+                  Awaiting Verification
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md space-y-4">
-              <div className="flex items-center space-x-3 text-sky-600">
-                <GlobeIcon className="w-6 h-6" />
+            <div className="bg-white border border-slate-200 p-6 space-y-4">
+              <div className="flex items-center space-x-3 text-slate-700">
+                <CheckIcon className="w-6 h-6" />
                 <h3 className="text-lg font-bold text-slate-900">
                   Professional Business Website
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+              <p className="text-sm text-slate-600 leading-relaxed font-medium">
                 Your custom trade domain and e-commerce import/export showcase
-                site is live.
+                site status.
               </p>
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+              <div className="p-4 bg-slate-50 border border-slate-200 text-xs space-y-2">
                 <p>
-                  <strong className="text-slate-900">Website:</strong>{" "}
-                  {studentInfo.websiteUrl}
+                  <strong className="text-slate-900 font-semibold">Website:</strong>{" "}
+                  Not Assigned
                 </p>
                 <p>
-                  <strong className="text-slate-900">Hosting:</strong> Active
-                  (CRMISA Managed)
+                  <strong className="text-slate-900 font-semibold">Hosting:</strong>{" "}
+                  Inactive
                 </p>
               </div>
             </div>

@@ -1,187 +1,262 @@
-import React, { useState } from 'react';
-import { SearchIcon, CheckIcon, CartIcon, HeartIcon } from '../components/icons/Icons';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Filter, BookOpen, Star, ChevronRight, Check, BarChart } from 'lucide-react';
+import { courseService } from '../services/courseService';
 
 export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist }) {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Filter States
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedLevel, setSelectedLevel] = useState('All');
 
-  const courses = [
-    {
-      id: 1,
-      title: "Import & Export Full Masterclass Course",
-      category: "Full Certification",
-      duration: "12 Weeks",
-      price: "R15 000",
-      rating: "4.9 ★★★★★ (184 reviews)",
-      description: "Complete end-to-end training covering customs, shipping modes, tariffs, supplier negotiation, and free company registration bonus.",
-      featured: true,
-      perks: ["FREE Registered Company", "FREE E-Commerce Website", "SAD500 Customs Guide"]
-    },
-    {
-      id: 2,
-      title: "Customs Procedures & Documentation Mastery",
-      category: "Customs & Compliance",
-      duration: "4 Weeks",
-      price: "R4 500",
-      rating: "4.8 ★★★★★ (92 reviews)",
-      description: "Master South African revenue services (SARS) customs clearance, EUR.1 certificates, bills of lading, and tariff classifications.",
-      featured: false,
-      perks: ["SARS Clearance Templates", "Tariff Search Matrix"]
-    },
-    {
-      id: 3,
-      title: "Calculating Landed Costs & Pricing Strategies",
-      category: "Finance & Costing",
-      duration: "3 Weeks",
-      price: "R3 800",
-      rating: "4.9 ★★★★★ (67 reviews)",
-      description: "Never lose money on shipments. Learn step-by-step formulas for currency exchange, insurance, duty taxes, and profit margins.",
-      featured: false,
-      perks: ["Automated Cost Excel Calculator", "Incoterms 2020 Chart"]
-    },
-    {
-      id: 4,
-      title: "Setting Up Overseas Trade Networks & Agents",
-      category: "Sourcing & Logistics",
-      duration: "4 Weeks",
-      price: "R4 200",
-      rating: "4.7 ★★★★★ (51 reviews)",
-      description: "How to verify genuine suppliers in Asia, Europe, and Americas, avoid scammers, and negotiate freight container rates.",
-      featured: false,
-      perks: ["Verified Supplier Directory", "Contract Agreement Kit"]
-    }
-  ];
+  // Filter Dropdown State
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef(null);
 
-  const categories = ["All", "Full Certification", "Customs & Compliance", "Finance & Costing", "Sourcing & Logistics"];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const res = await courseService.getPublishedCourses();
+        setCourses(res.data.courses || []);
+      } catch (error) {
+        console.error("Failed to load courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
 
-  const filteredCourses = courses.filter((c) => {
-    const matchesCat = selectedCategory === 'All' || c.category === selectedCategory;
-    const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || c.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCat && matchesSearch;
-  });
+  // Close filter dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const categories = ["All", "Full Certification", "Customs & Compliance", "Finance & Costing", "Sourcing & Logistics", "other"];
+  const levels = ["All", "beginner", "intermediate", "advanced"];
+
+  const filteredCourses = useMemo(() => {
+    return courses.filter((c) => {
+      const matchesCat = selectedCategory === 'All' || c.category === selectedCategory;
+      const matchesLevel = selectedLevel === 'All' || c.level === selectedLevel;
+      const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            c.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCat && matchesLevel && matchesSearch;
+    });
+  }, [courses, selectedCategory, selectedLevel, searchQuery]);
 
   return (
-    <div className="py-12 bg-slate-50 min-h-screen animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold text-crmisa-navy uppercase tracking-widest bg-crmisa-lightBlue px-3.5 py-1 rounded-full">
-            CRMISA Curriculum
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 uppercase">
-            Import & Export Masterclasses
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+      
+      {/* Page Header (Flat, Light) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="flex flex-col items-start gap-4 mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight">
+            Explore Our Courses
           </h1>
-          <p className="text-sm text-slate-600">
-            Learn practical, real-world international trade skills with South Africa's premier academy.
+          <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
+            Master international trade, logistics, and supply chain management with our industry-leading certification programs.
           </p>
         </div>
-
-        {/* Filter & Search Bar */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2 w-full md:w-auto">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-crmisa-navy text-white shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Box */}
-          <div className="relative w-full md:w-72">
+        
+        {/* Top Action Bar: Search & Filter Button */}
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-b border-slate-200 pb-6">
+          {/* Search */}
+          <div className="relative w-full sm:w-96 border border-slate-300 bg-white">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-slate-400" />
+            </div>
             <input
               type="text"
               placeholder="Search courses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-crmisa-navy focus:outline-none"
+              className="block w-full pl-10 pr-4 py-2.5 bg-transparent border-none text-sm text-slate-900 focus:ring-0 outline-none placeholder:text-slate-500"
             />
           </div>
 
-        </div>
-
-        {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredCourses.map((course) => (
-            <div 
-              key={course.id}
-              className={`bg-white rounded-2xl border ${
-                course.featured ? 'border-2 border-crmisa-navy shadow-xl' : 'border-slate-200 shadow-md'
-              } p-6 sm:p-8 flex flex-col justify-between space-y-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1`}
+          {/* Filter Button & Dropdown */}
+          <div className="relative w-full sm:w-auto" ref={filterRef}>
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-900 text-white font-medium text-sm transition-colors hover:bg-slate-800"
             >
-              {course.featured && (
-                <div className="absolute top-4 right-4 bg-crmisa-navy text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider shadow">
-                  Flagship Course
-                </div>
-              )}
+              <Filter className="w-4 h-4" />
+              Filters {(selectedCategory !== 'All' || selectedLevel !== 'All') && '(Active)'}
+            </button>
 
-              <div className="space-y-3">
-                <div className="text-xs font-bold text-sky-600 uppercase tracking-wider">
-                  {course.category} • {course.duration}
-                </div>
-                <h3 className="text-xl font-extrabold text-slate-900 leading-snug">
-                  {course.title}
-                </h3>
-                <div className="text-xs text-amber-500 font-bold">
-                  {course.rating}
-                </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {course.description}
-                </p>
-
-                {/* Perks Checklist */}
-                <div className="pt-2 space-y-1.5">
-                  {course.perks.map((perk, idx) => (
-                    <div key={idx} className="flex items-center text-xs font-semibold text-slate-700">
-                      <CheckIcon className="w-4 h-4 text-green-600 mr-2" />
-                      <span>{perk}</span>
+            {/* Filter Dropdown Menu */}
+            {isFilterOpen && (
+              <div className="absolute right-0 top-full mt-2 w-full sm:w-72 bg-white border border-slate-200 z-50 shadow-sm">
+                <div className="p-4 space-y-6">
+                  
+                  {/* Category Selection */}
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Category</h3>
+                    <div className="space-y-1">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat}
+                          onClick={() => setSelectedCategory(cat)}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
+                            selectedCategory === cat 
+                              ? 'bg-slate-100 text-slate-900 font-semibold' 
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                          }`}
+                        >
+                          <span>{cat === 'other' ? 'Other' : cat}</span>
+                          {selectedCategory === cat && <Check className="w-4 h-4 text-slate-900" />}
+                        </button>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <hr className="border-slate-100" />
+
+                  {/* Level Selection */}
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Skill Level</h3>
+                    <div className="space-y-1">
+                      {levels.map((lvl) => (
+                        <button
+                          key={lvl}
+                          onClick={() => setSelectedLevel(lvl)}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm capitalize transition-colors ${
+                            selectedLevel === lvl 
+                              ? 'bg-slate-100 text-slate-900 font-semibold' 
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                          }`}
+                        >
+                          <span>{lvl}</span>
+                          {selectedLevel === lvl && <Check className="w-4 h-4 text-slate-900" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Reset Filters */}
+                  {(selectedCategory !== 'All' || selectedLevel !== 'All') && (
+                    <div className="pt-2">
+                      <button
+                        onClick={() => { setSelectedCategory('All'); setSelectedLevel('All'); }}
+                        className="w-full py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors border border-red-200"
+                      >
+                        Clear Filters
+                      </button>
+                    </div>
+                  )}
+                  
                 </div>
               </div>
-
-              {/* Price & Action Buttons */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div>
-                  <span className="text-2xl font-black text-crmisa-navy">{course.price}</span>
-                  <span className="block text-[10px] text-slate-400 font-semibold uppercase">Tuition Fee</span>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => onAddToWishlist(course)}
-                    className="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-red-500 hover:border-red-200 transition-colors"
-                    title="Add to Wishlist"
-                  >
-                    <HeartIcon className="w-5 h-5" />
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      onAddToCart(course);
-                      onOpenEnrol();
-                    }}
-                    className="px-5 py-2.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-extrabold rounded-xl shadow text-xs transition-all"
-                  >
-                    Enrol Now &gt;&gt;
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          ))}
+            )}
+          </div>
         </div>
+      </div>
 
+      {/* Course Grid Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+          </div>
+        ) : filteredCourses.length === 0 ? (
+          <div className="bg-slate-50 p-12 text-center border border-slate-200 flex flex-col items-center justify-center min-h-[300px]">
+            <Search className="w-10 h-10 text-slate-400 mb-4" />
+            <h3 className="text-lg font-bold text-slate-800 mb-2">No courses found</h3>
+            <p className="text-slate-500 mb-6">Try adjusting your filters or search query.</p>
+            <button 
+              onClick={() => { setSelectedCategory('All'); setSelectedLevel('All'); setSearchQuery(''); setIsFilterOpen(false); }}
+              className="px-6 py-2 bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors"
+            >
+              Reset All
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredCourses.map((course) => (
+              <div 
+                key={course._id}
+                className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group"
+                onClick={() => navigate(`/courses/${course._id}`)}
+              >
+                {/* Flat Image Container */}
+                <div className="relative h-48 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                  {course.thumbnailUrl ? (
+                    <img 
+                      src={course.thumbnailUrl} 
+                      alt={course.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <BookOpen className="w-10 h-10 text-slate-300" />
+                    </div>
+                  )}
+                  
+
+                </div>
+
+                {/* Content Container */}
+                <div className="p-6 flex flex-col flex-1">
+                  
+                  {/* Meta info */}
+                  <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-3 uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5">
+                      <BarChart className="w-4 h-4 text-slate-400" />
+                      <span>{course.level}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen className="w-4 h-4 text-slate-400" />
+                      <span>{course.modules?.length || 0} Modules</span>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                    {course.title}
+                  </h3>
+                  
+                  <div className="flex items-center gap-1 mb-4">
+                    <Star className="w-4 h-4 text-slate-900 fill-slate-900" />
+                    <span className="text-sm font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '5.0'}</span>
+                    <span className="text-sm text-slate-500 ml-1">({course.totalEnrollments || 0})</span>
+                  </div>
+
+                  <p className="text-sm text-slate-600 line-clamp-3 mb-6 flex-1 leading-relaxed">
+                    {course.description}
+                  </p>
+
+                  {/* Footer Actions */}
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                    <span className="text-2xl font-bold text-slate-900">₹{course.price}</span>
+                    
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenEnrol(course.title, `₹${course.price}`);
+                        onAddToCart(course);
+                      }}
+                      className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
+                    >
+                      Enrol
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

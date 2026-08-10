@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
@@ -23,22 +24,27 @@ import DashboardPage from "./pages/DashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminCreateCoursePage from "./pages/AdminCreateCoursePage";
 import CoursePlayerPage from "./pages/CoursePlayerPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsConditionsPage from "./pages/TermsConditionsPage";
+import FaqPage from "./pages/FaqPage";
 
 export default function App() {
-  const [activePage, setActivePage] = useState("home");
-  useAOS(activePage);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [selectedModuleId, setSelectedModuleId] = useState(1);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [selectedEbook, setSelectedEbook] = useState(null);
-  const [selectedPost, setSelectedPost] = useState(null);
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Use AOS
+  useAOS(location.pathname);
 
   // Auth state from Context
   const { user, logout: contextLogout } = useAuth();
   const isLoggedIn = !!user;
 
   // Modals state
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isEnrolOpen, setIsEnrolOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
@@ -56,13 +62,12 @@ export default function App() {
 
   // Track selected course/item for checkout
   const [checkoutCourse, setCheckoutCourse] = useState({
+    id: null,
     title: "Import & Export Full Course",
-    price: "R15000",
+    price: "₹15000",
   });
 
   const [wishlistCount, setWishlistCount] = useState(2);
-
-  // Toast notification
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -72,40 +77,22 @@ export default function App() {
     }, 3000);
   };
 
-  // Smart Enroll / Checkout Trigger
-  const handleEnrollNowClick = (courseTitle, coursePrice) => {
-    const title =
-      typeof courseTitle === "string"
-        ? courseTitle
-        : "Import & Export Full Course";
-    const price = typeof coursePrice === "string" ? coursePrice : "R15000";
-    setCheckoutCourse({ title, price });
+  const handleEnrollNowClick = (courseTitle, coursePrice, courseId = null) => {
+    const title = courseTitle || "Course Checkout";
+    const price = coursePrice || 0;
+    setCheckoutCourse({ title, price, id: courseId });
 
     if (isLoggedIn) {
       setIsCheckoutOpen(true);
     } else {
       showToast("Please log in to your account to proceed with checkout.");
-      setActivePage("login");
+      navigate("/login");
     }
-  };
-
-  const handleLoginSuccess = () => {
-    showToast("Login Successful!");
-    setTimeout(() => {
-      setActivePage("dashboard");
-    }, 400);
-  };
-
-  const handleRegisterSuccess = () => {
-    showToast("Registration Successful! Account Created.");
-    setTimeout(() => {
-      setActivePage("dashboard");
-    }, 400);
   };
 
   const handleLogout = async () => {
     await contextLogout();
-    setActivePage("home");
+    navigate("/");
     showToast("Logged out successfully.");
   };
 
@@ -113,7 +100,7 @@ export default function App() {
     const newItem = {
       id: Date.now(),
       title: item.title || "CRMISA Import & Export Learning Material",
-      price: item.price || "R499",
+      price: item.price || "₹499",
     };
     setCartItems((prev) => [...prev, newItem]);
     showToast(`Added "${newItem.title}" to Cart!`);
@@ -130,41 +117,28 @@ export default function App() {
     showToast(`Saved "${item.title || "Item"}" to Wishlist!`);
   };
 
-  const handleSelectEbook = (ebook) => {
-    setSelectedEbook(ebook);
-    setActivePage("ebookdetail");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleSelectPost = (post) => {
-    setSelectedPost(post);
-    setActivePage("postdetail");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Determine if we should hide the Navbar/Footer
+  const hideLayoutPaths = ["/login", "/register", "/course-player", "/admin"];
+  const hideLayout = hideLayoutPaths.some((path) =>
+    location.pathname.startsWith(path),
+  );
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-slate-900 font-sans selection:bg-sky-400 selection:text-slate-900 overflow-x-hidden">
-      {/* Top Navbar */}
-      {activePage !== "login" &&
-        activePage !== "register" &&
-        activePage !== "course-player" && (
-          <Navbar
-            activePage={activePage}
-            setActivePage={setActivePage}
-            wishlistCount={wishlistCount}
-            cartCount={cartItems.length}
-            isLoggedIn={isLoggedIn}
-            user={user}
-            onOpenRegister={() => setActivePage("register")}
-            onOpenLogin={() => setActivePage("login")}
-            onOpenEnrol={() => handleEnrollNowClick()}
-            onOpenCartDrawer={() => setIsCartModalOpen(true)}
-            setSelectedModuleId={setSelectedModuleId}
-            onLogout={handleLogout}
-          />
-        )}
+      {!hideLayout && (
+        <Navbar
+          wishlistCount={wishlistCount}
+          cartCount={cartItems.length}
+          isLoggedIn={isLoggedIn}
+          user={user}
+          onOpenRegister={() => navigate("/register")}
+          onOpenLogin={() => navigate("/login")}
+          onOpenEnrol={() => handleEnrollNowClick()}
+          onOpenCartDrawer={() => setIsCartModalOpen(true)}
+          onLogout={handleLogout}
+        />
+      )}
 
-      {/* Interactive Notification Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 left-6 z-50 bg-crmisa-navy text-white px-5 py-3 rounded-2xl shadow-2xl border border-sky-400 font-bold text-xs flex items-center space-x-2 animate-slide-up">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
@@ -172,97 +146,95 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Dynamic View Router */}
       <main className="flex-1">
-        {(activePage === "home" ||
-          activePage === "login" ||
-          activePage === "register") && (
-          <HomePage
-            onOpenRegister={() => setActivePage("register")}
-            onOpenEnrol={() => handleEnrollNowClick()}
-            setActivePage={setActivePage}
-            isLoginMode={activePage === "login"}
-            isRegisterMode={activePage === "register"}
+        <Routes>
+          {/* Public Routes */}
+          <Route
+            path="/"
+            element={<HomePage onOpenEnrol={() => handleEnrollNowClick()} />}
           />
-        )}
-        {activePage === "about" && (
-          <AboutPage onOpenRegister={() => setActivePage("register")} />
-        )}
-        {activePage === "courses" && (
-          <CoursesPage
-            onOpenEnrol={(cTitle, cPrice) =>
-              handleEnrollNowClick(cTitle, cPrice)
+          <Route
+            path="/login"
+            element={
+              <HomePage
+                isLoginMode
+                onOpenEnrol={() => handleEnrollNowClick()}
+              />
             }
-            onAddToCart={handleAddToCart}
-            onAddToWishlist={handleAddToWishlist}
           />
-        )}
-        {activePage === "coursedetails" && (
-          <CourseDetailsPage
-            onOpenEnrol={() => handleEnrollNowClick()}
-            initialModuleId={selectedModuleId}
+          <Route
+            path="/register"
+            element={
+              <HomePage
+                isRegisterMode
+                onOpenEnrol={() => handleEnrollNowClick()}
+              />
+            }
           />
-        )}
-        {activePage === "ebook" && (
-          <EbookPage
-            onAddToCart={handleAddToCart}
-            onAddToWishlist={handleAddToWishlist}
-            onSelectEbook={handleSelectEbook}
+          <Route path="/about" element={<AboutPage />} />
+          <Route
+            path="/courses"
+            element={
+              <CoursesPage
+                onOpenEnrol={handleEnrollNowClick}
+                onAddToCart={handleAddToCart}
+                onAddToWishlist={handleAddToWishlist}
+              />
+            }
           />
-        )}
-        {activePage === "ebookdetail" && (
-          <EbookDetailPage
-            ebook={selectedEbook}
-            onAddToCart={handleAddToCart}
-            onBack={() => setActivePage("ebook")}
+          <Route
+            path="/courses/:id"
+            element={
+              <CourseDetailsPage onOpenEnrol={(title, price, id) => handleEnrollNowClick(title, price, id)} />
+            }
           />
-        )}
-        {activePage === "forum" && (
-          <ForumPage onSelectPost={handleSelectPost} />
-        )}
-        {activePage === "postdetail" && (
-          <PostDetailPage
-            post={selectedPost}
-            onBack={() => setActivePage("forum")}
+
+          <Route
+            path="/ebook"
+            element={
+              <EbookPage
+                onAddToCart={handleAddToCart}
+                onAddToWishlist={handleAddToWishlist}
+              />
+            }
           />
-        )}
-        {activePage === "contact" && <ContactPage />}
-        {activePage === "dashboard" && (
-          <DashboardPage
-            onLogout={handleLogout}
-            setActivePage={setActivePage}
-            setSelectedCourseId={setSelectedCourseId}
+          <Route
+            path="/ebook/:id"
+            element={<EbookDetailPage onAddToCart={handleAddToCart} />}
           />
-        )}
-        {activePage === "admin-dashboard" && (
-          <AdminDashboardPage
-            onLogout={handleLogout}
-            setActivePage={setActivePage}
-            setSelectedCourseId={setSelectedCourseId}
+
+          <Route path="/forum" element={<ForumPage />} />
+          <Route path="/forum/:id" element={<PostDetailPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsConditionsPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+
+          {/* Student Routes */}
+          <Route
+            path="/dashboard"
+            element={<DashboardPage onLogout={handleLogout} />}
           />
-        )}
-        {activePage === "admin-create-course" && (
-          <AdminCreateCoursePage
-            setActivePage={setActivePage}
-            selectedCourseId={selectedCourseId}
+          <Route path="/course-player/:id" element={<CoursePlayerPage />} />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={<AdminDashboardPage onLogout={handleLogout} />}
           />
-        )}
-        {activePage === "course-player" && (
-          <CoursePlayerPage
-            setActivePage={setActivePage}
-            courseId={selectedCourseId}
+          <Route
+            path="/admin/course/create"
+            element={<AdminCreateCoursePage />}
           />
-        )}
+          <Route
+            path="/admin/course/:id/edit"
+            element={<AdminCreateCoursePage />}
+          />
+        </Routes>
       </main>
 
-      {/* Global Footer */}
-      {activePage !== "login" &&
-        activePage !== "register" &&
-        activePage !== "course-player" && (
-          <Footer setActivePage={setActivePage} />
-        )}
+      {location.pathname === "/" && <Footer />}
 
-      {/* Cart Modal matching User Screenshot */}
       <CartModal
         isOpen={isCartModalOpen}
         onClose={() => setIsCartModalOpen(false)}
@@ -271,19 +243,18 @@ export default function App() {
         onProceedToCheckout={() => {
           const firstItem = cartItems[0] || {
             title: "CRMISA Ebook",
-            price: "R499",
+            price: "₹499",
           };
           handleEnrollNowClick(firstItem.title, String(firstItem.price));
         }}
       />
-
-      {/* Auth & Checkout Modals */}
 
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         courseTitle={checkoutCourse.title}
         coursePrice={checkoutCourse.price}
+        courseId={checkoutCourse.id}
         onPaymentSuccess={() => showToast("Payment Received! Access Granted.")}
       />
 

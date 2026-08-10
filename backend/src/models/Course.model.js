@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const lessonSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Lesson title is required'],
+    required: [true, "Lesson title is required"],
     trim: true,
     maxlength: 100,
   },
@@ -14,10 +14,14 @@ const lessonSchema = new mongoose.Schema({
   },
   videoUrl: {
     type: String,
-    default: '',
+    default: "",
   },
   videoPublicId: {
     type: String,
+  },
+  thumbnailUrl: {
+    type: String,
+    default: "",
   },
   duration: {
     type: Number, // in seconds
@@ -36,7 +40,7 @@ const lessonSchema = new mongoose.Schema({
 const moduleSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Module title is required'],
+    required: [true, "Module title is required"],
     trim: true,
     maxlength: 100,
   },
@@ -51,7 +55,7 @@ const courseSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'Course title is required'],
+      required: [true, "Course title is required"],
       trim: true,
       maxlength: 60,
     },
@@ -62,7 +66,7 @@ const courseSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Course description is required'],
+      required: [true, "Course description is required"],
     },
     whatYouWillLearn: {
       type: [String],
@@ -74,23 +78,29 @@ const courseSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, 'Category is required'],
-      enum: ['design', 'development', 'business', 'marketing', 'other'],
+      required: [true, "Category is required"],
+      enum: [
+        "Full Certification",
+        "Customs & Compliance",
+        "Finance & Costing",
+        "Sourcing & Logistics",
+        "other",
+      ],
     },
     level: {
       type: String,
-      required: [true, 'Level is required'],
-      enum: ['beginner', 'intermediate', 'advanced', 'all'],
+      required: [true, "Level is required"],
+      enum: ["beginner", "intermediate", "advanced", "all"],
     },
     language: {
       type: String,
-      required: [true, 'Language is required'],
-      enum: ['english', 'spanish', 'french', 'german', 'other'],
-      default: 'english',
+      required: [true, "Language is required"],
+      enum: ["english", "spanish", "french", "german", "other"],
+      default: "english",
     },
     price: {
       type: Number,
-      required: [true, 'Course price is required'],
+      required: [true, "Course price is required"],
       min: 0,
       default: 0,
     },
@@ -100,21 +110,21 @@ const courseSchema = new mongoose.Schema(
     },
     thumbnailUrl: {
       type: String, // Cloudinary URL
-      default: '',
+      default: "",
     },
     thumbnailPublicId: {
       type: String,
     },
     admin: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     modules: [moduleSchema],
     status: {
       type: String,
-      enum: ['DRAFT', 'PUBLISHED'],
-      default: 'DRAFT',
+      enum: ["DRAFT", "PUBLISHED"],
+      default: "DRAFT",
     },
     averageRating: {
       type: Number,
@@ -130,7 +140,7 @@ const courseSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Course = mongoose.model('Course', courseSchema);
+export const Course = mongoose.model("Course", courseSchema);

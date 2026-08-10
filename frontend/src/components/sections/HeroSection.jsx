@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { EyeIcon } from '../icons/Icons';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-function LoginForm({ setActivePage }) {
+function LoginForm() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -21,9 +23,9 @@ function LoginForm({ setActivePage }) {
     setProcessing(false);
     if (result.success) {
       if (result.user?.role === 'ADMIN') {
-        setActivePage('admin-dashboard');
+        navigate('/admin/dashboard');
       } else {
-        setActivePage('dashboard');
+        navigate('/dashboard');
       }
     } else {
       setError(result.message);
@@ -118,7 +120,7 @@ function LoginForm({ setActivePage }) {
         Don’t have an account?{' '}
         <button
           type="button"
-          onClick={() => setActivePage('register')}
+          onClick={() => navigate('/register')}
           className="text-blue-600 hover:text-blue-800 font-bold underline underline-offset-2 transition-colors"
         >
           Create an account
@@ -128,7 +130,8 @@ function LoginForm({ setActivePage }) {
   );
 }
 
-function RegisterForm({ setActivePage }) {
+function RegisterForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -157,7 +160,7 @@ function RegisterForm({ setActivePage }) {
     
     setProcessing(false);
     if (result.success) {
-      setActivePage('dashboard');
+      navigate('/dashboard');
     } else {
       setError(result.message);
     }
@@ -268,7 +271,7 @@ function RegisterForm({ setActivePage }) {
         Already have an account?{' '}
         <button
           type="button"
-          onClick={() => setActivePage('login')}
+          onClick={() => navigate('/login')}
           className="text-blue-600 hover:text-blue-800 font-bold underline underline-offset-2 transition-colors"
         >
           Login
@@ -278,8 +281,9 @@ function RegisterForm({ setActivePage }) {
   );
 }
 
-export default function HeroSection({ isLoginMode, isRegisterMode, setActivePage }) {
+export default function HeroSection({ isLoginMode, isRegisterMode }) {
   const isAuthMode = isLoginMode || isRegisterMode;
+  const navigate = useNavigate();
 
   return (
     <section className={`relative w-full ${isAuthMode ? 'h-screen overflow-hidden' : 'min-h-screen lg:h-screen lg:overflow-hidden'} flex flex-col lg:flex-row lg:items-center lg:justify-center bg-white`}>
@@ -301,7 +305,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, setActivePage
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              onClick={() => setActivePage('home')}
+              onClick={() => navigate('/')}
               className="absolute top-6 left-2 lg:top-10 lg:left-4 flex items-center gap-2 text-slate-400 hover:text-white transition-colors z-50 font-bold"
             >
               <ArrowLeft className="w-6 h-6" />
@@ -320,26 +324,26 @@ export default function HeroSection({ isLoginMode, isRegisterMode, setActivePage
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="flex flex-col items-start w-full mb-3 uppercase">
-                <h1 className="text-crmisa-navy text-5xl sm:text-7xl md:text-8xl lg:text-[140px] font-bold tracking-tight leading-[0.85]">
+              <div className="flex flex-col items-start text-left w-full max-w-2xl px-4 mt-8 lg:mt-0">
+                <h1 className="text-crmisa-navy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] uppercase">
                   MASTER
                 </h1>
-                <h2 className="text-blue-600 text-4xl sm:text-6xl md:text-7xl lg:text-[75px] font-bold tracking-tight leading-[0.85] pt-2">
+                <h2 className="text-blue-600 text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] uppercase pt-2">
                   GLOBAL TRADE
                 </h2>
-              </div>
-              <p className="mt-4 lg:mt-6 text-slate-500 text-base md:text-lg font-light max-w-lg leading-relaxed">
-                South Africa's leading online academy for Import & Export education.
-                Gain the expertise to navigate international trade, customs, and global shipping.
-              </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <button
-                  onClick={() => setActivePage('register')}
-                  className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-white border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                >
-                  Start Learning
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
+                <p className="mt-6 text-slate-500 text-base md:text-lg font-medium max-w-lg leading-relaxed">
+                  South Africa's leading online academy for Import & Export education.
+                  Gain the expertise to navigate international trade, customs, and global shipping.
+                </p>
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-start">
+                  <button
+                    onClick={() => navigate('/register')}
+                    className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-white border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                  >
+                    Start Learning
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}
@@ -365,7 +369,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, setActivePage
                     transition={{ duration: 0.3 }}
                     className="w-full max-w-md"
                   >
-                    <LoginForm setActivePage={setActivePage} />
+                    <LoginForm />
                   </motion.div>
                 ) : (
                   <motion.div 
@@ -376,7 +380,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, setActivePage
                     transition={{ duration: 0.3 }}
                     className="w-full max-w-md"
                   >
-                    <RegisterForm setActivePage={setActivePage} />
+                    <RegisterForm />
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -78,9 +78,9 @@ export const getEnrolledCourses = asyncHandler(async (req, res, next) => {
   const enrollments = await Enrollment.find({ student: req.user._id })
     .populate({
       path: "course",
-      select: "title thumbnailUrl instructor price",
+      select: "title thumbnailUrl admin price",
       populate: {
-        path: "instructor",
+        path: "admin",
         select: "name",
       },
     })
@@ -118,7 +118,7 @@ export const getCoursePlayerDetails = asyncHandler(async (req, res, next) => {
       path: "modules",
       populate: { path: "lessons" }
     })
-    .populate("instructor", "name")
+    .populate("admin", "name")
     .select("-draftData");
 
   if (!course) {

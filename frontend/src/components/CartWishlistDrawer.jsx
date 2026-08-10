@@ -14,7 +14,7 @@ export default function CartWishlistDrawer({
     {
       id: 1,
       title: 'Import & Export Full Course',
-      price: 'R15 000',
+      price: '₹15,000',
       tag: 'Best Seller',
       perks: 'Free Company Registration + Website'
     }
@@ -24,13 +24,13 @@ export default function CartWishlistDrawer({
     {
       id: 2,
       title: 'Customs Procedures & Documentation Mastery',
-      price: 'R4 500',
+      price: '₹4,500',
       tag: 'Specialist Module'
     },
     {
       id: 3,
       title: 'Calculating Landed Costs & Pricing Strategies',
-      price: 'R3 800',
+      price: '₹3,800',
       tag: 'Finance Module'
     }
   ];
@@ -131,7 +131,7 @@ export default function CartWishlistDrawer({
           <div className="p-6 border-t border-slate-200 bg-slate-50 space-y-3">
             <div className="flex justify-between text-sm font-bold text-slate-800">
               <span>Subtotal:</span>
-              <span className="text-crmisa-navy text-lg font-black">R15 000</span>
+              <span className="text-crmisa-navy text-lg font-black">₹15,000</span>
             </div>
             <button
               onClick={() => {
