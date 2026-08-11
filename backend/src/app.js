@@ -17,6 +17,7 @@ import forumRoutes from './routes/forum.routes.js';
 import ebookRoutes from './routes/ebook.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
 import reviewRoutes from './routes/review.routes.js';
+import examRoutes from './routes/exam.routes.js';
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/api/forum', forumRoutes);
 app.use('/api', ebookRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/exams', examRoutes);
 
 // Base route
 app.get('/', (req, res) => {

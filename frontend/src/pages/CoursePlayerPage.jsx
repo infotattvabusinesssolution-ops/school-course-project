@@ -12,10 +12,14 @@ import {
   Check,
   Play,
   Award,
+  Download,
+  FileText
 } from "lucide-react";
 import api from "../lib/axios";
 import reviewService from "../services/reviewService";
 import CustomVideoPlayer from "../components/CustomVideoPlayer";
+import CourseReviewModal from "../components/CourseReviewModal";
+import { getExamStatus } from "../services/exam.service";
 
 // ─── Video Detection ────────────────────────────────────────────────────────
 
@@ -204,11 +208,13 @@ export default function CoursePlayerPage() {
   const [lessonProgressData, setLessonProgressData] = useState([]);
   const [activeCertificate, setActiveCertificate] = useState(null);
   const [issuingCertificate, setIssuingCertificate] = useState(false);
+  const [examStatus, setExamStatus] = useState(null); // { hasExam, lessonsComplete, hasPassed, attemptCount, certificate, questionCount, passingPercentage, timeLimitMinutes }
   const [myReview, setMyReview] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const lastSyncTimeRef = useRef(0);
 
   const handleVideoProgress = async (currentTime, duration) => {
@@ -296,6 +302,14 @@ export default function CoursePlayerPage() {
           console.error("Failed to fetch course reviews:", err);
         }
 
+        // Fetch exam status
+        try {
+          const examSt = await getExamStatus(courseId);
+          setExamStatus(examSt);
+        } catch (err) {
+          console.error("Exam status check failed:", err);
+        }
+
         const firstLesson = c?.modules?.[0]?.lessons?.[0];
         if (firstLesson) setActiveLesson(firstLesson);
       } catch (err) {
@@ -376,6 +390,19 @@ export default function CoursePlayerPage() {
   const totalMins = Math.floor((totalDurationSecs % 3600) / 60);
 
   // ── States ────────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (loading) return;
+    if (completedCount === totalLessons && totalLessons > 0 && !myReview) {
+      if (!sessionStorage.getItem(`hasPromptedReview_${courseId}`)) {
+        const timer = setTimeout(() => {
+          setIsReviewModalOpen(true);
+          sessionStorage.setItem(`hasPromptedReview_${courseId}`, "true");
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [completedCount, totalLessons, myReview, courseId, loading]);
 
   if (loading) {
     return (
@@ -480,26 +507,100 @@ export default function CoursePlayerPage() {
               </div>
             </div>
 
-            {/* 100% Course Completion Celebration Banner */}
+            {/* ── Smart Exam / Certificate CTA Banner ── */}
             {totalLessons > 0 && completedCount >= totalLessons && (
-              <div className="mb-5 p-4 sm:p-5 rounded-2xl bg-amber-400 text-slate-900 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0 shadow-xs">
-                    <Award className="w-6 h-6" />
+              <>
+                {/* CASE 1: No exam configured — show old-style cert claim */}
+                {(!examStatus || !examStatus.hasExam) && (
+                  <div className="mb-5 p-4 sm:p-5 rounded-2xl bg-amber-400 text-slate-900 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0 shadow-xs">
+                        <Award className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-sm sm:text-base leading-snug">🎉 Congratulations! Course Completed!</h4>
+                        <p className="text-xs font-medium text-slate-900/80">Your official CRMISA Certificate of Completion is ready.</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleClaimCertificate}
+                      disabled={issuingCertificate}
+                      className="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Award className="w-4 h-4 text-amber-400" />
+                      <span>{issuingCertificate ? "Generating Certificate..." : "Claim Official Certificate"}</span>
+                    </button>
                   </div>
-                  <div>
-                    <h4 className="font-extrabold text-sm sm:text-base leading-snug">🎉 Congratulations! Course Completed!</h4>
-                    <p className="text-xs font-medium text-slate-900/80">Your official CRMISA Certificate of Completion is ready.</p>
+                )}
+
+                {/* CASE 2: Exam exists, student has already PASSED */}
+                {examStatus?.hasExam && examStatus?.hasPassed && (
+                  <div className="mb-5 p-4 sm:p-5 rounded-2xl bg-emerald-500 text-white border border-emerald-400 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                        <Award className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-sm sm:text-base leading-snug">✅ Exam Passed! Certificate Issued.</h4>
+                        <p className="text-xs font-medium text-white/80">
+                          Score: {examStatus.certificate?.examScore ?? "—"}% &nbsp;·&nbsp; You've earned your CRMISA certificate.
+                        </p>
+                      </div>
+                    </div>
+                    {examStatus.certificate?.certificateId && (
+                      <button
+                        onClick={() => navigate(`/certificate/${examStatus.certificate.certificateId}`)}
+                        className="w-full sm:w-auto px-5 py-2.5 bg-white hover:bg-white/90 text-emerald-700 font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Award className="w-4 h-4" />
+                        <span>View My Certificate</span>
+                      </button>
+                    )}
                   </div>
+                )}
+
+                {/* CASE 3: Exam exists, NOT yet passed — show Start Exam CTA */}
+                {examStatus?.hasExam && !examStatus?.hasPassed && (
+                  <div className="mb-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-900 text-white border border-indigo-700 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-500/30 flex items-center justify-center shrink-0">
+                        <BookOpen className="w-6 h-6 text-indigo-300" />
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-sm sm:text-base leading-snug">
+                          🎓 Course Complete — Take Your Exam!
+                        </h4>
+                        <p className="text-xs font-medium text-white/70">
+                          {examStatus.questionCount} questions &nbsp;·&nbsp; Pass ≥{examStatus.passingPercentage}%
+                          {examStatus.timeLimitMinutes > 0 && ` · ⏱ ${examStatus.timeLimitMinutes} min limit`}
+                          {examStatus.attemptCount > 0 && ` · Attempt #${examStatus.attemptCount + 1}`}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => navigate(`/course/${courseId}/exam`)}
+                      className="w-full sm:w-auto px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Play className="w-4 h-4" />
+                      <span>{examStatus.attemptCount > 0 ? "Retake Exam" : "Start Exam"}</span>
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* ── Exam locked hint (course not complete yet) ── */}
+            {examStatus?.hasExam && !examStatus?.hasPassed && totalLessons > 0 && completedCount < totalLessons && (
+              <div className="mb-5 p-3.5 rounded-xl bg-slate-100 border border-slate-200 flex items-center gap-3 text-slate-600">
+                <div className="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-slate-400" />
                 </div>
-                <button
-                  onClick={handleClaimCertificate}
-                  disabled={issuingCertificate}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Award className="w-4 h-4 text-amber-400" />
-                  <span>{issuingCertificate ? "Generating Certificate..." : "Claim Official Certificate"}</span>
-                </button>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-700">Exam Unlocks After Course Completion</p>
+                  <p className="text-[11px] text-slate-500">
+                    Complete all {totalLessons} lessons to unlock the certification exam ({examStatus.questionCount} questions, pass ≥{examStatus.passingPercentage}%).
+                  </p>
+                </div>
               </div>
             )}
 
@@ -516,6 +617,18 @@ export default function CoursePlayerPage() {
                 <h1 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
                   {activeLesson?.title ?? course.title}
                 </h1>
+                {course.pdfGuideUrl && (
+                  <a
+                    href={course.pdfGuideUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1.5 ml-4 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors shrink-0"
+                    title="Download Course PDF Guide"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">PDF Guide</span>
+                  </a>
+                )}
               </div>
             </div>
 
@@ -1036,6 +1149,19 @@ export default function CoursePlayerPage() {
           </div>
         </div>
       </div>
+
+      <CourseReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        courseId={courseId}
+        existingReview={myReview}
+        onSuccess={(rev) => {
+          setMyReview(rev);
+          // Also optionally refetch all reviews if we wanted, but not strictly necessary here 
+          // if we already have logic to refresh or we just let it be.
+          reviewService.getCourseReviews(courseId).then(res => setAllReviews(res.data || [])).catch(() => {});
+        }}
+      />
     </div>
   );
 }

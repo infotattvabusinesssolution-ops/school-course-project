@@ -8,6 +8,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
   const adminNavItems = [
     { id: 0, icon: "dashboard", label: "Overview" },
     { id: 5, icon: "video_library", label: "Course Management" },
+    { id: 6, icon: "quiz", label: "Exam Management" },
     { id: 1, icon: "group", label: "User Management" },
     { id: 2, icon: "payments", label: "Enrollments & Financials" },
     { id: 3, icon: "forum", label: "Forum Management" },

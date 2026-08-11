@@ -6,6 +6,7 @@ import { forumService } from "../services/forumService";
 import { ebookService } from "../services/ebookService";
 import { downloadPdf } from "../utils/downloadHelper";
 import AdminSidebar from "../components/layout/AdminSidebar";
+import AdminExamManagementPage from "./AdminExamManagementPage";
 
 export default function AdminDashboardPage({ onLogout }) {
   const navigate = useNavigate();
@@ -128,7 +129,7 @@ export default function AdminDashboardPage({ onLogout }) {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h1 className="text-display-lg-mobile md:text-display-lg font-bold text-on-background">
-              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : 'Course Management'}
+              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : 'Course Management'}
             </h1>
             {activeTab === 5 && (
               <button 
@@ -161,8 +162,8 @@ export default function AdminDashboardPage({ onLogout }) {
                 </div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate" title={`₹${Math.round(analytics.totalRevenue || 0).toLocaleString("en-IN")}`}>
-                  ₹{Math.round(analytics.totalRevenue || 0).toLocaleString("en-IN")}
+                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate" title={`R${Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}`}>
+                  R{Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}
                 </div>
                 <div className="text-[11px] font-semibold text-emerald-600 mt-1 flex items-center gap-1">
                   <span className="material-symbols-outlined text-[14px]">trending_up</span> All Sales Combined
@@ -237,7 +238,7 @@ export default function AdminDashboardPage({ onLogout }) {
                   {analytics.totalEbooksSold || 0}
                 </div>
                 <div className="text-[11px] font-semibold text-emerald-600 mt-1 truncate">
-                  ₹{Math.round(analytics.totalEbookRevenue || 0).toLocaleString("en-IN")} E-book Revenue
+                  R{Math.round(analytics.totalEbookRevenue || 0).toLocaleString("en-ZA")} E-book Revenue
                 </div>
               </div>
             </div>
@@ -319,7 +320,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">payments</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">₹{Math.round((analytics.totalRevenue || 0)).toLocaleString('en-IN')}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">R{Math.round((analytics.totalRevenue || 0)).toLocaleString('en-ZA')}</p>
                         <p className="text-xs text-slate-500 truncate">Total Revenue</p>
                       </div>
                     </div>
@@ -342,7 +343,7 @@ export default function AdminDashboardPage({ onLogout }) {
                               <p className="text-xs text-slate-500">{e.course?.title || 'Course'}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-slate-900 text-sm">₹{e.amountPaid}</p>
+                              <p className="font-bold text-slate-900 text-sm">R{e.amountPaid}</p>
                               <p className="text-xs text-slate-400">{new Date(e.enrolledAt).toLocaleDateString()}</p>
                             </div>
                           </div>
@@ -399,7 +400,7 @@ export default function AdminDashboardPage({ onLogout }) {
                               }`}>
                                 {course.status}
                               </span>
-                              <span className="text-body-sm text-on-surface-variant font-medium">₹{course.price}</span>
+                              <span className="text-body-sm text-on-surface-variant font-medium">R{course.price}</span>
                               <span className="text-body-sm text-on-surface-variant">• {course.modules?.length || 0} modules</span>
                               <span className="text-body-sm text-on-surface-variant">• {course.totalEnrollments || 0} students</span>
                             </div>
@@ -495,7 +496,7 @@ export default function AdminDashboardPage({ onLogout }) {
                                 <div className="text-body-sm text-on-surface-variant">{enrollment.student?.email}</div>
                               </td>
                               <td className="py-4 text-body-md text-on-surface-variant">{enrollment.course?.title}</td>
-                              <td className="py-4 text-body-md font-medium text-on-surface">₹{enrollment.amountPaid}</td>
+                              <td className="py-4 text-body-md font-medium text-on-surface">R{enrollment.amountPaid}</td>
                               <td className="py-4 text-body-sm text-on-surface-variant">{new Date(enrollment.enrolledAt).toLocaleDateString()}</td>
                               <td className="py-4">
                                 <span className={`px-2 py-1 rounded-md text-label-caps font-bold ${
@@ -521,7 +522,7 @@ export default function AdminDashboardPage({ onLogout }) {
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-headline-sm font-bold text-on-surface">E-book Sales & Revenue</h2>
                       <span className="text-body-sm font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
-                        Total E-book Sales: ₹{analytics.totalEbookRevenue || 0}
+                        Total E-book Sales: R{analytics.totalEbookRevenue || 0}
                       </span>
                     </div>
                     <div className="overflow-x-auto">
@@ -543,7 +544,7 @@ export default function AdminDashboardPage({ onLogout }) {
                                 <div className="text-body-sm text-on-surface-variant">{purchase.student?.email}</div>
                               </td>
                               <td className="py-4 text-body-md text-on-surface-variant font-medium">{purchase.ebook?.title || "Trade E-book"}</td>
-                              <td className="py-4 text-body-md font-bold text-on-surface">₹{purchase.amountPaid}</td>
+                              <td className="py-4 text-body-md font-bold text-on-surface">R{purchase.amountPaid}</td>
                               <td className="py-4 text-body-sm text-on-surface-variant">{new Date(purchase.purchasedAt || purchase.createdAt).toLocaleDateString()}</td>
                               <td className="py-4">
                                 <span className="px-2.5 py-1 rounded-md text-label-caps font-bold bg-emerald-100 text-emerald-800">
@@ -699,7 +700,7 @@ export default function AdminDashboardPage({ onLogout }) {
                               </span>
                             </td>
                             <td className="py-4 text-body-md font-bold text-on-surface">
-                              ₹{book.price}
+                              R{book.price}
                             </td>
                             <td className="py-4">
                               <div className="flex flex-col gap-1 text-[11px] font-semibold">
@@ -761,6 +762,9 @@ export default function AdminDashboardPage({ onLogout }) {
                   </div>
                 </div>
               )}
+
+              {/* Tab 6: Exam Management */}
+              {activeTab === 6 && <AdminExamManagementPage />}
             </>
           )}
         </div>

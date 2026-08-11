@@ -361,7 +361,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
 
               <div className="p-6 sm:p-8">
                 <div className="mb-6">
-                  <span className="text-3xl font-bold text-slate-900">₹{course.price}</span>
+                  <span className="text-3xl font-bold text-slate-900">R{course.price}</span>
                 </div>
 
                 {isCompleted ? (
@@ -414,7 +414,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
       {/* Mobile Sticky Bottom Bar (Flat) */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 flex items-center justify-between gap-4 z-50">
         <div className="flex flex-col">
-          <span className="text-xl font-bold text-slate-900">₹{course.price}</span>
+          <span className="text-xl font-bold text-slate-900">R{course.price}</span>
         </div>
         {isCompleted ? (
           <button
@@ -432,7 +432,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
           </button>
         ) : (
           <button
-            onClick={() => onOpenEnrol(course.title, `₹${course.price}`, courseId)}
+            onClick={() => onOpenEnrol(course.title, `R${course.price}`, courseId)}
             className="flex-1 py-3 bg-slate-900 text-white font-semibold text-center"
           >
             Enroll Now

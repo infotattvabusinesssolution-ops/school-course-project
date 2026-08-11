@@ -7,16 +7,21 @@ export default function AboutPage({ onOpenRegister }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         
         {/* Page Hero */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-xs font-bold text-crmisa-navy uppercase tracking-widest bg-crmisa-lightBlue px-3.5 py-1.5 rounded-full">
-            Our Story & Mission
-          </span>
+        <div className="text-center max-w-3xl mx-auto space-y-6">
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 uppercase tracking-tight">
-            Building Africa's Next Trade Tycoons
+            ABOUT CRMISA
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-            CRMISA (Quality Education) was founded with a singular purpose: breaking down barriers to international commerce for aspiring African entrepreneurs.
-          </p>
+          <div className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium space-y-4 text-left sm:text-center">
+            <p>
+              CRMISA is South Africa’s leading online academy for Import & Export education, built to empower the next generation of African entrepreneurs.
+            </p>
+            <p>
+              We offer a fully online, practical course that teaches you everything you need to know to start and grow your own import/export business, from international trade basics to shipping, suppliers, customs, and compliance.
+            </p>
+            <p>
+              But we don’t stop at education. When you complete our course, you receive a FREE registered company and a professional business website, so you’re ready to trade right away.
+            </p>
+          </div>
         </div>
 
         {/* 3 Pillars Grid */}

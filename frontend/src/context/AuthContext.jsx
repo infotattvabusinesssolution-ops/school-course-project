@@ -37,9 +37,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, role = 'STUDENT') => {
+  const register = async (formData) => {
     try {
-      const { data } = await api.post('/auth/signup', { name, email, password, role });
+      const { data } = await api.post('/auth/signup', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       setUser(data.data);
       return { success: true, message: data.message };
     } catch (error) {

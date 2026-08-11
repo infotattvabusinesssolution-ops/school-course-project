@@ -123,6 +123,13 @@ const courseSchema = new mongoose.Schema(
     thumbnailPublicId: {
       type: String,
     },
+    pdfGuideUrl: {
+      type: String,
+      default: "",
+    },
+    pdfGuidePublicId: {
+      type: String,
+    },
     admin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

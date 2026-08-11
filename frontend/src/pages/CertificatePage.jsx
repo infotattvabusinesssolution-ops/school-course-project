@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Printer, ShieldCheck, Award, Download } from "lucide-react";
+import { ArrowLeft, Printer, Download, CheckCircle2 } from "lucide-react";
 import html2pdf from "html2pdf.js";
 import api from "../lib/axios";
 
@@ -25,10 +25,10 @@ export default function CertificatePage() {
     if (certificateId) fetchCertificate();
   }, [certificateId]);
 
-  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>;
-  if (!certificate) return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Certificate Not Found</div>;
+  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-semibold text-slate-500">Loading Certificate...</div>;
+  if (!certificate) return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-bold text-red-500">Certificate Not Found</div>;
 
-  const { student, course, issueDate } = certificate;
+  const { student, course, issueDate, examScore } = certificate;
   const studentName = student?.name || "Valued Student";
   const courseTitle = course?.title || "Professional Training Program";
   const formattedDate = new Date(issueDate || Date.now()).toLocaleDateString("en-US", {
@@ -50,9 +50,16 @@ export default function CertificatePage() {
     
     const opt = {
       margin:       0,
-      filename:     `CRMISA-Certificate-${certificateId}.pdf`,
+      filename:     `Certificate-${studentName.replace(/\s+/g, '-')}.pdf`,
       image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff' },
+      html2canvas:  { 
+        scale: 2, 
+        useCORS: true, 
+        letterRendering: true, 
+        backgroundColor: '#ffffff',
+        windowWidth: 1122, 
+        width: 1122        
+      },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
     
@@ -60,133 +67,129 @@ export default function CertificatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center py-10 px-4 font-sans">
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center py-10 px-4 font-sans selection:bg-red-100">
       
-      {/* Top Control Bar (Hidden on Print & PDF generation) */}
-      <div className="w-full max-w-[1056px] flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-slate-900 text-white gap-4 rounded-t-2xl shadow-xl print:hidden">
+      {/* Load Fonts */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+      `}} />
+
+      {/* Top Control Bar */}
+      <div className="w-full max-w-[1122px] flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-white border border-slate-200 text-slate-800 gap-4 rounded-t-2xl shadow-sm print:hidden">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 -ml-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-          >
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div className="flex items-center gap-2 text-sm font-bold text-amber-400">
-            <Award className="w-5 h-5 text-amber-400" />
-            <span>CRMISA Official Certificate</span>
+          <div className="flex items-center gap-2 text-sm font-bold text-red-800">
+            <CheckCircle2 className="w-5 h-5" />
+            <span>Verified Certificate</span>
           </div>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <button
-            onClick={handleDownloadPdf}
-            className="flex-1 sm:flex-none justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
-          >
+          <button onClick={handleDownloadPdf} className="flex-1 sm:flex-none justify-center px-5 py-2.5 bg-red-50 text-red-800 hover:bg-red-100 border border-red-200 font-bold text-xs rounded-xl transition-colors flex items-center gap-2 cursor-pointer">
             <Download className="w-4 h-4" />
             <span>Download PDF</span>
           </button>
-          <button
-            onClick={handlePrint}
-            className="flex-1 sm:flex-none justify-center px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
-          >
+          <button onClick={handlePrint} className="flex-1 sm:flex-none justify-center px-5 py-2.5 bg-[#5e0a17] hover:bg-[#4a0812] text-white font-extrabold text-xs rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-sm">
             <Printer className="w-4 h-4" />
-            <span>Print</span>
+            <span>Print Certificate</span>
           </button>
         </div>
       </div>
 
-      {/* Page Container Wrapper (Screen styling) */}
-      <div className="w-full max-w-[1056px] shadow-2xl sm:rounded-b-2xl overflow-hidden print:shadow-none print:rounded-none print:m-0 print:w-full print:max-w-none">
+      <div className="w-full max-w-[1122px] shadow-2xl sm:rounded-b-2xl overflow-x-auto print:shadow-none print:rounded-none print:m-0 print:w-full print:max-w-none bg-white">
         
-        {/* Certificate Sheet Container (PDF bounds) */}
-        <div ref={printRef} className="w-full aspect-[297/210] bg-white relative overflow-hidden">
+        {/* Certificate Sheet Container */}
+        <div ref={printRef} className="w-[1122px] h-[793px] shrink-0 bg-[#fffdfa] relative overflow-hidden flex items-center justify-center p-12 mx-auto">
           
-          {/* BACKGROUND SHAPES (Using SVG to ensure html2pdf compatibility) */}
-        <svg className="absolute inset-0 w-full h-full z-0 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
-          {/* Top Edge Dark Blue */}
-          <polygon points="45,0 100,0 100,15 40,15" fill="#1e3a8a" />
-          
-          {/* Top Right Light Blue */}
-          <polygon points="85,0 100,0 100,30 80,30" fill="#3b82f6" />
-          
-          {/* Bottom Left Dark Blue */}
-          <polygon points="0,35 28,40 15,100 0,100" fill="#1e3a8a" />
-          
-          {/* Bottom Left Light Blue Accent */}
-          <polygon points="18,65 25,66 20,100 13,100" fill="#3b82f6" />
-          
-          {/* Right Edge Dark Blue */}
-          <polygon points="88,30 100,30 100,100 75,100" fill="#1e3a8a" />
-        </svg>
+          {/* Subtle Sparkle Background Layer (Converted to Inline SVG) */}
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-20 pointer-events-none z-0">
+            <defs>
+              <pattern id="sparkles" x="0" y="0" width="150" height="150" patternUnits="userSpaceOnUse">
+                <circle cx="50" cy="50" r="1.5" fill="#d4af37" opacity="0.8"/>
+                <circle cx="20" cy="80" r="2" fill="#d4af37" opacity="0.5"/>
+                <circle cx="80" cy="20" r="1.2" fill="#d4af37" opacity="0.9"/>
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#sparkles)" />
+          </svg>
 
-        {/* LOGO AREA */}
-        <div className="absolute top-[8%] left-[6%] flex items-center gap-3 z-20">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-transparent text-blue-700 flex items-center justify-center">
-            <ShieldCheck className="w-full h-full" />
+
+          {/* Inner Geometric Gold Border */}
+          <div className="absolute inset-10 border-2 border-[#d4af37] z-10 pointer-events-none">
+            <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-[#d4af37]"></div>
+            <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-[#d4af37]"></div>
+            <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-[#d4af37]"></div>
+            <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-[#d4af37]"></div>
           </div>
-          <span className="text-xl sm:text-2xl font-black text-slate-800 tracking-widest">CRMISA</span>
-        </div>
-
-        {/* BADGE */}
-        <div className="absolute left-[24%] top-[45%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-20">
-          <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 relative z-10">
-            <div className="w-[70px] h-[70px] sm:w-[88px] sm:h-[88px] border-2 border-dashed border-blue-400 rounded-full flex flex-col items-center justify-center text-center">
-              <Award className="w-6 h-6 sm:w-8 sm:h-8 text-blue-700 mb-0.5 sm:mb-1" />
-              <span className="text-[8px] sm:text-[10px] font-black text-blue-900 leading-tight tracking-widest">BEST</span>
-              <span className="text-[8px] sm:text-[10px] font-black text-blue-900 leading-tight tracking-widest">AWARD</span>
+          <div className="absolute inset-[44px] border-[0.5px] border-[#d4af37] z-10 pointer-events-none opacity-50"></div>
+          
+          {/* Gold Starburst Badge */}
+          <div className="absolute top-16 left-16 z-20 print:top-16 print:left-16 w-32 h-40">
+            <img src="/batch.png" alt="Gold Badge" className="absolute inset-0 w-full h-full object-contain drop-shadow-xl" />
+            
+            <div className="absolute top-0 left-0 w-full h-full text-center" style={{ paddingTop: '32%' }}>
+              <div className="text-[9px] font-bold text-[#713f12] uppercase tracking-widest mb-0 leading-none" style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.6)" }}>Score</div>
+              <div className="text-2xl font-black text-[#422006] leading-none mt-1" style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.6)" }}>
+                {examScore !== null && examScore !== undefined ? `${examScore}%` : "100%"}
+              </div>
             </div>
           </div>
-          {/* Ribbons */}
-          <div className="flex gap-1.5 sm:gap-2 -mt-3 sm:-mt-4 relative z-0">
-            <svg className="w-4 h-8 sm:w-6 sm:h-12 drop-shadow-md" preserveAspectRatio="none" viewBox="0 0 100 100">
-              <polygon points="0,0 100,0 100,100 50,80 0,100" fill="#2563eb" />
-            </svg>
-            <svg className="w-4 h-8 sm:w-6 sm:h-12 drop-shadow-md" preserveAspectRatio="none" viewBox="0 0 100 100">
-              <polygon points="0,0 100,0 100,100 50,80 0,100" fill="#2563eb" />
-            </svg>
-          </div>
-        </div>
-
-        {/* CONTENT AREA */}
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-[10%] pr-[8%] pl-[15%]">
-          <h1 className="text-3xl sm:text-5xl font-serif text-blue-700 font-bold uppercase tracking-widest mb-1 sm:mb-2 text-center">CERTIFICATE</h1>
-          <h2 className="text-base sm:text-xl font-serif text-slate-700 uppercase tracking-[0.2em] mb-6 sm:mb-12 text-center">Of Achievement</h2>
           
-          <p className="text-[10px] sm:text-xs font-bold text-slate-800 uppercase tracking-widest mb-4 sm:mb-6 text-center">Proudly Presented To :</p>
-          
-          <h3 className="text-3xl sm:text-6xl font-serif text-blue-600 font-medium mb-4 sm:mb-8 text-center px-4">
-            {studentName}
-          </h3>
-          
-          <p className="text-[9px] sm:text-[11px] text-slate-500 max-w-xl text-center leading-relaxed mb-8 sm:mb-16 px-4 sm:px-10">
-            This certificate is awarded to signify that the recipient has demonstrated exceptional dedication 
-            and proficiency. By meeting all rigorous academic and practical requirements set forth by the 
-            Centre for Regional Merchandise & International Shipping Academy (CRMISA), the individual has 
-            proven their capability and commitment to professional excellence.
-            <br/><br/>
-            (This certifies the successful completion of: <strong className="text-slate-800">{courseTitle}</strong>)
-          </p>
-          
-          {/* Footer Area with Signatures and QR */}
-          <div className="flex items-end justify-between w-full max-w-2xl mt-auto pb-[6%] px-4 sm:px-0">
-            <div className="text-center w-24 sm:w-40">
-              <div className="border-b-2 border-slate-400 pb-2 mb-2 font-bold text-slate-800 text-xs sm:text-sm">{formattedDate}</div>
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Date</p>
+          {/* CONTENT AREA */}
+          <div className="relative z-20 w-full h-full flex flex-col items-center py-8 justify-between">
+            
+            {/* Title Section */}
+            <div className="flex flex-col items-center text-center mt-6">
+              <h1 className="text-6xl font-playfair text-[#5e0a17] font-bold uppercase tracking-wide mb-1 drop-shadow-sm" style={{textShadow: "1px 1px 0px rgba(0,0,0,0.1)"}}>
+                CERTIFICATE
+              </h1>
+              <h2 className="text-2xl font-playfair text-slate-800 uppercase tracking-[0.2em] mb-10">
+                Of Achievement
+              </h2>
+              
+              <p className="text-lg font-playfair font-bold text-slate-800 mb-6">
+                This Certificate Is Proudly Presented To
+              </p>
             </div>
             
-            <div className="flex flex-col items-center justify-center -mb-2 sm:-mb-4">
-               <div className="p-1 sm:p-1.5 bg-white border border-slate-200 rounded shadow-sm">
-                 <img src={qrCodeUrl} alt="QR" className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
-               </div>
-               <p className="text-[6px] sm:text-[8px] text-slate-400 font-mono mt-1 uppercase tracking-tighter">ID: {certificateId}</p>
+            {/* Student Name */}
+            <div className="flex flex-col items-center text-center w-full max-w-4xl px-4">
+              <h3 className="text-7xl font-cursive text-[#5e0a17] mb-10 py-2">
+                {studentName}
+              </h3>
+              
+              <p className="text-lg font-playfair text-slate-700 leading-relaxed max-w-3xl mb-4 text-center">
+                This certificate is given to <strong className="font-bold">{studentName}</strong> for their successful completion of the <strong className="font-bold">{courseTitle}</strong> program. It proves that they are highly competent and have demonstrated exceptional dedication in their field.
+              </p>
             </div>
+            
+            {/* Footer Area with Date, Logo, QR, and Signature */}
+            <div className="flex items-end justify-between w-full px-16 mt-auto">
+              
+              <div className="flex flex-col items-center justify-center -mb-4 z-10 relative">
+                 <div className="p-1.5 bg-white border-2 border-[#d4af37] rounded-sm shadow-sm mb-2">
+                   <img src={qrCodeUrl} alt="QR Code for Verification" className="w-20 h-20 object-contain" />
+                 </div>
+                 <p className="text-[12px] text-slate-900 font-mono mt-1 font-bold tracking-wider">ID: {certificateId}</p>
+                 <p className="text-[14px] text-slate-900 font-playfair font-bold mt-1">Issued: {formattedDate}</p>
+              </div>
 
-            <div className="text-center w-24 sm:w-40">
-              <div className="border-b-2 border-slate-400 pb-2 mb-2 font-bold text-slate-800 italic font-serif text-sm sm:text-lg leading-none">Director</div>
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Signature</p>
+              <div className="text-center w-56 pb-2 z-10 relative">
+                <div className="border-b-[1.5px] border-slate-800 pb-1 mb-1 mt-12 font-playfair text-3xl font-bold uppercase tracking-wider text-[#5e0a17] text-base">
+                  CRMISA
+                </div>
+                <p className="text-[12px] text-slate-700 font-playfair font-italic">Authorized Signature</p>
+              </div>
+
+              <div className="flex flex-col items-center justify-center -mb-4">
+                 <img src="/image.png" alt="Platform Logo" className="h-24 object-contain" />
+              </div>
+              
             </div>
           </div>
-        </div>
-
         </div>
       </div>
     </div>

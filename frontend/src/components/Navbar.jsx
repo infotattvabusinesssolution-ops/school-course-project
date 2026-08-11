@@ -61,32 +61,18 @@ export default function Navbar({
   };
 
   return (
-    <header className="absolute top-0 w-full z-50 bg-transparent transition-all duration-300">
+    <>
+      <header className="absolute top-0 w-full z-[60] bg-white/90 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none shadow-sm sm:shadow-none border-b border-slate-200/50 sm:border-transparent transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-24 sm:h-28">
           
           {/* Logo Section */}
           <div 
             onClick={() => handleNavClick('/')}
-            className="flex items-center space-x-3 cursor-pointer group py-1"
+            className="flex items-center cursor-pointer group py-1 z-[60] relative"
           >
-            <div className="relative w-12 h-12 bg-gradient-to-br from-crmisa-navy via-crmisa-accentNavy to-crmisa-darkNavy rounded-xl flex items-center justify-center p-2 shadow-md group-hover:scale-105 transition-transform duration-300">
-              <svg className="w-8 h-8 text-white" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 5 L90 25 V65 C90 90 50 115 50 115 C50 115 10 90 10 65 V25 Z" fill="none" stroke="currentColor" strokeWidth="6" />
-                <path d="M50 15 L80 30 V60 C80 80 50 100 50 100 C50 100 20 80 20 60 V30 Z" fill="#0d2859" stroke="#ffffff" strokeWidth="3" />
-                <line x1="50" y1="25" x2="50" y2="90" stroke="#3b82f6" strokeWidth="4" />
-                <line x1="25" y1="55" x2="75" y2="55" stroke="#3b82f6" strokeWidth="4" />
-                <text x="50" y="50" textAnchor="middle" fill="#ffffff" fontSize="14" fontWeight="bold">CRMISA</text>
-                <text x="50" y="72" textAnchor="middle" fill="#93c5fd" fontSize="8" fontWeight="600">QUALITY</text>
-              </svg>
-            </div>
-            <div className="flex flex-col leading-tight">
-              <span className="font-extrabold text-lg text-crmisa-navy tracking-tight group-hover:text-blue-600 transition-colors">
-                CRMISA
-              </span>
-              <span className="text-[9px] uppercase font-bold tracking-widest text-slate-500">
-                Quality Education
-              </span>
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+              <img src="/image.png" alt="CRMISA Logo" className="w-full h-full object-contain" />
             </div>
           </div>
 
@@ -184,10 +170,31 @@ export default function Navbar({
 
         </div>
       </div>
+    </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-xl animate-fade-in absolute w-full top-16 sm:top-20">
+        <div 
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[70] lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Side Drawer */}
+      <div className={`fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl z-[80] transform transition-transform duration-300 ease-in-out lg:hidden flex flex-col ${
+        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="flex items-center justify-between p-4 border-b border-slate-100">
+          <span className="font-bold text-lg text-slate-900">Menu</span>
+          <button 
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 text-slate-500 hover:text-crmisa-navy focus:outline-none rounded-lg hover:bg-slate-50 transition-colors"
+          >
+            <XIcon className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
           <nav className="flex flex-col space-y-2">
             {navLinks.map((link, i) => (
               <div key={i}>
@@ -199,9 +206,9 @@ export default function Navbar({
                       handleNavClick(link.path);
                     }
                   }}
-                  className={`w-full flex justify-between items-center px-3 py-2.5 rounded-lg text-base font-normal transition-colors ${
+                  className={`w-full flex justify-between items-center px-3 py-3 rounded-lg text-base font-medium transition-colors ${
                     location.pathname === link.path || (link.path === '/courses' && location.pathname.startsWith('/courses'))
-                      ? 'bg-crmisa-lightBlue text-crmisa-navy font-medium'
+                      ? 'bg-blue-50 text-blue-600'
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -210,12 +217,12 @@ export default function Navbar({
                 </button>
 
                 {link.hasDropdown && coursesDropdownOpen && (
-                  <div className="pl-4 pr-2 py-2 space-y-1.5 border-l-2 border-slate-200 my-1 bg-slate-50 rounded-r-lg">
+                  <div className="pl-4 pr-2 py-2 space-y-1 my-1 border-l-2 border-slate-100">
                     {courseDropdownItems.map((item, idx) => (
                       <button
-                         key={idx}
+                        key={idx}
                         onClick={() => handleDropdownItemClick(item)}
-                        className="w-full text-left py-2 px-3 text-sm font-normal text-slate-600 hover:text-crmisa-navy"
+                        className="w-full text-left py-2.5 px-3 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-50 transition-colors"
                       >
                         {item.name}
                       </button>
@@ -226,7 +233,7 @@ export default function Navbar({
             ))}
           </nav>
 
-          <div className="pt-4 border-t border-slate-100 flex flex-col space-y-3">
+          <div className="pt-6 border-t border-slate-100 flex flex-col space-y-3">
             {isLoggedIn ? (
               <>
                 <button
@@ -238,7 +245,7 @@ export default function Navbar({
                       navigate('/dashboard');
                     }
                   }}
-                  className="w-full py-2.5 bg-crmisa-navy text-white font-bold rounded-xl text-center"
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-center transition-colors"
                 >
                   {user?.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}
                 </button>
@@ -247,7 +254,7 @@ export default function Navbar({
                     setMobileMenuOpen(false);
                     onLogout();
                   }}
-                  className="w-full py-2.5 border border-red-200 text-red-600 font-normal rounded-xl text-center hover:bg-red-50"
+                  className="w-full py-3 border border-red-200 text-red-600 font-semibold rounded-xl text-center hover:bg-red-50 transition-colors"
                 >
                   Logout
                 </button>
@@ -258,14 +265,14 @@ export default function Navbar({
                   setMobileMenuOpen(false);
                   onOpenLogin();
                 }}
-                className="w-full py-2.5 border border-slate-300 text-slate-700 font-normal rounded-xl text-center"
+                className="w-full py-3 border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold rounded-xl text-center transition-colors"
               >
                 Login
               </button>
             )}
           </div>
         </div>
-      )}
-    </header>
+      </div>
+    </>
   );
 }

@@ -30,6 +30,8 @@ import TermsConditionsPage from "./pages/TermsConditionsPage";
 import FaqPage from "./pages/FaqPage";
 import VerifyCertificatePage from "./pages/VerifyCertificatePage";
 import CertificatePage from "./pages/CertificatePage";
+import ExamPage from "./pages/ExamPage";
+import ExamResultPage from "./pages/ExamResultPage";
 
 export default function App() {
   const location = useLocation();
@@ -103,7 +105,7 @@ export default function App() {
   const [checkoutCourse, setCheckoutCourse] = useState({
     id: null,
     title: "Import & Export Full Course",
-    price: "₹15000",
+    price: "R15000",
   });
 
   const [wishlistCount, setWishlistCount] = useState(2);
@@ -139,7 +141,7 @@ export default function App() {
     const newItem = {
       id: Date.now(),
       title: item.title || "CRMISA Import & Export Learning Material",
-      price: item.price || "₹499",
+      price: item.price || "R499",
     };
     setCartItems((prev) => [...prev, newItem]);
     showToast(`Added "${newItem.title}" to Cart!`);
@@ -157,7 +159,16 @@ export default function App() {
   };
 
   // Determine if we should hide the Navbar/Footer
-  const hideLayoutPaths = ["/login", "/register", "/course-player", "/admin"];
+  const hideLayoutPaths = [
+    "/login", 
+    "/register", 
+    "/course-player", 
+    "/admin", 
+    "/course/", 
+    "/certificate/", 
+    "/verify-certificate/",
+    "/dashboard"
+  ];
   const hideLayout = hideLayoutPaths.some((path) =>
     location.pathname.startsWith(path),
   );
@@ -259,6 +270,8 @@ export default function App() {
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/verify-certificate/:certificateId" element={<VerifyCertificatePage />} />
           <Route path="/certificate/:certificateId" element={<CertificatePage />} />
+          <Route path="/course/:id/exam" element={<ExamPage />} />
+          <Route path="/course/:id/exam/result" element={<ExamResultPage />} />
 
           {/* Student Routes */}
           <Route
@@ -301,7 +314,7 @@ export default function App() {
         onProceedToCheckout={() => {
           const firstItem = cartItems[0] || {
             title: "CRMISA Ebook",
-            price: "₹499",
+            price: "R499",
           };
           handleEnrollNowClick(firstItem.title, String(firstItem.price));
         }}

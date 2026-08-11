@@ -218,6 +218,28 @@ export const uploadCourseImage = asyncHandler(async (req, res) => {
   }, 'Image uploaded successfully'));
 });
 
+// @desc    Upload course PDF guide
+// @route   POST /api/courses/upload-pdf
+// @access  Private (Admin)
+export const uploadCoursePdf = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, 'Please upload a PDF file');
+  }
+
+  const pdfLocalPath = req.file.path;
+  const pdf = await uploadOnCloudinary(pdfLocalPath);
+
+  if (!pdf) {
+    throw new ApiError(500, 'Error uploading PDF to Cloudinary');
+  }
+
+  res.status(200).json(new ApiResponse(200, {
+    pdfUrl: pdf.secure_url,
+    pdfPublicId: pdf.public_id,
+  }, 'PDF uploaded successfully'));
+});
+
+
 // @desc    Get all published courses (Public)
 // @route   GET /api/public/courses
 // @access  Public

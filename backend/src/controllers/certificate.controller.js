@@ -5,6 +5,7 @@ import Certificate from "../models/Certificate.model.js";
 import Enrollment from "../models/Enrollment.model.js";
 import { Course } from "../models/Course.model.js";
 import Progress from "../models/Progress.model.js";
+import ExamAttempt from "../models/ExamAttempt.model.js";
 import { generateCertificateId } from "../utils/generateCertificateId.js";
 
 // @desc    Issue Certificate for course completion
@@ -87,12 +88,25 @@ export const issueCertificate = asyncHandler(async (req, res) => {
 export const verifyCertificate = asyncHandler(async (req, res) => {
   const { certificateId } = req.params;
 
-  const certificate = await Certificate.findOne({ certificateId })
+  let certificate = await Certificate.findOne({ certificateId })
     .populate("student", "name email")
     .populate("course", "title category description");
 
   if (!certificate) {
     throw new ApiError(404, "Invalid or unrecognized Certificate ID");
+  }
+
+  if (certificate.examScore === null || certificate.examScore === undefined) {
+    const bestAttempt = await ExamAttempt.findOne({ 
+      student: certificate.student._id, 
+      course: certificate.course._id, 
+      passed: true 
+    }).sort({ percentage: -1 });
+    
+    if (bestAttempt) {
+      certificate.examScore = bestAttempt.percentage;
+      await Certificate.updateOne({ _id: certificate._id }, { examScore: bestAttempt.percentage });
+    }
   }
 
   res.status(200).json(
@@ -107,12 +121,25 @@ export const verifyStudentCertificate = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
   const studentId = req.user._id;
 
-  const certificate = await Certificate.findOne({ course: courseId, student: studentId })
+  let certificate = await Certificate.findOne({ course: courseId, student: studentId })
     .populate("student", "name email")
     .populate("course", "title category");
 
   if (!certificate) {
     throw new ApiError(404, "Certificate not found for this course");
+  }
+
+  if (certificate.examScore === null || certificate.examScore === undefined) {
+    const bestAttempt = await ExamAttempt.findOne({ 
+      student: studentId, 
+      course: courseId, 
+      passed: true 
+    }).sort({ percentage: -1 });
+    
+    if (bestAttempt) {
+      certificate.examScore = bestAttempt.percentage;
+      await Certificate.updateOne({ _id: certificate._id }, { examScore: bestAttempt.percentage });
+    }
   }
 
   res.status(200).json(
@@ -130,6 +157,22 @@ export const getMyCertificates = asyncHandler(async (req, res) => {
     .sort({ issueDate: -1 })
     .populate("student", "name email")
     .populate("course", "title category thumbnailUrl");
+
+  // Retroactively fill missing exam scores
+  for (let cert of certificates) {
+    if (cert.examScore === null || cert.examScore === undefined) {
+      const bestAttempt = await ExamAttempt.findOne({ 
+        student: studentId, 
+        course: cert.course._id, 
+        passed: true 
+      }).sort({ percentage: -1 });
+      
+      if (bestAttempt) {
+        cert.examScore = bestAttempt.percentage;
+        await Certificate.updateOne({ _id: cert._id }, { examScore: bestAttempt.percentage });
+      }
+    }
+  }
 
   res.status(200).json(
     new ApiResponse(200, certificates, "Student certificates retrieved successfully")

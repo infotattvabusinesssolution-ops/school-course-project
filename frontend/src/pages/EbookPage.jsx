@@ -196,7 +196,7 @@ export default function EbookPage({ onAddToCart, onAddToWishlist }) {
                       {item.title}
                     </h3>
                     <div className="text-xs font-extrabold text-slate-900">
-                      Price: <span className="text-slate-900 font-black">₹{item.price}</span>
+                      Price: <span className="text-slate-900 font-black">R{item.price}</span>
                     </div>
                   </div>
 

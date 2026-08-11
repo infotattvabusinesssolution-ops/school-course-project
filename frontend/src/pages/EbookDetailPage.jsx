@@ -138,7 +138,7 @@ export default function EbookDetailPage({ onAddToCart }) {
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               <div className="space-y-0.5">
                 <span className="text-xs text-slate-500 font-medium">Digital PDF Price</span>
-                <div className="text-3xl font-black text-slate-900">₹{ebook.price}</div>
+                <div className="text-3xl font-black text-slate-900">R{ebook.price}</div>
               </div>
 
               <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-md">

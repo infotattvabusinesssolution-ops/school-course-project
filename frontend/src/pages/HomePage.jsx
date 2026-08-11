@@ -9,7 +9,8 @@ import HowItWorksSection from '../components/sections/HowItWorksSection';
 import JoinCertifiedSection from '../components/sections/JoinCertifiedSection';
 import ContactSection from '../components/sections/ContactSection';
 import FaqSection from '../components/sections/FaqSection';
-
+import HeadlineTicker from '../components/sections/HeadlineTicker';
+import FloatingSocialBar from '../components/FloatingSocialBar';
 
 export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
   useEffect(() => {
@@ -45,6 +46,9 @@ export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isR
               isRegisterMode={isRegisterMode}
             />
             
+            <FloatingSocialBar />
+            
+            <HeadlineTicker />
 
             <AboutSection onGetStarted={onOpenRegister} />
             <SpecializeSection />

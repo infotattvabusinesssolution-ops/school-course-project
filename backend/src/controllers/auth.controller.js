@@ -6,6 +6,8 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import crypto from 'crypto';
 
+import { uploadImageOnCloudinary } from '../utils/cloudinary.js';
+
 export const signup = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -18,11 +20,24 @@ export const signup = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'User already exists');
   }
 
+  let avatarUrl = "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png";
+  let avatarPublicId = "";
+
+  if (req.file) {
+    const avatarUpload = await uploadImageOnCloudinary(req.file.path);
+    if (avatarUpload) {
+      avatarUrl = avatarUpload.secure_url;
+      avatarPublicId = avatarUpload.public_id;
+    }
+  }
+
   const user = await User.create({
     name,
     email,
     passwordHash: password, // Pre-save hook hashes it
     role: role || 'STUDENT',
+    avatar: avatarUrl,
+    avatarPublicId: avatarPublicId,
   });
 
   if (user) {
@@ -38,6 +53,7 @@ export const signup = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      avatar: user.avatar,
       token,
     }, 'User registered successfully'));
   } else {
@@ -69,6 +85,7 @@ export const login = asyncHandler(async (req, res) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    avatar: user.avatar,
     token,
   }, 'User logged in successfully'));
 });

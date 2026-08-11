@@ -1,0 +1,975 @@
+{
+  "communities": {
+    "0": [
+      "frontend_src_app",
+      "frontend_src_app_app",
+      "frontend_src_components_createpostmodal",
+      "frontend_src_components_createpostmodal_createpostmodal",
+      "frontend_src_components_ebookcheckoutmodal",
+      "frontend_src_components_ebookcheckoutmodal_ebookcheckoutmodal",
+      "frontend_src_components_footer",
+      "frontend_src_components_footer_footer",
+      "frontend_src_components_layout_adminsidebar",
+      "frontend_src_components_layout_adminsidebar_adminsidebar",
+      "frontend_src_components_sections_coursemodulessection",
+      "frontend_src_components_sections_coursemodulessection_coursemodulessection",
+      "frontend_src_components_sections_joincertifiedsection",
+      "frontend_src_components_sections_joincertifiedsection_joincertifiedsection",
+      "frontend_src_context_authcontext",
+      "frontend_src_context_authcontext_authcontext",
+      "frontend_src_context_authcontext_authprovider",
+      "frontend_src_context_authcontext_useauth",
+      "frontend_src_hooks_useaos",
+      "frontend_src_hooks_useaos_useaos",
+      "frontend_src_lib_axios",
+      "frontend_src_lib_axios_api",
+      "frontend_src_main",
+      "frontend_src_pages_admincreatecoursepage",
+      "frontend_src_pages_admincreatecoursepage_admincreatecoursepage",
+      "frontend_src_pages_admindashboardpage",
+      "frontend_src_pages_admindashboardpage_admindashboardpage",
+      "frontend_src_pages_adminebookcreatepage",
+      "frontend_src_pages_adminebookcreatepage_adminebookcreatepage",
+      "frontend_src_pages_certificatepage",
+      "frontend_src_pages_coursedetailspage",
+      "frontend_src_pages_coursedetailspage_coursedetailspage",
+      "frontend_src_pages_coursespage",
+      "frontend_src_pages_coursespage_coursespage",
+      "frontend_src_pages_dashboardpage",
+      "frontend_src_pages_dashboardpage_dashboardpage",
+      "frontend_src_pages_ebookdetailpage",
+      "frontend_src_pages_ebookdetailpage_ebookdetailpage",
+      "frontend_src_pages_ebookpage",
+      "frontend_src_pages_ebookpage_ebookpage",
+      "frontend_src_pages_examresultpage",
+      "frontend_src_pages_examresultpage_examresultpage",
+      "frontend_src_pages_faqpage",
+      "frontend_src_pages_faqpage_faqpage",
+      "frontend_src_pages_forumpage",
+      "frontend_src_pages_forumpage_forumpage",
+      "frontend_src_pages_postdetailpage",
+      "frontend_src_pages_postdetailpage_postdetailpage",
+      "frontend_src_pages_privacypolicypage",
+      "frontend_src_pages_privacypolicypage_privacypolicypage",
+      "frontend_src_pages_termsconditionspage",
+      "frontend_src_pages_termsconditionspage_termsconditionspage",
+      "frontend_src_pages_verifycertificatepage",
+      "frontend_src_pages_verifycertificatepage_verifycertificatepage",
+      "frontend_src_services_adminservice",
+      "frontend_src_services_adminservice_adminservice",
+      "frontend_src_services_courseservice",
+      "frontend_src_services_courseservice_courseservice",
+      "frontend_src_services_ebookservice",
+      "frontend_src_services_ebookservice_ebookservice",
+      "frontend_src_services_forumservice",
+      "frontend_src_services_forumservice_forumservice",
+      "frontend_src_services_reviewservice",
+      "frontend_src_services_reviewservice_reviewservice",
+      "frontend_src_utils_api",
+      "frontend_src_utils_api_api",
+      "frontend_src_utils_downloadhelper",
+      "frontend_src_utils_downloadhelper_downloadpdf"
+    ],
+    "1": [
+      "backend_src_controllers_certificate_controller",
+      "backend_src_controllers_certificate_controller_getmycertificates",
+      "backend_src_controllers_certificate_controller_issuecertificate",
+      "backend_src_controllers_certificate_controller_verifycertificate",
+      "backend_src_controllers_certificate_controller_verifystudentcertificate",
+      "backend_src_controllers_exam_controller",
+      "backend_src_controllers_exam_controller_createexam",
+      "backend_src_controllers_exam_controller_deleteexam",
+      "backend_src_controllers_exam_controller_getcourseexamstats",
+      "backend_src_controllers_exam_controller_getexamforadmin",
+      "backend_src_controllers_exam_controller_getexamforstudent",
+      "backend_src_controllers_exam_controller_getexamstatus",
+      "backend_src_controllers_exam_controller_getmyattempts",
+      "backend_src_controllers_exam_controller_shufflearray",
+      "backend_src_controllers_exam_controller_submitexam",
+      "backend_src_controllers_exam_controller_updateexam",
+      "backend_src_models_certificate_model",
+      "backend_src_models_certificate_model_certificateschema",
+      "backend_src_models_enrollment_model",
+      "backend_src_models_enrollment_model_enrollmentschema",
+      "backend_src_models_exam_model",
+      "backend_src_models_exam_model_examschema",
+      "backend_src_models_exam_model_questionschema",
+      "backend_src_models_examattempt_model",
+      "backend_src_models_examattempt_model_examattemptschema",
+      "backend_src_models_progress_model",
+      "backend_src_models_progress_model_progressschema",
+      "backend_src_routes_certificate_routes",
+      "backend_src_routes_exam_routes",
+      "backend_src_utils_apiresponse",
+      "backend_src_utils_apiresponse_apiresponse",
+      "backend_src_utils_apiresponse_apiresponse_constructor",
+      "backend_src_utils_generatecertificateid",
+      "backend_src_utils_generatecertificateid_generatecertificateid"
+    ],
+    "2": [
+      "aos",
+      "axios",
+      "emotion_react",
+      "emotion_styled",
+      "framer_motion",
+      "frontend_package_dependencies",
+      "frontend_package_dependencies_aos",
+      "frontend_package_dependencies_axios",
+      "frontend_package_dependencies_emotion_react",
+      "frontend_package_dependencies_emotion_styled",
+      "frontend_package_dependencies_framer_motion",
+      "frontend_package_dependencies_html2pdf_js",
+      "frontend_package_dependencies_lucide_react",
+      "frontend_package_dependencies_mui_icons_material",
+      "frontend_package_dependencies_mui_material",
+      "frontend_package_dependencies_react",
+      "frontend_package_dependencies_react_dom",
+      "frontend_package_dependencies_react_router_dom",
+      "frontend_package_dependencies_recharts",
+      "frontend_package_dependencies_tailwindcss_vite",
+      "html2pdf_js",
+      "lucide_react",
+      "mui_icons_material",
+      "mui_material",
+      "react",
+      "react_dom",
+      "react_router_dom",
+      "recharts",
+      "tailwindcss_vite"
+    ],
+    "3": [
+      "backend_src_controllers_course_controller",
+      "backend_src_controllers_course_controller_createcourse",
+      "backend_src_controllers_course_controller_deletecourse",
+      "backend_src_controllers_course_controller_getadmincourses",
+      "backend_src_controllers_course_controller_getcoursebyid",
+      "backend_src_controllers_course_controller_updatecourse",
+      "backend_src_controllers_course_controller_uploadcourseimage",
+      "backend_src_controllers_course_controller_uploadcoursethumbnail",
+      "backend_src_controllers_course_controller_uploadcoursevideo",
+      "backend_src_controllers_ebook_controller",
+      "backend_src_controllers_ebook_controller_createebook",
+      "backend_src_controllers_ebook_controller_deleteebook",
+      "backend_src_controllers_ebook_controller_getebookbyid",
+      "backend_src_controllers_ebook_controller_getpublicebooks",
+      "backend_src_controllers_ebook_controller_updateebook",
+      "backend_src_middleware_upload_middleware",
+      "backend_src_middleware_upload_middleware_storage",
+      "backend_src_middleware_upload_middleware_upload",
+      "backend_src_models_ebook_model",
+      "backend_src_models_ebook_model_ebookschema",
+      "backend_src_routes_course_routes",
+      "backend_src_routes_ebook_routes",
+      "backend_src_routes_ebook_routes_uploadfields",
+      "backend_src_utils_cloudinary",
+      "backend_src_utils_cloudinary_deletefromcloudinary",
+      "backend_src_utils_cloudinary_uploadoncloudinary"
+    ],
+    "4": [
+      "autoprefixer",
+      "frontend_package",
+      "frontend_package_devdependencies",
+      "frontend_package_devdependencies_autoprefixer",
+      "frontend_package_devdependencies_postcss",
+      "frontend_package_devdependencies_tailwindcss",
+      "frontend_package_devdependencies_types_react",
+      "frontend_package_devdependencies_types_react_dom",
+      "frontend_package_devdependencies_vite",
+      "frontend_package_devdependencies_vitejs_plugin_react",
+      "frontend_package_name",
+      "frontend_package_private",
+      "frontend_package_scripts",
+      "frontend_package_scripts_build",
+      "frontend_package_scripts_dev",
+      "frontend_package_scripts_lint",
+      "frontend_package_scripts_preview",
+      "frontend_package_type",
+      "frontend_package_version",
+      "postcss",
+      "tailwindcss",
+      "types_react",
+      "types_react_dom",
+      "vite",
+      "vitejs_plugin_react"
+    ],
+    "5": [
+      "backend_src_controllers_interaction_controller",
+      "backend_src_controllers_interaction_controller_answerdoubt",
+      "backend_src_controllers_interaction_controller_getcoursereviews",
+      "backend_src_controllers_interaction_controller_getinstructordoubts",
+      "backend_src_controllers_interaction_controller_getinstructorreviews",
+      "backend_src_controllers_interaction_controller_getstudentdoubts",
+      "backend_src_controllers_interaction_controller_submitdoubts",
+      "backend_src_controllers_interaction_controller_submitreview",
+      "backend_src_models_course_model",
+      "backend_src_models_course_model_course",
+      "backend_src_models_course_model_courseschema",
+      "backend_src_models_course_model_lessonschema",
+      "backend_src_models_course_model_moduleschema",
+      "backend_src_models_doubt_model",
+      "backend_src_models_doubt_model_doubtschema",
+      "backend_src_models_review_model",
+      "backend_src_models_review_model_reviewschema",
+      "backend_src_routes_interaction_routes",
+      "backend_src_routes_interaction_routes_router",
+      "backend_src_scripts_backfillcoursestats",
+      "backend_src_scripts_backfillcoursestats_backfillcoursestats",
+      "backend_src_scripts_backfillcoursestats_dirname",
+      "backend_src_scripts_backfillcoursestats_filename"
+    ],
+    "6": [
+      "backend_src_app",
+      "backend_src_app_limiter",
+      "backend_src_controllers_course_controller_getpubliccoursedetails",
+      "backend_src_controllers_course_controller_getpublishedcourses",
+      "backend_src_middleware_error_middleware",
+      "backend_src_middleware_error_middleware_errorhandler",
+      "backend_src_routes_category_routes",
+      "backend_src_routes_category_routes_router",
+      "backend_src_routes_certificate_routes_router",
+      "backend_src_routes_course_routes_router",
+      "backend_src_routes_ebook_routes_router",
+      "backend_src_routes_exam_routes_router",
+      "backend_src_routes_forum_routes_router",
+      "backend_src_routes_index",
+      "backend_src_routes_index_router",
+      "backend_src_routes_learning_routes",
+      "backend_src_routes_learning_routes_router",
+      "backend_src_routes_public_routes",
+      "backend_src_routes_public_routes_router",
+      "backend_src_routes_student_routes_router",
+      "backend_src_routes_upload_routes",
+      "backend_src_routes_upload_routes_router"
+    ],
+    "7": [
+      "frontend_src_components_icons_icons",
+      "frontend_src_components_icons_icons_awardbadgeicon",
+      "frontend_src_components_icons_icons_bookopenicon",
+      "frontend_src_components_icons_icons_chevrondownicon",
+      "frontend_src_components_icons_icons_chevronlefticon",
+      "frontend_src_components_icons_icons_chevronrighticon",
+      "frontend_src_components_icons_icons_envelopeicon",
+      "frontend_src_components_icons_icons_linkedinicon",
+      "frontend_src_components_icons_icons_locationpinicon",
+      "frontend_src_components_icons_icons_menuicon",
+      "frontend_src_components_icons_icons_phonecallicon",
+      "frontend_src_components_icons_icons_searchicon",
+      "frontend_src_components_icons_icons_teachericon",
+      "frontend_src_components_icons_icons_twittericon",
+      "frontend_src_components_icons_icons_usericon",
+      "frontend_src_components_icons_icons_userplusicon",
+      "frontend_src_components_navbar",
+      "frontend_src_components_navbar_navbar"
+    ],
+    "8": [
+      "frontend_src_components_sections_contactsection",
+      "frontend_src_components_sections_contactsection_contactsection",
+      "frontend_src_components_sections_faqsection",
+      "frontend_src_components_sections_faqsection_faqs",
+      "frontend_src_components_sections_faqsection_faqsection",
+      "frontend_src_components_sections_headlineticker",
+      "frontend_src_components_sections_headlineticker_headlines",
+      "frontend_src_components_sections_headlineticker_headlineticker",
+      "frontend_src_components_sections_howitworkssection",
+      "frontend_src_components_sections_howitworkssection_howitworkssection",
+      "frontend_src_components_sections_receivesection",
+      "frontend_src_components_sections_receivesection_receivesection",
+      "frontend_src_components_sections_testimonialssection",
+      "frontend_src_components_sections_testimonialssection_testimonialssection",
+      "frontend_src_pages_contactpage",
+      "frontend_src_pages_contactpage_contactpage",
+      "frontend_src_pages_homepage",
+      "frontend_src_pages_homepage_homepage"
+    ],
+    "9": [
+      "backend_src_controllers_admin_controller",
+      "backend_src_controllers_admin_controller_getanalytics",
+      "backend_src_controllers_admin_controller_getenrollments",
+      "backend_src_controllers_admin_controller_getusers",
+      "backend_src_controllers_admin_controller_updateuser",
+      "backend_src_middleware_auth_middleware",
+      "backend_src_middleware_auth_middleware_authorize",
+      "backend_src_middleware_role_middleware",
+      "backend_src_middleware_role_middleware_authorize",
+      "backend_src_routes_admin_routes",
+      "backend_src_routes_admin_routes_router",
+      "backend_src_utils_apierror",
+      "backend_src_utils_apierror_apierror",
+      "backend_src_utils_apierror_apierror_constructor",
+      "backend_src_utils_asynchandler",
+      "backend_src_utils_asynchandler_asynchandler"
+    ],
+    "10": [
+      "frontend_src_components_cartmodal",
+      "frontend_src_components_cartmodal_cartmodal",
+      "frontend_src_components_cartwishlistdrawer",
+      "frontend_src_components_cartwishlistdrawer_cartwishlistdrawer",
+      "frontend_src_components_checkoutmodal",
+      "frontend_src_components_checkoutmodal_checkoutmodal",
+      "frontend_src_components_enrolmodal",
+      "frontend_src_components_enrolmodal_enrolmodal",
+      "frontend_src_components_icons_icons_carticon",
+      "frontend_src_components_icons_icons_checkicon",
+      "frontend_src_components_icons_icons_hearticon",
+      "frontend_src_components_icons_icons_trashicon",
+      "frontend_src_components_icons_icons_xicon",
+      "frontend_src_components_modal",
+      "frontend_src_components_modal_modal"
+    ],
+    "11": [
+      "frontend_src_pages_adminexammanagementpage",
+      "frontend_src_pages_adminexammanagementpage_adminexammanagementpage",
+      "frontend_src_pages_adminexammanagementpage_emptyquestion",
+      "frontend_src_pages_exampage",
+      "frontend_src_pages_exampage_exampage",
+      "frontend_src_services_exam_service",
+      "frontend_src_services_exam_service_createexam",
+      "frontend_src_services_exam_service_deleteexam",
+      "frontend_src_services_exam_service_getcourseexamstats",
+      "frontend_src_services_exam_service_getexamforadmin",
+      "frontend_src_services_exam_service_getexamstatus",
+      "frontend_src_services_exam_service_getmyattempts",
+      "frontend_src_services_exam_service_submitexam",
+      "frontend_src_services_exam_service_takeexam",
+      "frontend_src_services_exam_service_updateexam"
+    ],
+    "12": [
+      "backend_src_controllers_forum_controller",
+      "backend_src_controllers_forum_controller_addreply",
+      "backend_src_controllers_forum_controller_createpost",
+      "backend_src_controllers_forum_controller_deletepost",
+      "backend_src_controllers_forum_controller_deletereply",
+      "backend_src_controllers_forum_controller_getallposts",
+      "backend_src_controllers_forum_controller_getpostbyid",
+      "backend_src_controllers_forum_controller_seedsampleposts",
+      "backend_src_controllers_forum_controller_togglelike",
+      "backend_src_models_forumpost_model",
+      "backend_src_models_forumpost_model_forumpostschema",
+      "backend_src_models_forumpost_model_replyschema",
+      "backend_src_routes_forum_routes"
+    ],
+    "13": [
+      "backend_src_controllers_auth_controller",
+      "backend_src_controllers_auth_controller_getme",
+      "backend_src_controllers_auth_controller_login",
+      "backend_src_controllers_auth_controller_logout",
+      "backend_src_controllers_auth_controller_signup",
+      "backend_src_middleware_auth_middleware_protect",
+      "backend_src_models_studentprofile_model",
+      "backend_src_models_studentprofile_model_studentprofileschema",
+      "backend_src_routes_auth_routes",
+      "backend_src_routes_auth_routes_router",
+      "backend_src_utils_generatetoken",
+      "backend_src_utils_generatetoken_generatetoken"
+    ],
+    "14": [
+      "backend_package_dependencies",
+      "backend_package_dependencies_bcryptjs",
+      "backend_package_dependencies_cloudinary",
+      "backend_package_dependencies_mongoose",
+      "backend_package_dependencies_nanoid",
+      "backend_package_dependencies_validator",
+      "bcryptjs",
+      "cloudinary",
+      "mongoose",
+      "nanoid",
+      "validator"
+    ],
+    "15": [
+      "backend_src_controllers_payment_controller",
+      "backend_src_controllers_payment_controller_createebookorder",
+      "backend_src_controllers_payment_controller_createrazorpayorder",
+      "backend_src_controllers_payment_controller_razorpay",
+      "backend_src_controllers_payment_controller_verifyebookpayment",
+      "backend_src_controllers_payment_controller_verifyrazorpaypayment",
+      "backend_src_models_ebookpurchase_model",
+      "backend_src_models_ebookpurchase_model_ebookpurchaseschema",
+      "backend_src_routes_payment_routes",
+      "backend_src_routes_payment_routes_router"
+    ],
+    "16": [
+      "backend_src_controllers_student_controller",
+      "backend_src_controllers_student_controller_getcourseplayerdetails",
+      "backend_src_controllers_student_controller_getenrolledcourses",
+      "backend_src_controllers_student_controller_getpurchasedebooks",
+      "backend_src_controllers_student_controller_getstudentdashboard",
+      "backend_src_controllers_student_controller_marklessoncompleted",
+      "backend_src_controllers_student_controller_synclessonprogress",
+      "backend_src_models_activitylog_model",
+      "backend_src_models_activitylog_model_activitylogschema",
+      "backend_src_routes_student_routes"
+    ],
+    "17": [
+      "frontend_src_components_customvideoplayer",
+      "frontend_src_components_customvideoplayer_customvideoplayer",
+      "frontend_src_components_customvideoplayer_formattime",
+      "frontend_src_components_customvideoplayer_speeds",
+      "frontend_src_pages_courseplayerpage",
+      "frontend_src_pages_courseplayerpage_courseplayerpage",
+      "frontend_src_pages_courseplayerpage_coursesidebar",
+      "frontend_src_pages_courseplayerpage_getyoutubeid",
+      "frontend_src_pages_courseplayerpage_isdirectvideo",
+      "frontend_src_pages_courseplayerpage_videoplayer"
+    ],
+    "18": [
+      "frontend_src_components_icons_icons_globeicon",
+      "frontend_src_components_icons_icons_packageicon",
+      "frontend_src_components_icons_icons_speedometericon",
+      "frontend_src_components_sections_aboutsection",
+      "frontend_src_components_sections_aboutsection_aboutsection",
+      "frontend_src_components_sections_specializesection",
+      "frontend_src_components_sections_specializesection_specializesection",
+      "frontend_src_pages_aboutpage",
+      "frontend_src_pages_aboutpage_aboutpage"
+    ],
+    "19": [
+      "backend_package",
+      "backend_package_devdependencies",
+      "backend_package_devdependencies_nodemon",
+      "backend_package_name",
+      "backend_package_type",
+      "backend_package_version",
+      "nodemon"
+    ],
+    "20": [
+      "frontend_src_components_icons_icons_eyeicon",
+      "frontend_src_components_loginmodal",
+      "frontend_src_components_loginmodal_loginmodal",
+      "frontend_src_components_sections_herosection",
+      "frontend_src_components_sections_herosection_herosection",
+      "frontend_src_components_sections_herosection_loginform",
+      "frontend_src_components_sections_herosection_registerform"
+    ],
+    "21": [
+      "backend_src_controllers_review_controller",
+      "backend_src_controllers_review_controller_addreview",
+      "backend_src_controllers_review_controller_getcoursereviews",
+      "backend_src_controllers_review_controller_getmyreview",
+      "backend_src_routes_review_routes",
+      "backend_src_routes_review_routes_router"
+    ],
+    "22": [
+      "frontend_src_components_floatingsocialbar",
+      "frontend_src_components_floatingsocialbar_floatingsocialbar",
+      "frontend_src_components_icons_icons_facebookicon",
+      "frontend_src_components_icons_icons_instagramicon",
+      "frontend_src_components_icons_icons_tiktokicon",
+      "frontend_src_components_icons_icons_whatsappicon"
+    ],
+    "23": [
+      "backend_package_scripts",
+      "backend_package_scripts_dev",
+      "backend_package_scripts_seed_admin",
+      "backend_package_scripts_seed_categories",
+      "backend_package_scripts_start"
+    ],
+    "24": [
+      "backend_seedadmin",
+      "backend_seedadmin_seedadmin",
+      "backend_src_models_user_model",
+      "backend_src_models_user_model_userschema"
+    ],
+    "25": [
+      "backend_src_app_app",
+      "backend_src_config_db",
+      "backend_src_config_db_connectdb",
+      "backend_src_server"
+    ],
+    "26": [
+      "backend_package_dependencies_compression",
+      "compression"
+    ],
+    "27": [
+      "backend_package_dependencies_cookie_parser",
+      "cookie_parser"
+    ],
+    "28": [
+      "backend_package_dependencies_cors",
+      "cors"
+    ],
+    "29": [
+      "backend_package_dependencies_dotenv",
+      "dotenv"
+    ],
+    "30": [
+      "backend_package_dependencies_express",
+      "express"
+    ],
+    "31": [
+      "backend_package_dependencies_express_mongo_sanitize",
+      "express_mongo_sanitize"
+    ],
+    "32": [
+      "backend_package_dependencies_express_rate_limit",
+      "express_rate_limit"
+    ],
+    "33": [
+      "backend_package_dependencies_helmet",
+      "helmet"
+    ],
+    "34": [
+      "backend_package_dependencies_hpp",
+      "hpp"
+    ],
+    "35": [
+      "backend_package_dependencies_jsonwebtoken",
+      "jsonwebtoken"
+    ],
+    "36": [
+      "backend_package_dependencies_morgan",
+      "morgan"
+    ],
+    "37": [
+      "backend_package_dependencies_multer",
+      "multer"
+    ],
+    "38": [
+      "backend_package_dependencies_razorpay",
+      "razorpay"
+    ],
+    "39": [
+      "backend_package_dependencies_slugify",
+      "slugify"
+    ],
+    "40": [
+      "backend_package_dependencies_stripe",
+      "stripe"
+    ],
+    "41": [
+      "backend_package_dependencies_zod",
+      "zod"
+    ],
+    "42": [
+      "backend_src_config_cloudinary",
+      "backend_src_config_cloudinary_cloudinaryconfig"
+    ],
+    "43": [
+      "backend_src_config_env",
+      "backend_src_config_env_env"
+    ],
+    "44": [
+      "backend_src_config_stripe",
+      "backend_src_config_stripe_stripeconfig"
+    ],
+    "45": [
+      "backend_src_constants_messages",
+      "backend_src_constants_messages_messages"
+    ],
+    "46": [
+      "backend_src_constants_permissions",
+      "backend_src_constants_permissions_permissions"
+    ],
+    "47": [
+      "backend_src_constants_roles",
+      "backend_src_constants_roles_roles"
+    ],
+    "48": [
+      "backend_src_constants_statuses",
+      "backend_src_constants_statuses_statuses"
+    ],
+    "49": [
+      "backend_src_controllers_category_controller",
+      "backend_src_controllers_category_controller_getcategories"
+    ],
+    "50": [
+      "backend_src_controllers_instructor_controller",
+      "backend_src_controllers_instructor_controller_getprofile"
+    ],
+    "51": [
+      "backend_src_controllers_learning_controller",
+      "backend_src_controllers_learning_controller_getcourseprogress"
+    ],
+    "52": [
+      "backend_src_controllers_payout_controller",
+      "backend_src_controllers_payout_controller_requestpayout"
+    ],
+    "53": [
+      "backend_src_controllers_upload_controller",
+      "backend_src_controllers_upload_controller_getsignature"
+    ],
+    "54": [
+      "backend_src_middleware_admin_middleware",
+      "backend_src_middleware_admin_middleware_adminonly"
+    ],
+    "55": [
+      "backend_src_middleware_notfound_middleware",
+      "backend_src_middleware_notfound_middleware_notfound"
+    ],
+    "56": [
+      "backend_src_middleware_ownership_middleware",
+      "backend_src_middleware_ownership_middleware_checkownership"
+    ],
+    "57": [
+      "backend_src_middleware_security_middleware",
+      "backend_src_middleware_security_middleware_securityheaders"
+    ],
+    "58": [
+      "backend_src_middleware_validate_middleware",
+      "backend_src_middleware_validate_middleware_validate"
+    ],
+    "59": [
+      "backend_src_scripts_clearenrollments",
+      "backend_src_scripts_clearenrollments_clearenrollments"
+    ],
+    "60": [
+      "backend_src_scripts_dropindexes",
+      "backend_src_scripts_dropindexes_dropindexes"
+    ],
+    "61": [
+      "backend_src_services_activitylog_service",
+      "backend_src_services_activitylog_service_activitylogservice"
+    ],
+    "62": [
+      "backend_src_services_auth_service",
+      "backend_src_services_auth_service_authservice"
+    ],
+    "63": [
+      "backend_src_services_certificate_service",
+      "backend_src_services_certificate_service_certificateservice"
+    ],
+    "64": [
+      "backend_src_services_cloudinary_service",
+      "backend_src_services_cloudinary_service_cloudinaryservice"
+    ],
+    "65": [
+      "backend_src_services_course_service",
+      "backend_src_services_course_service_courseservice"
+    ],
+    "66": [
+      "backend_src_services_earning_service",
+      "backend_src_services_earning_service_earningservice"
+    ],
+    "67": [
+      "backend_src_services_enrollment_service",
+      "backend_src_services_enrollment_service_enrollmentservice"
+    ],
+    "68": [
+      "backend_src_services_notification_service",
+      "backend_src_services_notification_service_notificationservice"
+    ],
+    "69": [
+      "backend_src_services_payout_service",
+      "backend_src_services_payout_service_payoutservice"
+    ],
+    "70": [
+      "backend_src_services_stripe_service",
+      "backend_src_services_stripe_service_stripeservice"
+    ],
+    "71": [
+      "backend_src_services_token_service",
+      "backend_src_services_token_service_tokenservice"
+    ],
+    "72": [
+      "backend_src_utils_calculatecommission",
+      "backend_src_utils_calculatecommission_calculatecommission"
+    ],
+    "73": [
+      "backend_src_utils_logger",
+      "backend_src_utils_logger_logger"
+    ],
+    "74": [
+      "backend_src_utils_pick",
+      "backend_src_utils_pick_pick"
+    ],
+    "75": [
+      "backend_src_utils_slugifytext",
+      "backend_src_utils_slugifytext_slugifytext"
+    ],
+    "76": [
+      "backend_src_validations_auth_validation",
+      "backend_src_validations_auth_validation_authschema"
+    ],
+    "77": [
+      "backend_src_validations_category_validation",
+      "backend_src_validations_category_validation_categoryschema"
+    ],
+    "78": [
+      "backend_src_validations_course_validation",
+      "backend_src_validations_course_validation_courseschema"
+    ],
+    "79": [
+      "backend_src_validations_instructor_validation",
+      "backend_src_validations_instructor_validation_instructorschema"
+    ],
+    "80": [
+      "backend_src_validations_payment_validation",
+      "backend_src_validations_payment_validation_paymentschema"
+    ],
+    "81": [
+      "backend_src_validations_payout_validation",
+      "backend_src_validations_payout_validation_payoutschema"
+    ],
+    "82": [
+      "backend_src_validations_review_validation",
+      "backend_src_validations_review_validation_reviewschema"
+    ],
+    "83": [
+      "backend_src_validations_student_validation",
+      "backend_src_validations_student_validation_studentschema"
+    ],
+    "84": [
+      "frontend_src_components_newstickerbar",
+      "frontend_src_components_newstickerbar_newstickerbar"
+    ],
+    "85": [
+      "backend_src_docs_swagger_placeholder"
+    ],
+    "86": [
+      "backend_src_models_cart_model"
+    ],
+    "87": [
+      "backend_src_models_category_model"
+    ],
+    "88": [
+      "backend_src_models_coursephase_model"
+    ],
+    "89": [
+      "backend_src_models_lesson_model"
+    ],
+    "90": [
+      "backend_src_models_lessonvideo_model"
+    ],
+    "91": [
+      "backend_src_models_notification_model"
+    ],
+    "92": [
+      "backend_src_models_order_model"
+    ],
+    "93": [
+      "backend_src_models_payment_model"
+    ],
+    "94": [
+      "backend_src_models_resource_model"
+    ],
+    "95": [
+      "backend_src_models_wishlist_model"
+    ],
+    "96": [
+      "backend_src_seed_admin_seed"
+    ],
+    "97": [
+      "backend_src_seed_category_seed"
+    ],
+    "98": [
+      "frontend_eslint_config"
+    ],
+    "99": [
+      "frontend_vite_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08121158911325724,
+    "1": 0.10160427807486631,
+    "2": 0.06896551724137931,
+    "3": 0.16615384615384615,
+    "4": 0.08,
+    "5": 0.13043478260869565,
+    "6": 0.14285714285714285,
+    "7": 0.12418300653594772,
+    "8": 0.1568627450980392,
+    "9": 0.225,
+    "10": 0.19047619047619047,
+    "11": 0.2761904761904762,
+    "12": 0.2564102564102564,
+    "13": 0.2727272727272727,
+    "14": 0.18181818181818182,
+    "15": 0.28888888888888886,
+    "16": 0.3333333333333333,
+    "17": 0.28888888888888886,
+    "18": 0.3055555555555556,
+    "19": 0.2857142857142857,
+    "20": 0.2857142857142857,
+    "21": 0.5333333333333333,
+    "22": 0.6,
+    "23": 0.4,
+    "24": 0.5,
+    "25": 0.6666666666666666,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0
+  },
+  "gods": [
+    {
+      "id": "frontend_src_context_authcontext_useauth",
+      "label": "useAuth()",
+      "degree": 28
+    },
+    {
+      "id": "frontend_src_lib_axios_api",
+      "label": "api",
+      "degree": 16
+    },
+    {
+      "id": "backend_src_utils_apierror_apierror",
+      "label": "ApiError",
+      "degree": 13
+    },
+    {
+      "id": "backend_src_middleware_auth_middleware_protect",
+      "label": "protect",
+      "degree": 12
+    },
+    {
+      "id": "backend_src_utils_asynchandler_asynchandler",
+      "label": "asyncHandler()",
+      "degree": 11
+    },
+    {
+      "id": "backend_src_models_course_model_course",
+      "label": "Course",
+      "degree": 10
+    },
+    {
+      "id": "backend_src_utils_apiresponse_apiresponse",
+      "label": "ApiResponse",
+      "degree": 9
+    },
+    {
+      "id": "frontend_src_utils_downloadhelper_downloadpdf",
+      "label": "downloadPdf()",
+      "degree": 9
+    },
+    {
+      "id": "backend_src_utils_cloudinary_uploadoncloudinary",
+      "label": "uploadOnCloudinary()",
+      "degree": 8
+    },
+    {
+      "id": "frontend_src_components_icons_icons_checkicon",
+      "label": "CheckIcon()",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "LoginForm()",
+      "target": "useAuth()",
+      "source_files": [
+        "frontend/src/components/sections/HeroSection.jsx",
+        "frontend/src/context/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities; peripheral node `LoginForm()` unexpectedly reaches hub `useAuth()`"
+    },
+    {
+      "source": "RegisterForm()",
+      "target": "useAuth()",
+      "source_files": [
+        "frontend/src/components/sections/HeroSection.jsx",
+        "frontend/src/context/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities; peripheral node `RegisterForm()` unexpectedly reaches hub `useAuth()`"
+    },
+    {
+      "source": "FloatingSocialBar()",
+      "target": "FacebookIcon()",
+      "source_files": [
+        "frontend/src/components/FloatingSocialBar.jsx",
+        "frontend/src/components/icons/Icons.jsx"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "FloatingSocialBar()",
+      "target": "InstagramIcon()",
+      "source_files": [
+        "frontend/src/components/FloatingSocialBar.jsx",
+        "frontend/src/components/icons/Icons.jsx"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "FloatingSocialBar()",
+      "target": "TikTokIcon()",
+      "source_files": [
+        "frontend/src/components/FloatingSocialBar.jsx",
+        "frontend/src/components/icons/Icons.jsx"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

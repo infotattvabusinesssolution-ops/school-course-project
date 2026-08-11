@@ -65,7 +65,7 @@ export default function CartModal({
 
                 {/* Price */}
                 <div className="col-span-2 text-center font-black text-[#0284c7]">
-                  ₹{typeof item.price === 'number' ? item.price : String(item.price).replace(/[^0-9]/g, '') || 499}
+                  R{typeof item.price === 'number' ? item.price : String(item.price).replace(/[^0-9]/g, '') || 499}
                 </div>
 
                 {/* Remove Trash Button matching Image */}
@@ -89,7 +89,7 @@ export default function CartModal({
               Grand Total
             </div>
             <div className="col-span-2 text-center font-black text-[#0284c7] text-base">
-              ₹{calculateGrandTotal()}
+              R{calculateGrandTotal()}
             </div>
             <div className="col-span-2" />
           </div>

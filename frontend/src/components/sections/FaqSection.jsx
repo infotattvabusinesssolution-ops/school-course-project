@@ -1,34 +1,32 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const faqs = [
   {
-    q: "What is CRMISA and what courses do you offer?",
-    a: "CRMISA is a premier trade education platform providing practical, certified training in international import/export management, customs clearance, incoterms, trade finance, and supply chain logistics."
+    q: "What is this course about?",
+    a: "This course is a comprehensive guide to starting and growing an import/export business, covering everything from international trade basics to shipping, customs, and compliance."
   },
   {
-    q: "How do I enroll in a course?",
-    a: "Browse our Courses page, select your preferred course, and click 'Enroll Now'. Complete the secure checkout via Razorpay to gain immediate access to your student dashboard and course player."
+    q: "Who is this course for?",
+    a: "It is designed for aspiring entrepreneurs, business owners, and professionals looking to understand and enter the global trade market."
   },
   {
-    q: "Will I receive a certificate upon completion?",
-    a: "Yes! Every student who completes 100% of the lessons in a course receives an official, verifiable Certificate of Completion from CRMISA."
+    q: "Do I need any prior experience in trade or business?",
+    a: "No prior experience is necessary. The course is built to take you from a complete beginner to a confident trader."
   },
   {
-    q: "What payment methods are supported?",
-    a: "We support secure online payments via Razorpay including Credit/Debit Cards, Net Banking, UPI, and Instant EFT options."
+    q: "What countries or regions does the course focus on?",
+    a: "While the core principles apply globally, the course includes specific modules focused on the African market and cross-border trade."
   },
   {
-    q: "How long do I have access to course materials?",
-    a: "Most courses include full ongoing access so you can review lessons and reference guides anytime at your own pace."
+    q: "How long is the course?",
+    a: "The course is self-paced, but most students complete the core modules within 4 to 6 weeks, depending on their schedule."
   },
   {
-    q: "Can I watch videos on mobile devices?",
-    a: "Yes, our course player and student dashboard are fully optimized for seamless playback across desktop, tablet, and mobile browsers."
-  },
-  {
-    q: "How can I contact my instructor if I have questions?",
-    a: "Inside the Course Player, navigate to the Q&A section to ask questions directly to your instructor and view answers."
+    q: "What topics are covered in the course?",
+    a: "Topics include finding buyers/suppliers, logistics, customs, trade finance, compliance, and how to successfully register and run your business."
   }
 ];
 
@@ -40,30 +38,22 @@ export default function FaqSection() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-[2px] bg-yellow-400" />
-            <span className="text-sm font-semibold text-slate-500 uppercase tracking-widest">
-              Got Questions?
-            </span>
+        <div className="mb-10 text-center sm:text-left flex flex-col sm:flex-row items-center sm:items-start gap-4">
+          <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+            <HelpCircle className="w-5 h-5" />
           </div>
-          <div className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
-              <HelpCircle className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-slate-500 text-sm mt-2">
-                Everything you need to know before getting started.
-              </p>
-            </div>
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-slate-500 text-sm mt-2">
+              Everything you need to know before getting started.
+            </p>
           </div>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-3">
+        <div className="space-y-3 mb-8">
           {faqs.map((faq, i) => {
             const isOpen = openIdx === i;
             return (
@@ -90,15 +80,35 @@ export default function FaqSection() {
                     }`}
                   />
                 </button>
-                {isOpen && (
-                  <div className="px-5 py-4 text-slate-600 text-sm leading-relaxed bg-slate-50 border-t border-slate-100">
-                    {faq.a}
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 py-4 text-slate-600 text-sm leading-relaxed bg-slate-50 border-t border-slate-100">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
         </div>
+
+        <div className="text-center">
+          <Link
+            to="/faq"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-full transition-colors text-sm uppercase tracking-wider"
+          >
+            View More FAQs <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
       </div>
     </section>
   );

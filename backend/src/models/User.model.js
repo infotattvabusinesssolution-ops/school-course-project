@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       select: false,
     },
+    avatar: {
+      type: String,
+      default: "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png",
+    },
+    avatarPublicId: {
+      type: String,
+    },
     role: {
       type: String,
       enum: ["STUDENT", "ADMIN"],

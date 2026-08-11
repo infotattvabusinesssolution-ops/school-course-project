@@ -26,6 +26,10 @@ const certificateSchema = new mongoose.Schema(
       type: Number,
       default: 100,
     },
+    examScore: {
+      type: Number,
+      default: null, // null means no exam was required; otherwise stores percentage e.g. 75
+    },
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { courseService } from '../services/courseService';
+import { FileText, Image as ImageIcon, Film, Plus, Trash2, CheckCircle2, ChevronLeft, Save, Send, Award } from 'lucide-react';
 
 export default function AdminCreateCoursePage() {
   const { id: selectedCourseId } = useParams();
@@ -8,6 +9,7 @@ export default function AdminCreateCoursePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingLessonIdx, setUploadingLessonIdx] = useState(null);
   
   const [formData, setFormData] = useState({
@@ -18,7 +20,8 @@ export default function AdminCreateCoursePage() {
     level: 'beginner',
     price: 0,
     modules: [],
-    thumbnailUrl: ''
+    thumbnailUrl: '',
+    pdfGuideUrl: ''
   });
 
   useEffect(() => {
@@ -35,7 +38,8 @@ export default function AdminCreateCoursePage() {
             level: response.data.level || 'beginner',
             price: response.data.price || 0,
             modules: response.data.modules || [],
-            thumbnailUrl: response.data.thumbnailUrl || ''
+            thumbnailUrl: response.data.thumbnailUrl || '',
+            pdfGuideUrl: response.data.pdfGuideUrl || ''
           });
         } catch (err) {
           setError(err.message || "Failed to fetch course details");
@@ -57,7 +61,6 @@ export default function AdminCreateCoursePage() {
       setLoading(true);
       setError('');
       
-      // Clean up empty modules/lessons before saving and add the required 'order' fields
       const cleanedModules = formData.modules.map((m, mIdx) => ({
         ...m,
         order: mIdx + 1,
@@ -69,12 +72,19 @@ export default function AdminCreateCoursePage() {
 
       const dataToSave = { ...formData, modules: cleanedModules, status: publish ? 'PUBLISHED' : 'DRAFT' };
       
+      let createdCourseId = selectedCourseId;
+
       if (selectedCourseId) {
         await courseService.updateCourse(selectedCourseId, dataToSave);
         alert(`Course ${publish ? 'Published' : 'Updated'} Successfully!`);
       } else {
-        await courseService.createCourse(dataToSave);
+        const response = await courseService.createCourse(dataToSave);
+        createdCourseId = response.data._id;
         alert(`Course Created Successfully!`);
+      }
+      
+      if (publish) {
+        localStorage.setItem("adminActiveTab", "6");
       }
       navigate('/admin/dashboard');
     } catch (err) {
@@ -97,6 +107,22 @@ export default function AdminCreateCoursePage() {
       setError(err.message || 'Failed to upload image');
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploadingPdf(true);
+      setError('');
+      const response = await courseService.uploadPdf(file);
+      setFormData(prev => ({ ...prev, pdfGuideUrl: response.data.pdfUrl }));
+    } catch (err) {
+      setError(err.message || 'Failed to upload PDF guide');
+    } finally {
+      setUploadingPdf(false);
     }
   };
 
@@ -175,30 +201,31 @@ export default function AdminCreateCoursePage() {
   };
 
   return (
-    <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+    <div className="bg-slate-50 min-h-screen flex flex-col font-sans">
       {/* Top Navbar */}
-      <header className="bg-surface-container-lowest border-b border-outline-variant h-20 w-full flex items-center px-4 md:px-8 z-50 sticky top-0">
+      <header className="bg-crmisa-navy text-white h-20 w-full flex items-center px-4 md:px-8 z-50 sticky top-0 shadow-md">
         <button 
           onClick={() => navigate('/admin/dashboard')}
-          className="flex items-center gap-2 text-on-surface hover:text-primary transition-colors font-bold"
+          className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors font-bold text-sm"
         >
-          <span className="material-symbols-outlined">arrow_back</span>
+          <ChevronLeft className="w-5 h-5" />
           Back to Dashboard
         </button>
         <div className="ml-auto flex items-center gap-4">
           <button 
             onClick={() => handleSave(false)}
             disabled={loading}
-            className="px-6 py-2 rounded-xl text-primary font-bold border border-primary hover:bg-primary-container/20 transition-all disabled:opacity-50"
+            className="px-6 py-2 rounded-xl text-white font-bold border border-white hover:bg-white/10 transition-all disabled:opacity-50 flex items-center gap-2 text-sm"
           >
+            <Save className="w-4 h-4" />
             Save Draft
           </button>
           <button 
             onClick={() => handleSave(true)}
             disabled={loading}
-            className="px-6 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2 rounded-xl bg-blue-500 text-white font-bold shadow-sm hover:bg-blue-400 transition-all flex items-center gap-2 disabled:opacity-50 text-sm"
           >
-            <span className="material-symbols-outlined text-[20px]">publish</span>
+            <Send className="w-4 h-4" />
             Publish
           </button>
         </div>
@@ -206,86 +233,86 @@ export default function AdminCreateCoursePage() {
 
       <main className="flex-grow flex flex-col items-center py-8 px-4 md:px-8 max-w-5xl mx-auto w-full">
         {/* Header */}
-        <div className="w-full mb-8">
-          <h1 className="text-display-lg-mobile md:text-headline-md font-bold text-on-background mb-2">
+        <div className="w-full mb-8 text-center sm:text-left">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-crmisa-navy mb-2 tracking-tight">
             {selectedCourseId ? 'Edit Course' : 'Create New Course'}
           </h1>
-          <p className="text-body-lg text-on-surface-variant">
-            Complete the details below to build your course curriculum.
+          <p className="text-slate-500 font-medium">
+            Complete the details below to build your course curriculum and resources.
           </p>
         </div>
 
         {/* Form Container */}
-        <div className="w-full bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm p-6 md:p-8 relative overflow-hidden">
+        <div className="w-full bg-white rounded-2xl shadow-xl p-6 md:p-10 relative overflow-hidden border border-slate-100">
           {error && (
-            <div className="mb-6 p-4 bg-error-container/20 border border-error-container text-error rounded-lg">
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl font-medium text-sm">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-12">
             
             {/* Section 1: Basic Info */}
-            <div className="flex flex-col gap-6 border-b border-outline-variant/20 pb-8">
-              <div>
-                <h2 className="text-headline-sm font-bold text-on-surface mb-2">Core Identity</h2>
-                <p className="text-body-sm text-on-surface-variant">Provide the title, subtitle, and description.</p>
+            <div className="flex flex-col gap-6">
+              <div className="border-b-2 border-crmisa-lightBlue pb-3">
+                <h2 className="text-xl font-extrabold text-crmisa-navy uppercase tracking-wider">Core Identity</h2>
+                <p className="text-slate-500 text-sm mt-1">Provide the title, subtitle, and description.</p>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-label-md font-bold text-on-surface">Course Title *</label>
+                <label className="text-sm font-bold text-slate-700">Course Title <span className="text-red-500">*</span></label>
                 <input 
                   type="text" 
                   name="title" 
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary focus:ring-0 transition-all shadow-sm" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" 
                   placeholder="e.g., Import & Export Masterclass" 
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-label-md font-bold text-on-surface">Course Subtitle</label>
+                <label className="text-sm font-bold text-slate-700">Course Subtitle</label>
                 <input 
                   type="text" 
                   name="subtitle" 
                   value={formData.subtitle}
                   onChange={handleChange}
-                  className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary focus:ring-0 transition-all shadow-sm" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" 
                   placeholder="A brief summary of what students will achieve" 
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-label-md font-bold text-on-surface">Course Description *</label>
+                <label className="text-sm font-bold text-slate-700">Course Description <span className="text-red-500">*</span></label>
                 <textarea 
                   name="description" 
                   value={formData.description}
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary focus:ring-0 resize-y min-h-[150px] bg-surface-container-lowest" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all resize-y" 
                   placeholder="Explain what your course covers..."
                 ></textarea>
               </div>
             </div>
 
             {/* Section 2: Taxonomy & Pricing */}
-            <div className="flex flex-col gap-6 border-b border-outline-variant/20 pb-8">
-              <div>
-                <h2 className="text-headline-sm font-bold text-on-surface mb-2">Categorization & Pricing</h2>
-                <p className="text-body-sm text-on-surface-variant">Set the level, category, and price.</p>
+            <div className="flex flex-col gap-6">
+              <div className="border-b-2 border-crmisa-lightBlue pb-3">
+                <h2 className="text-xl font-extrabold text-crmisa-navy uppercase tracking-wider">Categorization & Pricing</h2>
+                <p className="text-slate-500 text-sm mt-1">Set the level, category, and price.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-label-md font-bold text-on-surface">Category *</label>
+                  <label className="text-sm font-bold text-slate-700">Category <span className="text-red-500">*</span></label>
                   <select 
                     name="category" 
                     value={formData.category}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary transition-all shadow-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                   >
                     <option value="Full Certification">Full Certification</option>
                     <option value="Customs & Compliance">Customs & Compliance</option>
@@ -296,12 +323,12 @@ export default function AdminCreateCoursePage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-label-md font-bold text-on-surface">Level *</label>
+                  <label className="text-sm font-bold text-slate-700">Level <span className="text-red-500">*</span></label>
                   <select 
                     name="level" 
                     value={formData.level}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary transition-all shadow-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                   >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
@@ -311,104 +338,138 @@ export default function AdminCreateCoursePage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-label-md font-bold text-on-surface">Price (R) *</label>
+                  <label className="text-sm font-bold text-slate-700">Price (R) <span className="text-red-500">*</span></label>
                   <input 
                     type="number" 
                     name="price" 
                     value={formData.price}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-primary transition-all shadow-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                     min="0"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Section 3: Media */}
-            <div className="flex flex-col gap-6 border-b border-outline-variant/20 pb-8">
-              <div>
-                <h2 className="text-headline-sm font-bold text-on-surface mb-2">Course Image</h2>
-                <p className="text-body-sm text-on-surface-variant">Upload a thumbnail for the course catalog.</p>
+            {/* Section 3: Media & Resources */}
+            <div className="flex flex-col gap-6">
+              <div className="border-b-2 border-crmisa-lightBlue pb-3">
+                <h2 className="text-xl font-extrabold text-crmisa-navy uppercase tracking-wider">Media & Resources</h2>
+                <p className="text-slate-500 text-sm mt-1">Upload course thumbnail and a downloadable PDF Guide.</p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <div className="w-full sm:w-1/2 aspect-video bg-surface-container rounded-xl overflow-hidden border-2 border-dashed border-outline-variant flex flex-col items-center justify-center relative">
-                  {formData.thumbnailUrl ? (
-                    <img src={formData.thumbnailUrl} alt="Course Thumbnail" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="flex flex-col items-center gap-2 text-on-surface-variant p-4 text-center">
-                      <span className="material-symbols-outlined text-[48px] text-outline">image</span>
-                      <p className="text-body-sm">1920x1080 recommended</p>
-                    </div>
-                  )}
-                  {uploadingImage && (
-                    <div className="absolute inset-0 bg-surface-container/80 flex flex-col items-center justify-center backdrop-blur-sm">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                      <span className="text-label-md font-bold text-primary mt-2">Uploading...</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <label className="cursor-pointer px-4 py-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg hover:bg-[#5ce8ab] transition-colors flex items-center justify-center gap-2 shadow-sm text-center">
-                    <span className="material-symbols-outlined">upload_file</span>
-                    Upload Image
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                {/* Thumbnail Upload */}
+                <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-6 flex flex-col items-center justify-center text-center">
+                  <div className="w-full aspect-video bg-white rounded-xl overflow-hidden border border-slate-200 mb-4 flex items-center justify-center relative">
+                    {formData.thumbnailUrl ? (
+                      <img src={formData.thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-slate-300 flex flex-col items-center">
+                        <ImageIcon className="w-12 h-12 mb-2" />
+                        <span className="text-sm font-medium">1920x1080 recommended</span>
+                      </div>
+                    )}
+                    {uploadingImage && (
+                      <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-sm">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        <span className="text-sm font-bold text-blue-500 mt-2">Uploading...</span>
+                      </div>
+                    )}
+                  </div>
+                  <label className="cursor-pointer px-6 py-2 bg-crmisa-navy text-white font-bold rounded-xl hover:bg-crmisa-accentNavy transition-colors flex items-center justify-center gap-2 shadow-md w-full">
+                    <ImageIcon className="w-4 h-4" />
+                    {formData.thumbnailUrl ? 'Change Cover Image' : 'Upload Cover Image'}
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                   </label>
-                  <div className="text-body-sm text-on-surface-variant max-w-xs">
-                    File must be a JPEG, PNG, or WEBP, and less than 5MB.
-                  </div>
+                  <p className="text-xs text-slate-500 mt-3">JPEG, PNG, WEBP (Max 5MB)</p>
                 </div>
+
+                {/* PDF Guide Upload */}
+                <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-6 flex flex-col items-center justify-center text-center">
+                  <div className="w-full aspect-video bg-white rounded-xl overflow-hidden border border-slate-200 mb-4 flex items-center justify-center relative">
+                    {formData.pdfGuideUrl ? (
+                      <div className="text-green-600 flex flex-col items-center p-4">
+                        <CheckCircle2 className="w-12 h-12 mb-2 text-green-500" />
+                        <span className="font-bold">PDF Guide Ready</span>
+                        <a href={formData.pdfGuideUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline mt-1">Preview PDF</a>
+                      </div>
+                    ) : (
+                      <div className="text-slate-300 flex flex-col items-center p-4">
+                        <FileText className="w-12 h-12 mb-2" />
+                        <span className="text-sm font-medium">Add a downloadable guide</span>
+                      </div>
+                    )}
+                    {uploadingPdf && (
+                      <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-sm">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        <span className="text-sm font-bold text-blue-500 mt-2">Uploading PDF...</span>
+                      </div>
+                    )}
+                  </div>
+                  <label className="cursor-pointer px-6 py-2 bg-blue-50 text-blue-600 font-bold border border-blue-200 rounded-xl hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 w-full">
+                    <FileText className="w-4 h-4" />
+                    {formData.pdfGuideUrl ? 'Change PDF Guide' : 'Upload PDF Guide'}
+                    <input type="file" accept="application/pdf" className="hidden" onChange={handlePdfUpload} />
+                  </label>
+                  <p className="text-xs text-slate-500 mt-3">PDF files only (Max 20MB)</p>
+                </div>
+
               </div>
             </div>
 
             {/* Section 4: Curriculum Builder */}
             <div className="flex flex-col gap-6">
-              <div className="flex justify-between items-center">
+              <div className="border-b-2 border-crmisa-lightBlue pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
-                  <h2 className="text-headline-sm font-bold text-on-surface mb-2">Curriculum Builder</h2>
-                  <p className="text-body-sm text-on-surface-variant">Structure your course into modules and add lessons.</p>
+                  <h2 className="text-xl font-extrabold text-crmisa-navy uppercase tracking-wider">Curriculum Builder</h2>
+                  <p className="text-slate-500 text-sm mt-1">Structure your course into modules and add lessons.</p>
                 </div>
                 <button 
                   onClick={addModule}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-container text-on-primary-container rounded-lg font-bold hover:bg-[#adc6ff] transition-colors shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 bg-crmisa-navy text-white rounded-xl font-bold hover:bg-crmisa-accentNavy transition-colors shadow-md text-sm"
                 >
-                  <span className="material-symbols-outlined">add</span>
+                  <Plus className="w-4 h-4" />
                   Add Module
                 </button>
               </div>
 
-              <div className="flex flex-col gap-6 mt-4">
+              <div className="flex flex-col gap-6 mt-2">
                 {formData.modules.map((module, mIdx) => (
-                  <div key={mIdx} className="bg-surface border border-outline-variant/60 rounded-xl p-5 shadow-sm">
+                  <div key={mIdx} className="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-crmisa-navy"></div>
+                    
                     {/* Module Header */}
-                    <div className="flex items-center gap-4 mb-5">
-                      <span className="font-bold text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-md text-sm">Module {mIdx + 1}</span>
+                    <div className="flex items-center gap-4 mb-6 pl-2">
+                      <span className="font-extrabold text-crmisa-navy bg-crmisa-lightBlue px-3 py-1 rounded-lg text-xs tracking-wider uppercase">
+                        Module {mIdx + 1}
+                      </span>
                       <input 
                         type="text" 
                         value={module.title}
                         onChange={(e) => updateModule(mIdx, 'title', e.target.value)}
                         placeholder="Module Title (e.g., Introduction)"
-                        className="flex-grow bg-transparent border-b-2 border-outline-variant/50 px-2 py-1 font-bold text-on-surface focus:border-primary focus:outline-none transition-colors"
+                        className="flex-grow bg-transparent border-b-2 border-slate-200 px-2 py-1 font-bold text-slate-800 focus:border-blue-500 focus:outline-none transition-colors"
                       />
                       <button 
                         onClick={() => removeModule(mIdx)}
-                        className="p-2 text-on-surface-variant hover:text-error transition-colors bg-surface-container rounded-lg"
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors rounded-lg"
                         title="Delete Module"
                       >
-                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
 
                     {/* Lessons List */}
-                    <div className="pl-2 sm:pl-8 flex flex-col gap-4">
+                    <div className="pl-4 sm:pl-12 flex flex-col gap-4 border-l-2 border-slate-100 ml-4">
                       {module.lessons.map((lesson, lIdx) => (
-                        <div key={lIdx} className="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 relative group">
+                        <div key={lIdx} className="bg-slate-50 border border-slate-200 rounded-xl p-4 relative group hover:border-blue-200 transition-colors">
                           <button 
                             onClick={() => removeLesson(mIdx, lIdx)}
-                            className="absolute top-3 right-3 p-1.5 text-on-surface-variant hover:bg-error-container hover:text-error transition-all rounded-md"
+                            className="absolute top-3 right-3 p-1.5 text-slate-400 hover:bg-red-100 hover:text-red-600 transition-all rounded-md opacity-0 group-hover:opacity-100"
                           >
-                            <span className="material-symbols-outlined text-[18px]">close</span>
+                            <Trash2 className="w-4 h-4" />
                           </button>
 
                           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -418,43 +479,43 @@ export default function AdminCreateCoursePage() {
                                 value={lesson.title}
                                 onChange={(e) => updateLesson(mIdx, lIdx, 'title', e.target.value)}
                                 placeholder="Lesson Title"
-                                className="font-bold bg-surface border border-outline-variant/50 px-3 py-2 rounded-lg focus:border-primary focus:outline-none w-full"
+                                className="font-bold bg-white border border-slate-200 px-4 py-2.5 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none w-full text-sm shadow-sm"
                               />
-                              <label className="flex items-center gap-2 cursor-pointer w-max">
+                              <label className="flex items-center gap-2 cursor-pointer w-max pl-1">
                                 <input 
                                   type="checkbox"
                                   checked={lesson.isFreePreview}
                                   onChange={(e) => updateLesson(mIdx, lIdx, 'isFreePreview', e.target.checked)}
-                                  className="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant"
+                                  className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300"
                                 />
-                                <span className="text-body-sm font-medium text-on-surface-variant">Free Preview</span>
+                                <span className="text-xs font-bold text-slate-600 tracking-wide uppercase">Free Preview</span>
                               </label>
                             </div>
                             
-                            <div className="w-full sm:w-auto flex flex-col gap-2 mt-3 sm:mt-0">
+                            <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3 mt-3 sm:mt-0">
                               {/* Video Upload */}
                               {lesson.videoUrl ? (
-                                <div className="flex items-center justify-between gap-2 bg-secondary-container/20 text-secondary border border-secondary-container px-3 py-2 rounded-lg w-full">
+                                <div className="flex items-center justify-between gap-2 bg-green-50 text-green-700 border border-green-200 px-3 py-2 rounded-lg w-full sm:w-max shadow-sm">
                                   <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                                    <span className="text-body-sm font-bold">Video Ready</span>
+                                    <CheckCircle2 className="w-4 h-4" />
+                                    <span className="text-xs font-bold">Video Ready</span>
                                   </div>
-                                  <label className="cursor-pointer text-[12px] underline hover:text-primary transition-colors ml-2 shrink-0">
+                                  <label className="cursor-pointer text-[11px] font-bold underline hover:text-green-800 transition-colors ml-3 shrink-0">
                                     Change
                                     <input type="file" accept="video/*" className="hidden" onChange={(e) => handleVideoUpload(e, mIdx, lIdx)} />
                                   </label>
                                 </div>
                               ) : (
-                                <div>
+                                <div className="w-full sm:w-max">
                                   {uploadingLessonIdx === `${mIdx}-${lIdx}` ? (
-                                    <div className="flex items-center justify-center gap-2 bg-surface-container border border-outline-variant px-3 py-2 rounded-lg text-primary w-full">
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
-                                      <span className="text-body-sm font-bold">Uploading...</span>
+                                    <div className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-600 w-full">
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                                      <span className="text-xs font-bold">Uploading...</span>
                                     </div>
                                   ) : (
-                                    <label className="flex items-center justify-center gap-2 bg-surface border border-outline-variant px-3 py-2 rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors text-on-surface-variant font-medium w-full">
-                                      <span className="material-symbols-outlined text-[16px]">movie</span>
-                                      <span className="text-body-sm">Upload Video</span>
+                                    <label className="flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors text-slate-600 font-bold text-xs shadow-sm w-full">
+                                      <Film className="w-4 h-4 text-slate-400" />
+                                      Upload Video
                                       <input type="file" accept="video/*" className="hidden" onChange={(e) => handleVideoUpload(e, mIdx, lIdx)} />
                                     </label>
                                   )}
@@ -463,27 +524,27 @@ export default function AdminCreateCoursePage() {
 
                               {/* Thumbnail Upload */}
                               {lesson.thumbnailUrl ? (
-                                <div className="flex items-center justify-between gap-2 bg-primary-container/20 text-primary border border-primary-container px-3 py-2 rounded-lg w-full">
+                                <div className="flex items-center justify-between gap-2 bg-blue-50 text-blue-700 border border-blue-200 px-3 py-2 rounded-lg w-full sm:w-max shadow-sm">
                                   <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[16px]">image</span>
-                                    <span className="text-body-sm font-bold truncate max-w-[80px]">Thumb Ready</span>
+                                    <ImageIcon className="w-4 h-4" />
+                                    <span className="text-xs font-bold truncate max-w-[80px]">Thumb Ready</span>
                                   </div>
-                                  <label className="cursor-pointer text-[12px] underline hover:text-primary transition-colors ml-2 shrink-0">
+                                  <label className="cursor-pointer text-[11px] font-bold underline hover:text-blue-800 transition-colors ml-3 shrink-0">
                                     Change
                                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLessonImageUpload(e, mIdx, lIdx)} />
                                   </label>
                                 </div>
                               ) : (
-                                <div>
+                                <div className="w-full sm:w-max">
                                   {uploadingLessonIdx === `img-${mIdx}-${lIdx}` ? (
-                                    <div className="flex items-center justify-center gap-2 bg-surface-container border border-outline-variant px-3 py-2 rounded-lg text-primary w-full">
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
-                                      <span className="text-body-sm font-bold">Uploading...</span>
+                                    <div className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-600 w-full">
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                                      <span className="text-xs font-bold">Uploading...</span>
                                     </div>
                                   ) : (
-                                    <label className="flex items-center justify-center gap-2 bg-surface border border-outline-variant px-3 py-2 rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors text-on-surface-variant font-medium w-full">
-                                      <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
-                                      <span className="text-body-sm">Thumbnail</span>
+                                    <label className="flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors text-slate-600 font-bold text-xs shadow-sm w-full">
+                                      <ImageIcon className="w-4 h-4 text-slate-400" />
+                                      Thumbnail
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLessonImageUpload(e, mIdx, lIdx)} />
                                     </label>
                                   )}
@@ -496,9 +557,9 @@ export default function AdminCreateCoursePage() {
 
                       <button 
                         onClick={() => addLesson(mIdx)}
-                        className="flex items-center justify-center gap-2 self-start px-4 py-2 border-2 border-dashed border-primary/40 text-primary font-bold hover:bg-primary/5 rounded-lg transition-colors mt-2"
+                        className="flex items-center justify-center gap-2 self-start px-5 py-2.5 bg-crmisa-lightBlue text-crmisa-navy font-bold rounded-xl hover:bg-[#dce9ff] transition-colors mt-2 text-sm shadow-sm"
                       >
-                        <span className="material-symbols-outlined text-[20px]">add</span>
+                        <Plus className="w-4 h-4" />
                         Add Lesson
                       </button>
                     </div>
@@ -506,12 +567,28 @@ export default function AdminCreateCoursePage() {
                 ))}
 
                 {formData.modules.length === 0 && (
-                  <div className="text-center py-16 bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant">
-                    <span className="material-symbols-outlined text-[64px] text-outline mb-4">account_tree</span>
-                    <h3 className="font-bold text-on-surface text-headline-sm mb-2">Curriculum is empty</h3>
-                    <p className="text-on-surface-variant text-body-lg">Build out your course by adding modules and lessons.</p>
+                  <div className="text-center py-16 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+                      <Plus className="w-8 h-8 text-slate-400" />
+                    </div>
+                    <h3 className="font-extrabold text-slate-800 text-xl mb-2">Curriculum is empty</h3>
+                    <p className="text-slate-500 font-medium max-w-sm">Build out your course by adding modules and lessons. Each module represents a chapter.</p>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Certificate / Exam Info Message */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-4 shadow-sm relative overflow-hidden">
+              <div className="absolute right-0 top-0 w-32 h-32 bg-blue-100 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50"></div>
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center shrink-0 shadow-sm relative z-10">
+                <Award className="text-blue-600 w-6 h-6" />
+              </div>
+              <div className="relative z-10">
+                <h3 className="font-extrabold text-blue-900 text-lg">Configure Exam for Certificate</h3>
+                <p className="text-blue-800/80 font-medium text-sm mt-1 max-w-2xl leading-relaxed">
+                  After publishing, you will be automatically redirected to create an exam for this course. Students must pass the exam to claim their completion certificate.
+                </p>
               </div>
             </div>
 

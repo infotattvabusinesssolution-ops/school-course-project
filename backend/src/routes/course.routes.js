@@ -9,6 +9,7 @@ import {
   uploadCourseThumbnail,
   uploadCourseVideo,
   uploadCourseImage,
+  uploadCoursePdf,
   deleteCourse,
 } from '../controllers/course.controller.js';
 
@@ -30,6 +31,7 @@ router.route('/')
 
 router.post('/upload-video', upload.single('video'), uploadCourseVideo);
 router.post('/upload-image', upload.single('image'), uploadCourseImage);
+router.post('/upload-pdf', upload.single('pdf'), uploadCoursePdf);
 
 router.route('/:id')
   .put(updateCourse)

@@ -38,11 +38,11 @@ export const createRazorpayOrder = asyncHandler(async (req, res, next) => {
   }
 
   // Create Razorpay Order
-  const amount = Math.round(course.price * 100); // Amount in smallest currency unit (paise for INR)
-  
+  const amount = Math.round(course.price * 100); // Amount in smallest currency unit (cents for ZAR)
+
   const options = {
     amount,
-    currency: "INR", // Change to your preferred currency if needed
+    currency: "ZAR", // Changed to ZAR
     receipt: `rcpt_${courseId.toString().slice(-8)}_${Date.now().toString().slice(-8)}`,
     notes: {
       courseId: courseId.toString(),
@@ -79,13 +79,19 @@ export const verifyRazorpayPayment = asyncHandler(async (req, res, next) => {
     }
 
     // Verify signature
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
-      .update(body.toString())
-      .digest("hex");
+    let isValid = false;
+    if (process.env.SIMULATE_PAYMENT === "true" && razorpay_signature === "SIMULATED_SIGNATURE") {
+      isValid = true;
+    } else {
+      const body = razorpay_order_id + "|" + razorpay_payment_id;
+      const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
+        .update(body.toString())
+        .digest("hex");
+      isValid = expectedSignature === razorpay_signature;
+    }
 
-    if (expectedSignature !== razorpay_signature) {
+    if (!isValid) {
       throw new ApiError(400, "Invalid payment signature");
     }
 
@@ -205,7 +211,7 @@ export const createEbookOrder = asyncHandler(async (req, res) => {
 
   const options = {
     amount,
-    currency: "INR",
+    currency: "ZAR",
     receipt: `ebk_${ebookId.toString().slice(-8)}_${Date.now().toString().slice(-8)}`,
     notes: {
       ebookId: ebookId.toString(),
@@ -241,13 +247,19 @@ export const verifyEbookPayment = asyncHandler(async (req, res) => {
   }
 
   // Verify signature
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
-  const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
-    .update(body.toString())
-    .digest("hex");
+  let isValid = false;
+  if (process.env.SIMULATE_PAYMENT === "true" && razorpay_signature === "SIMULATED_SIGNATURE") {
+    isValid = true;
+  } else {
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
+      .update(body.toString())
+      .digest("hex");
+    isValid = expectedSignature === razorpay_signature;
+  }
 
-  if (expectedSignature !== razorpay_signature) {
+  if (!isValid) {
     throw new ApiError(400, "Invalid payment signature");
   }
 

@@ -177,7 +177,7 @@ export default function AdminEbookCreatePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                Price (₹) *
+                Price (R) *
               </label>
               <input
                 type="number"

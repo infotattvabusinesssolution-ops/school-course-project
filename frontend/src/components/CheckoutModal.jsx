@@ -63,6 +63,27 @@ export default function CheckoutModal({
         return;
       }
 
+      // SIMULATION MODE BYPASS
+      if (import.meta.env.VITE_SIMULATE_PAYMENT === 'true') {
+        const verifyRes = await api.post("/payments/verify-razorpay-payment", {
+          razorpay_order_id: data.orderId,
+          razorpay_payment_id: "sim_pay_" + Date.now(),
+          razorpay_signature: "SIMULATED_SIGNATURE",
+          courseId,
+        });
+
+        if (verifyRes.data.success) {
+          setSuccess(true);
+          if (onPaymentSuccess) onPaymentSuccess();
+          setTimeout(() => {
+            setSuccess(false);
+            onClose();
+            navigate(`/course-player/${courseId}`);
+          }, 2000);
+        }
+        return; // Skip loading actual Razorpay
+      }
+
       const options = {
         key: data.keyId,
         amount: data.amount,
@@ -148,7 +169,7 @@ export default function CheckoutModal({
                 Total Price
               </span>
               <span className="block text-3xl font-bold text-slate-900">
-                ₹{safePrice}
+                R{safePrice}
               </span>
             </div>
 

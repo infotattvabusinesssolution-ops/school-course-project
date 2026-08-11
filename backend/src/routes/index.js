@@ -13,6 +13,8 @@ import paymentRoutes from "./payment.routes.js";
 import certificateRoutes from "./certificate.routes.js";
 import interactionRoutes from "./interaction.routes.js";
 import reviewRoutes from "./review.routes.js";
+import examRoutes from "./exam.routes.js";
+import userRoutes from "./user.routes.js";
 const router = express.Router();
 router.get("/health", (req, res) => res.json({ success: true, message: "OK" }));
 
@@ -30,4 +32,6 @@ router.use("/payments", paymentRoutes);
 router.use("/certificates", certificateRoutes);
 router.use("/interactions", interactionRoutes);
 router.use("/reviews", reviewRoutes);
+router.use("/exams", examRoutes);
+router.use("/users", userRoutes);
 export default router;

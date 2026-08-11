@@ -13,8 +13,8 @@ export default function Footer() {
           {/* Column 1: Brand & Description (lg:col-span-4) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
-                C
+              <div className="relative w-12 h-12 flex items-center justify-center">
+                <img src="/image.png" alt="CRMISA Logo" className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="font-bold text-xl text-white tracking-tight">

@@ -48,14 +48,14 @@ export default function EnrolModal({ isOpen, onClose, onEnrolSuccess }) {
               <p className="text-xs text-slate-200 mt-1">Includes 6 Core Modules & 2 Free Business Perks</p>
             </div>
             <div className="text-right">
-              <span className="text-2xl sm:text-3xl font-black tracking-tight text-white">₹15,000*</span>
+              <span className="text-2xl sm:text-3xl font-black tracking-tight text-white">R15,000*</span>
               <span className="block text-[10px] text-sky-200 font-medium">All-Inclusive</span>
             </div>
           </div>
 
           {/* Included Features List matching Image 4 */}
           <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <div className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">What's Included in ₹15,000:</div>
+            <div className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">What's Included in R15,000:</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700 font-semibold">
               <div className="flex items-center space-x-2">
                 <CheckIcon className="w-4 h-4 text-crmisa-navy" />
@@ -134,7 +134,7 @@ export default function EnrolModal({ isOpen, onClose, onEnrolSuccess }) {
               {processing ? (
                 <span>Securing Enrollment...</span>
               ) : (
-                <span>Confirm Enrollment (₹15,000) &gt;&gt;</span>
+                <span>Confirm Enrollment (R15,000) &gt;&gt;</span>
               )}
             </button>
           </div>

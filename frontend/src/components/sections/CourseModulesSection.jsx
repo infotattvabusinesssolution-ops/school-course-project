@@ -148,7 +148,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
 
                   {/* Price + Action */}
                   <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
-                    <span className="text-2xl font-bold text-slate-900">₹{course.price}</span>
+                    <span className="text-2xl font-bold text-slate-900">R{course.price}</span>
                     
                     {isCompleted ? (
                       <button

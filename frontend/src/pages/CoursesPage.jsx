@@ -264,7 +264,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
 
                   {/* Footer Actions */}
                   <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
-                    <span className="text-2xl font-bold text-slate-900">₹{course.price}</span>
+                    <span className="text-2xl font-bold text-slate-900">R{course.price}</span>
                     
                     {isCompleted ? (
                       <button 
@@ -292,7 +292,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (onOpenEnrol) onOpenEnrol(course.title, `₹${course.price}`, course._id);
+                          if (onOpenEnrol) onOpenEnrol(course.title, `R${course.price}`, course._id);
                         }}
                         className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
                       >

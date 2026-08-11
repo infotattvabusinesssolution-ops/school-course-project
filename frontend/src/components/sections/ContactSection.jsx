@@ -206,7 +206,7 @@ export default function ContactSection() {
                       <option value="Select a course">Select a course</option>
                       {courses.map((c) => (
                         <option key={c._id} value={c.title}>
-                          {c.title} (₹{c.price})
+                          {c.title} (R{c.price})
                         </option>
                       ))}
                     </select>

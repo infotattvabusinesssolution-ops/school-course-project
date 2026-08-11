@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Award, Star, Globe, Plane, GraduationCap, ShieldCheck, TrendingUp } from "lucide-react";
 import { EyeIcon } from '../icons/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -81,13 +81,15 @@ function LoginForm() {
               className="w-full px-4 py-3.5 pr-12 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm text-slate-900 font-medium transition-all"
               placeholder="••••••••"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
-            >
-              <EyeIcon className="w-5 h-5" />
-            </button>
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <EyeIcon className="w-5 h-5" />
+              </button>
+            </div>
           </div>
           
           {/* Forgot Password */}
@@ -138,7 +140,8 @@ function RegisterForm() {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    profilePhoto: null
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -159,7 +162,17 @@ function RegisterForm() {
     setError(null);
     
     const fullName = `${formData.firstName} ${formData.lastName}`.trim();
-    const result = await register(fullName, formData.email, formData.password, 'STUDENT');
+    
+    const submitData = new FormData();
+    submitData.append('name', fullName);
+    submitData.append('email', formData.email);
+    submitData.append('password', formData.password);
+    submitData.append('role', 'STUDENT');
+    if (formData.profilePhoto) {
+      submitData.append('profilePhoto', formData.profilePhoto);
+    }
+
+    const result = await register(submitData);
     
     setProcessing(false);
     if (result.success) {
@@ -235,6 +248,17 @@ function RegisterForm() {
           </div>
         </div>
 
+        {/* Profile Picture */}
+        <div>
+          <label className="block text-sm font-bold text-slate-800 mb-1">Profile Picture (Optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFormData({ ...formData, profilePhoto: e.target.files[0] })}
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+        </div>
+
         {/* Passwords */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -247,13 +271,15 @@ function RegisterForm() {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
-              >
-                <EyeIcon className="w-4 h-4" />
-              </button>
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                >
+                  <EyeIcon className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
           <div>
@@ -266,13 +292,15 @@ function RegisterForm() {
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
               />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center"
-              >
-                <EyeIcon className="w-4 h-4" />
-              </button>
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                >
+                  <EyeIcon className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -345,21 +373,21 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="flex flex-col items-start text-left w-full max-w-2xl px-4 mt-8 lg:mt-0">
-                <h1 className="text-crmisa-navy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1]">
+              <div className="flex flex-col items-center text-center w-full max-w-2xl px-4 mt-8 lg:mt-0 mx-auto">
+                <h1 className="text-black text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1]">
                   Master
                 </h1>
-                <h2 className="text-blue-600 text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] pt-2">
+                <h2 className="text-black text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] pt-2">
                   Global trade
                 </h2>
-                <p className="mt-6 text-slate-500 text-base md:text-lg font-medium max-w-lg leading-relaxed">
+                <p className="mt-6 text-black text-base md:text-lg font-medium max-w-lg leading-relaxed">
                   South Africa's leading online academy for Import & Export education.
                   Gain the expertise to navigate international trade, customs, and global shipping.
                 </p>
-                <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-start">
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
                   <button
                     onClick={() => navigate('/register')}
-                    className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-white border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                    className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-black border-2 border-black text-white px-8 py-4 rounded-none font-bold text-lg hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-xl"
                   >
                     Start Learning
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -428,7 +456,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
           <motion.div
             initial={{ y: "-100vh", opacity: 0 }}
             animate={{ 
-               y: isLoginMode ? -80 : 0, 
+               y: isAuthMode ? -80 : 0, 
                opacity: 1,
                scale: isAuthMode ? 0.95 : 1.15 
             }}
@@ -466,14 +494,64 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
 
         {/* Mobile Container Image (Only shown in Hero Mode on mobile) */}
         {!isAuthMode && (
-          <motion.div 
-            initial={{ y: "-100vh", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "spring", bounce: 0.15, duration: 2.5, delay: 0.2 }}
-            className="flex lg:hidden w-full justify-center mt-auto relative z-10"
-          >
-             <img src="/student/download (17)-Photoroom.png" alt="CRMISA Student" className="w-[95%] max-w-[300px] drop-shadow-2xl origin-bottom object-bottom" />
-          </motion.div>
+          <div className="flex lg:hidden w-full justify-center mt-12 relative z-10 pb-0">
+
+            {/* Floating Chip 1 — Top Left: Star Rating */}
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+              className="absolute top-[8%] left-1 z-0 w-14 h-14 rounded-full bg-amber-400 shadow-[0_8px_24px_rgba(251,191,36,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <Star className="w-6 h-6 text-white fill-white" />
+            </motion.div>
+
+            {/* Floating Chip 2 — Top Right: Shield */}
+            <motion.div
+              animate={{ y: [0, -16, 0], x: [0, 4, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+              className="absolute top-[18%] right-0 z-0 w-12 h-12 rounded-full bg-blue-500 shadow-[0_8px_24px_rgba(59,130,246,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <ShieldCheck className="w-5 h-5 text-white" />
+            </motion.div>
+
+            {/* Floating Chip 3 — Mid Left: Globe */}
+            <motion.div
+              animate={{ y: [0, 14, 0], x: [0, -4, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+              className="absolute top-[40%] left-0 z-0 w-[52px] h-[52px] rounded-full bg-emerald-500 shadow-[0_8px_24px_rgba(16,185,129,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <Globe className="w-5 h-5 text-white" />
+            </motion.div>
+
+            {/* Floating Chip 4 — Mid Right: Award */}
+            <motion.div
+              animate={{ y: [0, -14, 0] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 2.2 }}
+              className="absolute top-[52%] right-1 z-0 w-14 h-14 rounded-full bg-purple-500 shadow-[0_8px_24px_rgba(168,85,247,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <Award className="w-6 h-6 text-white" />
+            </motion.div>
+
+            {/* Floating Chip 5 — Lower Left: Graduation Cap */}
+            <motion.div
+              animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute top-[72%] left-2 z-0 w-12 h-12 rounded-full bg-rose-500 shadow-[0_8px_24px_rgba(244,63,94,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <GraduationCap className="w-5 h-5 text-white" />
+            </motion.div>
+
+            {/* Floating Chip 6 — Lower Right: TrendingUp */}
+            <motion.div
+              animate={{ y: [0, -18, 0], x: [0, -3, 0] }}
+              transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+              className="absolute top-[83%] right-3 z-0 w-11 h-11 rounded-full bg-sky-500 shadow-[0_8px_24px_rgba(14,165,233,0.5)] flex items-center justify-center border-2 border-white"
+            >
+              <TrendingUp className="w-4 h-4 text-white" />
+            </motion.div>
+
+            <img src="/hero/mobile-coont.png" alt="CRMISA Student" className="relative z-10 w-[135%] max-w-[135%] translate-x-6 drop-shadow-2xl origin-bottom object-bottom" />
+          </div>
         )}
 
       </div>

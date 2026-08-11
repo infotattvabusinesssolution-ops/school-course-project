@@ -61,6 +61,28 @@ export default function EbookCheckoutModal({
         return;
       }
 
+      // SIMULATION MODE BYPASS
+      if (import.meta.env.VITE_SIMULATE_PAYMENT === 'true') {
+        const verifyRes = await api.post("/payments/verify-ebook-payment", {
+          razorpay_order_id: data.orderId,
+          razorpay_payment_id: "sim_pay_" + Date.now(),
+          razorpay_signature: "SIMULATED_SIGNATURE",
+          ebookId: ebook._id,
+        });
+
+        if (verifyRes.data.success) {
+          setSuccess(true);
+          if (onPaymentSuccess) onPaymentSuccess();
+          setTimeout(() => {
+            setSuccess(false);
+            onClose();
+            navigate("/dashboard");
+          }, 2000);
+        }
+        setProcessing(false);
+        return; // Skip loading actual Razorpay
+      }
+
       const options = {
         key: data.keyId,
         amount: data.amount,
@@ -158,7 +180,7 @@ export default function EbookCheckoutModal({
                 Total Handbook Price
               </span>
               <span className="block text-3xl font-black text-white">
-                ₹{safePrice}
+                R{safePrice}
               </span>
             </div>
 
@@ -198,7 +220,7 @@ export default function EbookCheckoutModal({
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                {processing ? 'Processing Order...' : `Pay ₹${safePrice} & Unlock Handbook`}
+                {processing ? 'Processing Order...' : `Pay R${safePrice} & Unlock Handbook`}
               </button>
             </div>
 
