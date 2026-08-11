@@ -18,6 +18,7 @@ import ebookRoutes from './routes/ebook.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
 import reviewRoutes from './routes/review.routes.js';
 import examRoutes from './routes/exam.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/api', ebookRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/exams', examRoutes);
+app.use('/api/users', userRoutes);
 
 // Base route
 app.get('/', (req, res) => {
@@ -65,4 +67,4 @@ app.get('/', (req, res) => {
 // Error handling
 app.use(errorHandler);
 
-export default app;
+export default app;// Force restart

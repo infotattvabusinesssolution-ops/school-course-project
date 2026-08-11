@@ -20,7 +20,7 @@ export const signup = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'User already exists');
   }
 
-  let avatarUrl = "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png";
+  let avatarUrl = "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128";
   let avatarPublicId = "";
 
   if (req.file) {

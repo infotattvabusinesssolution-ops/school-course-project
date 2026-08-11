@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation, useNavigate, useNavigationType } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, useNavigationType, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
@@ -20,7 +20,11 @@ import EbookDetailPage from "./pages/EbookDetailPage";
 import ForumPage from "./pages/ForumPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import ContactPage from "./pages/ContactPage";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardLayout from "./pages/DashboardLayout";
+import DashboardCourses from "./pages/DashboardCourses";
+import DashboardEbooks from "./pages/DashboardEbooks";
+import DashboardExams from "./pages/DashboardExams";
+import DashboardProfile from "./pages/DashboardProfile";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminCreateCoursePage from "./pages/AdminCreateCoursePage";
 import AdminEbookCreatePage from "./pages/AdminEbookCreatePage";
@@ -166,8 +170,7 @@ export default function App() {
     "/admin", 
     "/course/", 
     "/certificate/", 
-    "/verify-certificate/",
-    "/dashboard"
+    "/verify-certificate/"
   ];
   const hideLayout = hideLayoutPaths.some((path) =>
     location.pathname.startsWith(path),
@@ -274,10 +277,13 @@ export default function App() {
           <Route path="/course/:id/exam/result" element={<ExamResultPage />} />
 
           {/* Student Routes */}
-          <Route
-            path="/dashboard"
-            element={<DashboardPage onLogout={handleLogout} />}
-          />
+          <Route path="/dashboard" element={<DashboardLayout onLogout={handleLogout} />}>
+            <Route index element={<Navigate to="/dashboard/courses" replace />} />
+            <Route path="courses" element={<DashboardCourses />} />
+            <Route path="ebooks" element={<DashboardEbooks />} />
+            <Route path="exams" element={<DashboardExams />} />
+            <Route path="profile" element={<DashboardProfile />} />
+          </Route>
           <Route path="/course-player/:id" element={<CoursePlayerPage />} />
 
           {/* Admin Routes */}
@@ -304,7 +310,7 @@ export default function App() {
         </Routes>
       </main>
 
-      {!hideLayout && <Footer />}
+      {['/', '/login', '/register'].includes(location.pathname) && <Footer />}
 
       <CartModal
         isOpen={isCartModalOpen}

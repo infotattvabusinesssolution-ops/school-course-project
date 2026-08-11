@@ -10,7 +10,7 @@ const studentProfileSchema = new mongoose.Schema(
     },
     profilePhoto: {
       type: String,
-      default: "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png",
+      default: "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128",
     },
     learningInterests: {
       type: [String],

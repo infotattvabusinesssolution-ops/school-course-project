@@ -62,7 +62,7 @@ export default function Navbar({
 
   return (
     <>
-      <header className="absolute top-0 w-full z-[60] bg-white/90 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none shadow-sm sm:shadow-none border-b border-slate-200/50 sm:border-transparent transition-all duration-300">
+      <header className={`w-full z-[60] transition-all duration-300 ${location.pathname.startsWith('/dashboard') ? 'fixed top-0 bg-white shadow-sm border-b border-slate-200' : 'absolute top-0 bg-white/90 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none shadow-sm sm:shadow-none border-b border-slate-200/50 sm:border-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-24 sm:h-28">
           

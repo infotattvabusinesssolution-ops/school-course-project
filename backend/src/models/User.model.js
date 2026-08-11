@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png",
+      default: "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128",
     },
     avatarPublicId: {
       type: String,
@@ -47,9 +47,9 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.isModified("passwordHash")) {
-    return next();
+    return;
   }
   const salt = await bcrypt.genSalt(10);
   this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
