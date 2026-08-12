@@ -330,7 +330,7 @@ function RegisterForm() {
   );
 }
 
-export default function HeroSection({ isLoginMode, isRegisterMode }) {
+export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, onOpenRegister }) {
   const isAuthMode = isLoginMode || isRegisterMode;
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -391,7 +391,8 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
                       if (user) {
                         navigate('/courses');
                       } else {
-                        navigate('/login');
+                        if (onOpenLogin) onOpenLogin();
+                        else navigate('/login');
                       }
                     }}
                     className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-black border-2 border-black text-white px-8 py-4 rounded-none font-bold text-lg hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-xl"

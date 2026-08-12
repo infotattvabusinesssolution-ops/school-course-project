@@ -13,7 +13,7 @@ import HeadlineTicker from '../components/sections/HeadlineTicker';
 import FloatingSocialBar from '../components/FloatingSocialBar';
 import NewsletterModal from '../components/NewsletterModal';
 
-export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
+export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
   useEffect(() => {
     // If we land on /login or /register, wait for DOM to settle then open the modal
     if (isLoginMode) {
@@ -44,6 +44,7 @@ export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isR
             <NewsletterModal />
             <HeroSection 
               onOpenRegister={onOpenRegister} 
+              onOpenLogin={onOpenLogin}
               isLoginMode={isLoginMode}
               isRegisterMode={isRegisterMode}
             />
@@ -68,6 +69,7 @@ export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isR
       ) : (
         <HeroSection 
           onOpenRegister={onOpenRegister} 
+          onOpenLogin={onOpenLogin}
           isLoginMode={isLoginMode}
           isRegisterMode={isRegisterMode}
         />

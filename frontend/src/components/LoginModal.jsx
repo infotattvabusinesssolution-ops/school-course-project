@@ -4,8 +4,8 @@ import { EyeIcon } from './icons/Icons';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRegister }) {
-  const [email, setEmail] = useState('gyan123priya@gmail.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -61,7 +61,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
-              placeholder="gyan123priya@gmail.com"
+              placeholder="Enter your email address"
             />
           </div>
 

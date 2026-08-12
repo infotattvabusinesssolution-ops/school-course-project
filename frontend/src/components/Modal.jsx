@@ -26,8 +26,8 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "ma
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-fade-in"
       />
 
-      {/* Modal Container - Bottom sheet on mobile, centered modal on desktop */}
-      <div className={`relative w-full ${maxWidth} bg-white sm:border sm:border-slate-200 overflow-hidden transform transition-all animate-slide-up z-10 sm:my-8 flex flex-col rounded-t-2xl sm:rounded-xl max-h-[90vh]`}>
+      {/* Modal Container - Full screen on mobile, centered modal on desktop */}
+      <div className={`relative w-full h-full sm:h-auto ${maxWidth} bg-white sm:border sm:border-slate-200 overflow-hidden transform transition-all animate-slide-up z-10 sm:my-8 flex flex-col sm:rounded-xl max-h-screen sm:max-h-[90vh]`}>
         
         {/* Modal Header - Light theme */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-white">

@@ -232,8 +232,8 @@ export default function AdminCourseTab() {
 
       {/* Edit Course Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-4xl bg-white shadow-xl border border-slate-200 max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm sm:p-4">
+          <div className="relative w-full h-full sm:h-auto max-w-4xl bg-white sm:shadow-xl sm:border border-slate-200 max-h-screen sm:max-h-[90vh] flex flex-col sm:rounded-xl">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-slate-200 shrink-0 bg-slate-50">

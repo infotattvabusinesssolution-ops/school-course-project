@@ -191,7 +191,7 @@ export default function App() {
           {/* Public Routes */}
           <Route
             path="/"
-            element={<HomePage onOpenEnrol={() => handleEnrollNowClick()} />}
+            element={<HomePage onOpenEnrol={() => handleEnrollNowClick()} onOpenLogin={() => setIsLoginModalOpen(true)} onOpenRegister={() => setIsRegisterModalOpen(true)} />}
           />
           <Route
             path="/login"
