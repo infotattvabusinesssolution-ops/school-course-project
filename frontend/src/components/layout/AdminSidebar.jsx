@@ -13,6 +13,10 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
     { id: 2, icon: "payments", label: "Enrollments & Financials" },
     { id: 3, icon: "forum", label: "Forum Management" },
     { id: 4, icon: "auto_stories", label: "E-book Management" },
+    { id: 7, icon: "article", label: "Blog Management" },
+    { id: 8, icon: "mark_email_read", label: "Newsletter Subscribers" },
+    { id: 9, icon: "local_offer", label: "Coupons" },
+    { id: 10, icon: "campaign", label: "Referrals & Influencers" },
   ];
 
   return (
@@ -68,7 +72,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 flex-grow">
+        <div className="flex flex-col gap-2 flex-grow overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {adminNavItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -135,7 +139,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 flex-grow">
+        <div className="flex flex-col gap-2 flex-grow overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-6">
           {adminNavItems.map((item) => {
             const isActive = activeTab === item.id;
             return (

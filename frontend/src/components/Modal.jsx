@@ -19,11 +19,11 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "ma
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop overlay */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity animate-fade-in"
       />
 
       {/* Modal Container - Flat design without shadows */}

@@ -36,9 +36,9 @@ export default function DashboardEbooks() {
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div className="text-xs font-bold text-slate-500">Paid: <span className="font-black text-slate-900">R{purchase.amountPaid || book.price}</span></div>
                 {book.pdfUrl ? (
-                  <button onClick={() => downloadPdf(book.pdfUrl, `${book.title || "Handbook"}.pdf`)} className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer">
+                  <a href={book.pdfUrl} download className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5">
                     Download PDF
-                  </button>
+                  </a>
                 ) : (
                   <span className="text-xs text-slate-400 font-semibold italic">PDF Processing</span>
                 )}

@@ -1,17 +1,28 @@
 import express from "express";
 import { protect } from "../middleware/auth.middleware.js";
 import { 
-  createRazorpayOrder,
-  verifyRazorpayPayment,
+  createPayfastOrder,
+  verifyPayfastPaymentSimulated,
   createEbookOrder,
-  verifyEbookPayment,
+  verifyEbookPaymentSimulated,
+  createCartOrder,
+  verifyCartPaymentSimulated,
+  payfastItnHandler
 } from "../controllers/payment.controller.js";
 
 const router = express.Router();
 
-router.post("/create-razorpay-order", protect, createRazorpayOrder);
-router.post("/verify-razorpay-payment", protect, verifyRazorpayPayment);
+// Order creation
+router.post("/create-payfast-order", protect, createPayfastOrder);
 router.post("/create-ebook-order", protect, createEbookOrder);
-router.post("/verify-ebook-payment", protect, verifyEbookPayment);
+router.post("/create-cart-order", protect, createCartOrder);
+
+// Simulated verification (for VITE_SIMULATE_PAYMENT=true)
+router.post("/verify-payfast-payment", protect, verifyPayfastPaymentSimulated);
+router.post("/verify-ebook-payment", protect, verifyEbookPaymentSimulated);
+router.post("/verify-cart-payment", protect, verifyCartPaymentSimulated);
+
+// Real ITN Webhook
+router.post("/payfast-itn", payfastItnHandler);
 
 export default router;

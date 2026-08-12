@@ -9,7 +9,7 @@ import { uploadOnCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js
 // @route   POST /api/courses
 // @access  Private (Admin)
 export const createCourse = asyncHandler(async (req, res) => {
-  const { title, subtitle, description, category, level, language, price, thumbnailUrl, thumbnailPublicId, modules, status } = req.body;
+  const { title, subtitle, description, category, level, language, price, thumbnailUrl, thumbnailPublicId, videoUrl, videoPublicId, status } = req.body;
 
   if (!title || !description || !category || !level) {
     throw new ApiError(400, 'Please provide all required basic course details');
@@ -25,7 +25,8 @@ export const createCourse = asyncHandler(async (req, res) => {
     price: price || 0,
     thumbnailUrl,
     thumbnailPublicId,
-    modules: modules || [],
+    videoUrl,
+    videoPublicId,
     admin: req.user._id,
     status: status || 'DRAFT',
   });
@@ -119,16 +120,12 @@ export const deleteCourse = asyncHandler(async (req, res) => {
     }
   }
 
-  // Delete all lesson videos
-  for (const module of course.modules) {
-    for (const lesson of module.lessons) {
-      if (lesson.videoPublicId) {
-        try {
-          await deleteFromCloudinary(lesson.videoPublicId, 'video');
-        } catch (err) {
-          console.error(`Failed to delete video ${lesson.videoPublicId} from cloudinary`, err);
-        }
-      }
+  // Delete main video
+  if (course.videoPublicId) {
+    try {
+      await deleteFromCloudinary(course.videoPublicId, 'video');
+    } catch (err) {
+      console.error('Failed to delete video from cloudinary', err);
     }
   }
 
@@ -303,17 +300,9 @@ export const getPublicCourseDetails = asyncHandler(async (req, res) => {
   // Convert course document to plain object so we can modify it
   const courseObj = course.toObject();
 
-  // Strip private video URLs for public view
-  if (courseObj.modules && courseObj.modules.length > 0) {
-    courseObj.modules.forEach(module => {
-      if (module.lessons && module.lessons.length > 0) {
-        module.lessons.forEach(lesson => {
-          delete lesson.videoUrl;
-          delete lesson.videoPublicId;
-        });
-      }
-    });
-  }
+  // Strip private video URL for public view
+  delete courseObj.videoUrl;
+  delete courseObj.videoPublicId;
 
   res.status(200).json(new ApiResponse(200, courseObj, 'Course details fetched successfully'));
 });

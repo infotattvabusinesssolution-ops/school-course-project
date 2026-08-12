@@ -5,6 +5,7 @@ import { PlayCircle, Check, Users, BarChart, ArrowLeft, Video, Award, Clock, Sta
 import { courseService } from '../services/courseService';
 import reviewService from '../services/reviewService';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import api from '../lib/axios';
 
 export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null }) {
@@ -17,6 +18,9 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const { user } = useAuth();
+  const { addToCart, cartItems } = useCart();
+  
+  const inCart = cartItems.some(item => item.id === courseId && item.type === 'course');
 
   useEffect(() => {
     const fetchEnrollmentStatus = async () => {
@@ -57,9 +61,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         if (!courseId) return;
         const res = await courseService.getPublicCourseDetails(courseId);
         setCourse(res.data);
-        if (res.data?.modules?.length > 0 && initialModuleId === null) {
-          setExpandedModule(res.data.modules[0]._id);
-        }
+        setCourse(res.data);
 
         const reviewRes = await reviewService.getCourseReviews(courseId);
         setReviews(reviewRes.data || []);
@@ -96,42 +98,56 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
     );
   }
 
-  // Calculate total lessons and duration
-  const totalLessons = course.modules?.reduce((acc, mod) => acc + (mod.lessons?.length || 0), 0) || 0;
-  const totalDurationSeconds = course.modules?.reduce((acc, mod) => {
-    return acc + (mod.lessons?.reduce((lAcc, l) => lAcc + (l.duration || 0), 0) || 0);
-  }, 0) || 0;
-  
-  const totalHours = Math.floor(totalDurationSeconds / 3600);
-  const totalMinutes = Math.floor((totalDurationSeconds % 3600) / 60);
+  // Modules and lessons have been removed from the architecture
 
   return (
-    <div className="bg-white min-h-screen font-sans pb-24 text-slate-800">
+    <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-slate-800">
       
-      {/* Light Hero Section - No dark colors */}
-      <div className="pt-28 pb-10 lg:pt-32 lg:pb-16 border-b border-slate-200 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <button 
-            onClick={() => navigate('/courses')}
-            className="flex items-center text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Courses
-          </button>
+      {/* Hero Banner Section (16:9) */}
+      <div className="relative w-full aspect-[21/9] sm:aspect-[16/7] md:aspect-[16/5] lg:aspect-[16/4] bg-slate-900 border-b border-slate-200">
+        {(course.bannerUrl || course.defaultBannerUrl) ? (
+          <img 
+            src={course.bannerUrl || course.defaultBannerUrl} 
+            alt={course.title} 
+            className="w-full h-full object-cover opacity-70"
+          />
+        ) : (course.thumbnailUrl || course.defaultThumbnailUrl) ? (
+           <img 
+            src={course.thumbnailUrl || course.defaultThumbnailUrl} 
+            alt={course.title} 
+            className="w-full h-full object-cover opacity-70"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Video className="w-16 h-16 text-slate-700" />
+          </div>
+        )}
+        
+        {/* Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
-            {/* Left Content */}
-            <div className="lg:col-span-8 flex flex-col justify-center">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+        {/* Content Over Banner */}
+        <div className="absolute inset-0 flex items-end">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-10 lg:pb-16">
+            <button 
+              onClick={() => navigate('/courses')}
+              className="flex items-center text-slate-300 hover:text-white transition-colors text-sm font-medium mb-6 group"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Courses
+            </button>
+
+            <div className="flex flex-col max-w-4xl">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight drop-shadow-md">
                   {course.title}
                 </h1>
                 <div className="flex items-center gap-3 mt-1 sm:mt-0">
-                  <span className="text-blue-700 font-semibold text-sm uppercase tracking-wide bg-blue-50 px-2.5 py-1 rounded-md">
+                  <span className="text-white font-semibold text-sm uppercase tracking-wide bg-blue-600/90 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-md">
                     {course.category}
                   </span>
                   {course.category === 'Full Certification' && (
-                    <span className="flex items-center text-amber-700 font-semibold text-sm uppercase tracking-wide bg-amber-50 px-2.5 py-1 rounded-md">
+                    <span className="flex items-center text-white font-semibold text-sm uppercase tracking-wide bg-amber-600/90 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-md">
                       <Award className="w-4 h-4 mr-1" /> Flagship
                     </span>
                   )}
@@ -139,38 +155,27 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
               </div>
               
               {course.subtitle && (
-                <p className="text-lg text-slate-600 max-w-3xl leading-relaxed mb-4">
+                <p className="text-lg text-slate-300 leading-relaxed mb-6 drop-shadow-sm max-w-3xl">
                   {course.subtitle}
                 </p>
               )}
 
               {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-600">
-                <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-md">
-                  <Star className="w-4 h-4 text-amber-500 fill-current" />
-                  <span className="font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-300">
+                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
+                  <Star className="w-4 h-4 text-amber-400 fill-current" />
+                  <span className="font-bold text-white">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
                   <span>({course.reviewCount || 0} reviews)</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-md">
-                  <Users className="w-4 h-4" />
-                  <span>{course.totalEnrollments || 0} Students</span>
+                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
+                  <Users className="w-4 h-4 text-slate-300" />
+                  <span className="text-white">{course.totalEnrollments || 0} Students</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-md">
-                  <BarChart className="w-4 h-4" />
-                  <span className="capitalize">{course.level || 'All Levels'}</span>
+                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
+                  <BarChart className="w-4 h-4 text-slate-300" />
+                  <span className="capitalize text-white">{course.level || 'All Levels'}</span>
                 </div>
               </div>
-            </div>
-            
-            {/* Right Mobile Thumbnail (No card, flat) */}
-            <div className="lg:hidden w-full aspect-video bg-slate-200">
-               {course.thumbnailUrl ? (
-                 <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
-               ) : (
-                 <div className="w-full h-full flex items-center justify-center text-slate-400">
-                   <Video className="w-12 h-12" />
-                 </div>
-               )}
             </div>
           </div>
         </div>
@@ -206,89 +211,6 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
               </section>
             )}
 
-            {/* Curriculum - Simple Flat Accordion */}
-            <section>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-900">Course Curriculum</h2>
-                <p className="text-slate-500 mt-2">
-                  {course.modules?.length || 0} sections • {totalLessons} lessons • {totalHours > 0 ? `${totalHours}h ` : ''}{totalMinutes}m total length
-                </p>
-              </div>
-
-              <div className="border border-slate-200">
-                {(!course.modules || course.modules.length === 0) ? (
-                  <div className="p-8 text-center text-slate-500">
-                    Curriculum is being updated. Please check back later.
-                  </div>
-                ) : (
-                  course.modules.map((mod, index) => {
-                    const isExpanded = expandedModule === mod._id;
-                    return (
-                      <div key={mod._id} className="border-b border-slate-200 last:border-b-0">
-                        <button
-                          onClick={() => toggleAccordion(mod._id)}
-                          className="w-full flex items-center justify-between px-6 py-4 text-left bg-slate-50 hover:bg-slate-100 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <ChevronDownIcon className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'transform rotate-180 text-slate-900' : 'text-slate-500'}`} />
-                            <span className="font-semibold text-slate-900 text-lg">Section {index + 1}: {mod.title}</span>
-                          </div>
-                          <div className="hidden sm:block text-sm text-slate-500">
-                            {mod.lessons?.length || 0} lectures
-                          </div>
-                        </button>
-
-                        <div
-                          className={`grid transition-all duration-300 ease-in-out ${
-                            isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                          }`}
-                        >
-                          <div className="overflow-hidden bg-white">
-                            {(!mod.lessons || mod.lessons.length === 0) ? (
-                              <div className="p-4 px-6 text-sm text-slate-500">No lessons available in this section.</div>
-                            ) : (
-                              <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {mod.lessons.map((lesson, lIdx) => (
-                                  <div 
-                                    key={lesson._id || lIdx} 
-                                    onClick={() => handleLessonClick(lesson._id)}
-                                    className="border border-slate-200 p-4 rounded-lg flex items-start gap-4 hover:border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer group"
-                                  >
-                                    <div className="shrink-0">
-                                      {lesson.thumbnailUrl ? (
-                                        <div className="w-20 h-14 rounded overflow-hidden relative group-hover:shadow-sm transition-shadow bg-slate-100 border border-slate-200">
-                                          <img src={lesson.thumbnailUrl} alt={lesson.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                          <div className="absolute inset-0 bg-slate-900/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <PlayCircle className="w-6 h-6 text-white" />
-                                          </div>
-                                        </div>
-                                      ) : (
-                                        <PlayCircle className="w-8 h-8 text-slate-300 group-hover:text-blue-600 transition-colors mt-1" />
-                                      )}
-                                    </div>
-                                    <div className="flex-1">
-                                      <h5 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug">
-                                        {lesson.title}
-                                      </h5>
-                                      {lesson.duration > 0 && (
-                                        <div className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                                          <Clock className="w-3 h-3" />
-                                          {Math.floor(lesson.duration / 60)}:{(lesson.duration % 60).toString().padStart(2, '0')}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </section>
 
             {/* Student Reviews Section */}
             <section className="pt-8 border-t border-slate-200">
@@ -348,17 +270,6 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
           <div className="lg:col-span-4 lg:sticky lg:top-28">
             <div className="border border-slate-200 bg-white">
               
-              {/* Desktop Thumbnail */}
-              <div className="hidden lg:block w-full aspect-video bg-slate-100">
-                 {course.thumbnailUrl ? (
-                   <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
-                 ) : (
-                   <div className="w-full h-full flex items-center justify-center text-slate-300">
-                     <Video className="w-12 h-12" />
-                   </div>
-                 )}
-              </div>
-
               <div className="p-6 sm:p-8">
                 <div className="mb-6">
                   <span className="text-3xl font-bold text-slate-900">R{course.price}</span>
@@ -379,12 +290,27 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                     Start Learning
                   </button>
                 ) : (
-                  <button
-                    onClick={() => onOpenEnrol(course.title, course.price, courseId)}
-                    className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-lg transition-colors mb-4"
-                  >
-                    Enroll Now
-                  </button>
+                  <div className="flex flex-col gap-3 mb-4">
+                    <button
+                      onClick={() => onOpenEnrol(course.title, course.price, courseId)}
+                      className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-lg transition-colors shadow-sm"
+                    >
+                      Enroll Now
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (!inCart) {
+                          addToCart({ id: course._id, type: 'course', title: course.title, price: course.price, image: course.thumbnailUrl || course.defaultThumbnailUrl });
+                        } else {
+                          navigate('/cart');
+                        }
+                      }}
+                      className="w-full py-3.5 bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 font-bold text-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      <span className="material-symbols-outlined">{inCart ? 'shopping_bag' : 'add_shopping_cart'}</span>
+                      {inCart ? 'View Cart' : 'Add to Cart'}
+                    </button>
+                  </div>
                 )}
                 <p className="text-center text-sm text-slate-500 mb-8">30-Day Money-Back Guarantee</p>
 
@@ -393,7 +319,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                   <h4 className="font-semibold text-slate-900 mb-4">This course includes:</h4>
                   <div className="flex items-center gap-3 text-slate-700">
                     <Video className="w-5 h-5 text-slate-400" />
-                    <span>{totalHours > 0 ? `${totalHours} hours ` : ''}{totalMinutes} mins on-demand video</span>
+                    <span>1 on-demand course video</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-700">
                     <Clock className="w-5 h-5 text-slate-400" />
@@ -431,12 +357,27 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
             Start Learning
           </button>
         ) : (
-          <button
-            onClick={() => onOpenEnrol(course.title, `R${course.price}`, courseId)}
-            className="flex-1 py-3 bg-slate-900 text-white font-semibold text-center"
-          >
-            Enroll Now
-          </button>
+          <div className="flex-1 flex gap-2">
+            <button
+              onClick={() => onOpenEnrol(course.title, `R${course.price}`, courseId)}
+              className="flex-1 py-3 bg-slate-900 text-white font-semibold text-center rounded-lg shadow-sm"
+            >
+              Enroll
+            </button>
+            <button
+              onClick={() => {
+                if (!inCart) {
+                  addToCart({ id: course._id, type: 'course', title: course.title, price: course.price, image: course.thumbnailUrl || course.defaultThumbnailUrl });
+                } else {
+                  navigate('/cart');
+                }
+              }}
+              className="px-4 py-3 bg-slate-100 text-slate-900 border border-slate-300 font-semibold flex items-center justify-center rounded-lg"
+              title="Add to Cart"
+            >
+              <span className="material-symbols-outlined">{inCart ? 'shopping_bag' : 'add_shopping_cart'}</span>
+            </button>
+          </div>
         )}
       </div>
 

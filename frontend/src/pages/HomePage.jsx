@@ -11,6 +11,7 @@ import ContactSection from '../components/sections/ContactSection';
 import FaqSection from '../components/sections/FaqSection';
 import HeadlineTicker from '../components/sections/HeadlineTicker';
 import FloatingSocialBar from '../components/FloatingSocialBar';
+import NewsletterModal from '../components/NewsletterModal';
 
 export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function HomePage({ onOpenRegister, onOpenEnrol, isLoginMode, isR
       {!isAuthMode ? (
         <main className="animate-fade-in relative z-10">
           <div className="relative">
+            <NewsletterModal />
             <HeroSection 
               onOpenRegister={onOpenRegister} 
               isLoginMode={isLoginMode}

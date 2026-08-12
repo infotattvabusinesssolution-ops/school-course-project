@@ -16,6 +16,13 @@ export default function EbookCheckoutModal({
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
 
+  // Coupon state
+  const [showCouponInput, setShowCouponInput] = useState(true);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
   const navigate = useNavigate();
 
   if (!ebook) return null;
@@ -23,14 +30,33 @@ export default function EbookCheckoutModal({
   const safeTitle = ebook.title || "Trade E-book";
   const safePrice = ebook.price || 499;
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
+  // No need to load external script for Payfast form POST
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setValidatingCoupon(true);
+    setCouponError("");
+    try {
+      const { data } = await api.post("/coupons/validate", { code: couponCode });
+      if (data.success) {
+        setAppliedCoupon({
+          code: couponCode,
+          discountType: data.data.discountType,
+          discountValue: data.data.discountValue
+        });
+        setCouponCode("");
+      }
+    } catch (err) {
+      setCouponError(err.response?.data?.message || "Invalid coupon code");
+      setAppliedCoupon(null);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponError("");
   };
 
   const handleProceed = async (e) => {
@@ -43,16 +69,9 @@ export default function EbookCheckoutModal({
     setProcessing(true);
 
     try {
-      const res = await loadRazorpayScript();
-      if (!res) {
-        alert("Razorpay SDK failed to load. Are you online?");
-        setProcessing(false);
-        return;
-      }
-
-      // Create order on backend for E-book
       const { data } = await api.post("/payments/create-ebook-order", {
         ebookId: ebook._id,
+        couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       });
 
       if (!data.success) {
@@ -64,10 +83,8 @@ export default function EbookCheckoutModal({
       // SIMULATION MODE BYPASS
       if (import.meta.env.VITE_SIMULATE_PAYMENT === 'true') {
         const verifyRes = await api.post("/payments/verify-ebook-payment", {
-          razorpay_order_id: data.orderId,
-          razorpay_payment_id: "sim_pay_" + Date.now(),
-          razorpay_signature: "SIMULATED_SIGNATURE",
           ebookId: ebook._id,
+          m_payment_id: data.payload.m_payment_id
         });
 
         if (verifyRes.data.success) {
@@ -76,57 +93,29 @@ export default function EbookCheckoutModal({
           setTimeout(() => {
             setSuccess(false);
             onClose();
-            navigate("/dashboard");
+            navigate(`/ebook`); // Or a specific success page
           }, 2000);
         }
         setProcessing(false);
-        return; // Skip loading actual Razorpay
+        return;
       }
 
-      const options = {
-        key: data.keyId,
-        amount: data.amount,
-        currency: data.currency,
-        name: "CRMISA Trade Library",
-        description: `Buy Handbook: ${safeTitle}`,
-        order_id: data.orderId,
-        handler: async function (response) {
-          try {
-            const verifyRes = await api.post("/payments/verify-ebook-payment", {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              ebookId: ebook._id,
-            });
-
-            if (verifyRes.data.success) {
-              setSuccess(true);
-              if (onPaymentSuccess) onPaymentSuccess();
-              setTimeout(() => {
-                setSuccess(false);
-                onClose();
-                navigate("/dashboard");
-              }, 2000);
-            }
-          } catch (error) {
-            console.error(error);
-            alert("E-book payment verification failed.");
-          }
-        },
-        prefill: {
-          name: "Buyer",
-          email: "student@example.com",
-        },
-        theme: {
-          color: "#0f172a", // slate-900
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.on('payment.failed', function (response) {
-        alert(`Payment failed: ${response.error.description}`);
+      // LIVE MODE: Create dynamic form and submit
+      const form = document.createElement('form');
+      form.action = data.actionUrl;
+      form.method = 'POST';
+      
+      Object.keys(data.payload).forEach(key => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = data.payload[key];
+          form.appendChild(input);
       });
-      rzp1.open();
+      
+      document.body.appendChild(form);
+      form.submit();
+      
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to initialize e-book payment");
@@ -175,13 +164,89 @@ export default function EbookCheckoutModal({
 
           <form onSubmit={handleProceed} className="space-y-6">
             
-            <div className="bg-slate-900 p-4 rounded-xl text-center text-white">
-              <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                Total Handbook Price
-              </span>
-              <span className="block text-3xl font-black text-white">
-                R{safePrice}
-              </span>
+            <div className="bg-slate-900 p-4 rounded-xl text-left text-white space-y-2">
+              <div className="flex justify-between items-center text-slate-300">
+                <span className="text-xs font-semibold uppercase tracking-wider">
+                  Handbook Price
+                </span>
+                <span className={`text-sm font-semibold ${appliedCoupon ? 'line-through opacity-50' : ''}`}>
+                  R{safePrice}
+                </span>
+              </div>
+              
+              {appliedCoupon && (
+                <div className="flex justify-between items-center text-emerald-400">
+                  <span className="text-xs font-semibold uppercase tracking-wider flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">local_offer</span>
+                    Discount ({appliedCoupon.code})
+                  </span>
+                  <span className="text-sm font-bold">
+                    -R{appliedCoupon.discountType === 'percentage' 
+                      ? (parseFloat(safePrice) * (appliedCoupon.discountValue / 100)).toFixed(2)
+                      : appliedCoupon.discountValue.toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex justify-between items-center pt-2 border-t border-slate-700">
+                <span className="text-sm font-bold uppercase tracking-wider">
+                  Total Payable
+                </span>
+                <span className="text-3xl font-black">
+                  R{appliedCoupon 
+                    ? Math.max(0, parseFloat(safePrice) - (appliedCoupon.discountType === 'percentage' ? parseFloat(safePrice) * (appliedCoupon.discountValue / 100) : appliedCoupon.discountValue)).toFixed(2)
+                    : safePrice}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => setShowCouponInput(!showCouponInput)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  {showCouponInput ? 'remove' : 'add'}
+                </span>
+                Have a coupon or referral code?
+              </button>
+              
+              {showCouponInput && !appliedCoupon && (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Enter code"
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 text-xs uppercase"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={validatingCoupon || !couponCode.trim()}
+                    className="px-4 py-2 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                  >
+                    {validatingCoupon ? 'Applying...' : 'Apply'}
+                  </button>
+                </div>
+              )}
+              
+              {couponError && (
+                <p className="text-xs text-red-500 font-medium">{couponError}</p>
+              )}
+              
+              {appliedCoupon && (
+                <div className="flex items-center justify-between bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg border border-emerald-200 text-xs">
+                  <div className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                    <span className="font-bold">{appliedCoupon.code}</span> applied successfully!
+                  </div>
+                  <button type="button" onClick={removeCoupon} className="text-emerald-700 hover:text-emerald-900 font-bold hover:underline">
+                    Remove
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 pt-2">
@@ -220,7 +285,7 @@ export default function EbookCheckoutModal({
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                {processing ? 'Processing Order...' : `Pay R${safePrice} & Unlock Handbook`}
+                {processing ? 'Processing Order...' : `Pay & Unlock Handbook`}
               </button>
             </div>
 

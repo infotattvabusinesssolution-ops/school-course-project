@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, ShoppingBag, Heart, CheckCircle2, ArrowRight, Filter, ChevronDown, Download } from "lucide-react";
+import { BookOpen, ShoppingBag, ShoppingCart, CheckCircle2, ArrowRight, Filter, ChevronDown, Download } from "lucide-react";
 import { ebookService } from "../services/ebookService";
 import { useAuth } from "../context/AuthContext";
 import EbookCheckoutModal from "../components/EbookCheckoutModal";
 import api from "../lib/axios";
 import { downloadPdf } from "../utils/downloadHelper";
 
-export default function EbookPage({ onAddToCart, onAddToWishlist }) {
+export default function EbookPage({ onAddToCart }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
@@ -62,77 +62,28 @@ export default function EbookPage({ onAddToCart, onAddToWishlist }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         
         {/* Header */}
-        <div data-aos="fade-up">
+        <div data-aos="fade-up" className="mb-10">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-[2px] bg-yellow-400"></div>
             <span className="text-sm sm:text-base font-semibold text-slate-500 uppercase tracking-widest">
-              Digital Library & Trade Handbooks
+              Premium Digital Library
             </span>
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <h1 className="text-4xl sm:text-5xl font-medium text-slate-900 tracking-tight leading-tight">
-                CRMISA Trade E-Books
+                Master Global Trade <br className="hidden sm:block" /> At Your Own Pace
               </h1>
               <p className="text-slate-600 text-base sm:text-lg mt-3 max-w-2xl">
-                Practical step-by-step handbooks on customs clearance, export buyer outreach, shipping containers, and international trade finance.
+                Download practical, step-by-step handbooks on customs clearance, export buyer outreach, shipping containers, and international trade finance.
               </p>
             </div>
-
-            {/* Single Filter Dropdown Button */}
-            <div className="relative shrink-0">
-              <button
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold shadow-xs transition-all border border-slate-800"
-              >
-                <Filter className="w-4 h-4 text-yellow-400" />
-                <span>Filter: {activeCategory}</span>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    isFilterOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {isFilterOpen && (
-                <>
-                  {/* Backdrop to close on click outside */}
-                  <div
-                    className="fixed inset-0 z-20"
-                    onClick={() => setIsFilterOpen(false)}
-                  />
-
-                  {/* Dropdown Menu */}
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-30 divide-y divide-slate-100">
-                    <div className="px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Select Category
-                    </div>
-                    <div className="py-1">
-                      {categories.map((cat) => (
-                        <button
-                          key={cat}
-                          onClick={() => {
-                            setActiveCategory(cat);
-                            setIsFilterOpen(false);
-                          }}
-                          className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors flex items-center justify-between ${
-                            activeCategory === cat
-                              ? "bg-slate-100 text-slate-900 font-bold"
-                              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                          }`}
-                        >
-                          <span>{cat}</span>
-                          {activeCategory === cat && (
-                            <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
           </div>
+        </div>
+
+        {/* Browse Section Title */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6" data-aos="fade-up">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Browse E-Books</h2>
         </div>
 
         {/* Ebooks Grid */}
@@ -149,78 +100,65 @@ export default function EbookPage({ onAddToCart, onAddToWishlist }) {
             {filteredEbooks.map((item) => (
               <div
                 key={item._id || item.id}
-                className="bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-all duration-300 flex flex-col justify-between overflow-hidden p-4 space-y-4 group cursor-pointer"
+                className="bg-white rounded-2xl border border-slate-200 hover:border-blue-400/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between overflow-hidden p-5 space-y-5 group cursor-pointer"
               >
-                {/* Ebook Graphic Cover */}
+                {/* 3D Ebook Graphic Cover */}
                 <div
                   onClick={() => navigate(`/ebook/${item._id || item.id}`)}
-                  className="relative aspect-[3/4] rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shadow-inner flex flex-col justify-between p-4 text-white"
+                  className="relative aspect-[3/4] w-[80%] mx-auto rounded-r-xl rounded-l-sm overflow-hidden bg-slate-900 border-l-[14px] border-slate-800 shadow-[4px_0px_0px_#f8fafc,8px_0px_0px_#f1f5f9,12px_0px_0px_#e2e8f0,13px_0px_0px_#cbd5e1] flex flex-col justify-between transition-all duration-300"
                 >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay group-hover:scale-105 transition-transform duration-500"
-                    style={{ backgroundImage: `url('${item.coverImage}')` }}
-                  />
+                  {/* Book Spine Highlight */}
+                  <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-white/30 to-transparent z-20 mix-blend-overlay"></div>
+                  
+                  {item.coverImage ? (
+                    <img src={item.coverImage} alt={item.title} className="absolute inset-0 w-full h-full object-cover z-0" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 font-bold text-sm z-0">No Cover</div>
+                  )}
 
-                  {/* Category Pill Badge */}
-                  <div className="relative z-10 flex justify-between items-center">
-                    <span className="bg-slate-800/90 text-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider backdrop-blur-xs">
-                      {item.category || "Trade"}
-                    </span>
-                    <div className="w-7 h-7 bg-yellow-400 text-slate-900 rounded-md flex items-center justify-center shadow-xs">
-                      <BookOpen className="w-4 h-4" />
-                    </div>
-                  </div>
+                  {/* Fallback overlay if no image or to darken */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/40 z-10"></div>
 
-                  {/* Cover Title */}
-                  <div className="relative z-10 bg-white/95 text-slate-900 p-3 rounded-lg text-center shadow-md backdrop-blur-xs my-auto border border-slate-200">
-                    <span className="text-[11px] font-black tracking-wider uppercase text-slate-900 block leading-tight">
-                      {item.coverTitle || item.title}
-                    </span>
-                  </div>
+
 
                   {/* Stock Indicator */}
-                  <div className="relative z-10 flex items-center justify-between text-[10px] font-semibold text-slate-300">
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Instant PDF Download
+                  <div className="relative z-20 p-3 flex items-center justify-between text-[10px] font-bold text-slate-100">
+                    <span className="flex items-center gap-1.5 bg-slate-900/80 px-2 py-1 rounded-md backdrop-blur-md">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant PDF
                     </span>
                   </div>
                 </div>
 
                 {/* Info & Price */}
-                <div className="space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-4 flex-1 flex flex-col justify-between">
                   <div
                     onClick={() => navigate(`/ebook/${item._id || item.id}`)}
-                    className="space-y-1.5"
+                    className="space-y-2"
                   >
-                    <h3 className="font-bold text-sm text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h3 className="font-extrabold text-base text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
                       {item.title}
                     </h3>
-                    <div className="text-xs font-extrabold text-slate-900">
-                      Price: <span className="text-slate-900 font-black">R{item.price}</span>
+                    <div className="text-sm font-bold text-slate-500">
+                      Price: <span className="text-blue-600 font-black text-lg">R{item.price}</span>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                  <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
                     {isAdmin ? (
-                      <span className="flex-1 py-2 bg-slate-100 text-slate-500 rounded-lg text-xs font-semibold text-center cursor-not-allowed">
+                      <span className="flex-1 py-2.5 bg-slate-100 text-slate-500 rounded-xl text-sm font-semibold text-center cursor-not-allowed">
                         Admin Mode
                       </span>
                     ) : purchasedEbookIds.has(item._id) ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (item.pdfUrl) {
-                            downloadPdf(item.pdfUrl, `${item.title || "Handbook"}.pdf`);
-                          } else {
-                            navigate("/dashboard");
-                          }
-                        }}
-                        className="flex-1 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                      <a
+                        href={item.pdfUrl}
+                        download
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-md shadow-emerald-600/20"
                       >
-                        <Download className="w-3.5 h-3.5" />
+                        <Download className="w-4 h-4" />
                         <span>Download PDF</span>
-                      </button>
+                      </a>
                     ) : (
                       <button
                         onClick={(e) => {
@@ -232,9 +170,9 @@ export default function EbookPage({ onAddToCart, onAddToWishlist }) {
                           setSelectedEbookForCheckout(item);
                           setIsCheckoutModalOpen(true);
                         }}
-                        className="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                        className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-md shadow-blue-600/20"
                       >
-                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <ShoppingBag className="w-4 h-4" />
                         <span>Buy Now</span>
                       </button>
                     )}
@@ -242,12 +180,12 @@ export default function EbookPage({ onAddToCart, onAddToWishlist }) {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onAddToWishlist) onAddToWishlist(item);
+                        if (onAddToCart) onAddToCart(item);
                       }}
-                      className="w-8 h-8 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 flex items-center justify-center text-slate-600 hover:text-red-500 transition-colors"
-                      title="Add to Wishlist"
+                      className="w-10 h-10 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors"
+                      title="Add to Cart"
                     >
-                      <Heart className="w-4 h-4" />
+                      <ShoppingCart className="w-5 h-5" />
                     </button>
                   </div>
                 </div>

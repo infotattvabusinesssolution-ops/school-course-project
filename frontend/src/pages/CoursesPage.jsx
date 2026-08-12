@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Filter, BookOpen, Star, ChevronRight, Check, BarChart } from 'lucide-react';
 import { courseService } from '../services/courseService';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import api from '../lib/axios';
 
 export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { cartItems, addToCart } = useCart();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [enrollmentsMap, setEnrollmentsMap] = useState(new Map());
@@ -71,8 +73,8 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
     return courses.filter((c) => {
       const matchesCat = selectedCategory === 'All' || c.category === selectedCategory;
       const matchesLevel = selectedLevel === 'All' || c.level === selectedLevel;
-      const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            c.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = (c.title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || 
+                            (c.description?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       return matchesCat && matchesLevel && matchesSearch;
     });
   }, [courses, selectedCategory, selectedLevel, searchQuery]);
@@ -216,11 +218,11 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                 className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group shadow-sm hover:shadow-md"
                 onClick={() => navigate(`/courses/${course._id}`)}
               >
-                {/* Flat Image Container */}
-                <div className="relative h-60 w-full bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
-                  {course.thumbnailUrl ? (
+                {/* 4:3 Aspect Ratio Image Container */}
+                <div className="relative w-full aspect-[4/3] bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                  {(course.thumbnailUrl || course.defaultThumbnailUrl) ? (
                     <img 
-                      src={course.thumbnailUrl} 
+                      src={course.thumbnailUrl || course.defaultThumbnailUrl} 
                       alt={course.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                     />
@@ -229,8 +231,10 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                       <BookOpen className="w-10 h-10 text-slate-300" />
                     </div>
                   )}
-                  
-
+                  {/* Floating Level Badge */}
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-slate-900 uppercase tracking-wide border border-white/50 shadow-sm">
+                    {course.category}
+                  </div>
                 </div>
 
                 {/* Content Container */}
@@ -248,9 +252,15 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                  <h3 className="text-xl font-bold text-slate-900 leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
                     {course.title}
                   </h3>
+                  
+                  {course.subtitle && (
+                    <p className="text-sm font-semibold text-slate-700 mb-3">
+                      {course.subtitle}
+                    </p>
+                  )}
                   
                   <div className="flex items-center gap-1 mb-4 text-amber-500">
                     <Star className="w-4 h-4 fill-current" />
@@ -285,20 +295,39 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                         }}
                         className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                       >
-                        <span>Start Learning</span>
+                        <span>Continue</span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onOpenEnrol) onOpenEnrol(course.title, `R${course.price}`, course._id);
-                        }}
-                        className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
-                      >
-                        <span>Enrol</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onOpenEnrol) onOpenEnrol(course.title, `R${course.price}`, course._id);
+                          }}
+                          className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
+                        >
+                          <span>Enrol</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const inCart = cartItems.some(item => item.id === course._id && item.type === 'course');
+                            if (!inCart) {
+                              addToCart({ id: course._id, type: 'course', title: course.title, price: course.price, image: course.thumbnailUrl || course.defaultThumbnailUrl });
+                            } else {
+                              navigate('/cart');
+                            }
+                          }}
+                          className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-2 text-sm font-semibold transition-colors border border-slate-300 flex items-center justify-center"
+                          title="Add to Cart"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">
+                            {cartItems.some(item => item.id === course._id && item.type === 'course') ? 'shopping_bag' : 'add_shopping_cart'}
+                          </span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

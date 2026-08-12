@@ -85,35 +85,28 @@ export default function EbookDetailPage({ onAddToCart }) {
 
         {/* Main Product Card */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start shadow-xs">
-          {/* Left Column: Ebook Cover Graphic */}
+          {/* Left Column: 3D Ebook Cover Graphic */}
           <div className="md:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-xs aspect-[3/4] rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shadow-md flex flex-col justify-between p-5 text-white group">
-              <div
-                className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
-                style={{ backgroundImage: `url('${ebook.coverImage}')` }}
-              />
+            <div className="relative w-full max-w-[280px] aspect-[3/4] rounded-r-2xl rounded-l-md overflow-hidden bg-slate-900 border-l-[20px] border-slate-800 shadow-[6px_6px_0px_#f8fafc,12px_12px_0px_#f1f5f9,18px_18px_0px_#e2e8f0,19px_19px_0px_#cbd5e1] flex flex-col justify-between group">
+              {/* Book Spine Highlight */}
+              <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white/20 to-transparent z-20 mix-blend-overlay"></div>
+              
+              {ebook.coverImage ? (
+                <img src={ebook.coverImage} alt={ebook.title} className="absolute inset-0 w-full h-full object-cover z-0" />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 font-bold text-sm z-0">No Cover</div>
+              )}
+              
+              {/* Dark Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-slate-900/40 z-10"></div>
 
-              {/* Header Badge */}
-              <div className="relative z-10 flex justify-between items-center">
-                <span className="bg-slate-800/90 text-yellow-400 text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider">
-                  {ebook.category || "Handbook"}
-                </span>
-                <div className="w-8 h-8 bg-yellow-400 text-slate-900 rounded-lg flex items-center justify-center font-bold">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-              </div>
 
-              {/* Center Title */}
-              <div className="relative z-10 bg-white/95 text-slate-900 p-4 rounded-xl text-center shadow-md border border-slate-200 my-auto">
-                <span className="text-xs font-black tracking-wider uppercase text-slate-900 block leading-tight">
-                  {ebook.coverTitle || ebook.title}
-                </span>
-              </div>
 
               {/* Bottom Notice */}
-              <div className="relative z-10 text-[11px] font-semibold text-slate-300 flex items-center justify-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                Official CRMISA Digital Edition
+              <div className="relative z-20 p-5 text-[11px] font-bold text-slate-100 flex items-center justify-between">
+                <span className="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1.5 rounded-md backdrop-blur-md shadow-sm">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant PDF
+                </span>
               </div>
             </div>
           </div>
@@ -157,19 +150,14 @@ export default function EbookDetailPage({ onAddToCart }) {
                   <span>Edit E-book (Admin)</span>
                 </button>
               ) : isPurchased ? (
-                <button
-                  onClick={() => {
-                    if (ebook.pdfUrl) {
-                      downloadPdf(ebook.pdfUrl, `${ebook.title || "Handbook"}.pdf`);
-                    } else {
-                      navigate("/dashboard");
-                    }
-                  }}
-                  className="px-8 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer"
+                <a
+                  href={ebook.pdfUrl}
+                  download
+                  className="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Full E-Book (PDF)</span>
-                </button>
+                </a>
               ) : (
                 <button
                   onClick={() => {
@@ -179,22 +167,21 @@ export default function EbookDetailPage({ onAddToCart }) {
                     }
                     setIsCheckoutModalOpen(true);
                   }}
-                  className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2"
+                  className="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md shadow-blue-600/20 transition-colors text-sm flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>Buy Now</span>
                 </button>
               )}
 
-              {ebook.samplePdfUrl && (
-                <button
-                  onClick={() => downloadPdf(ebook.samplePdfUrl, `${ebook.title || "Sample"}_Sample.pdf`)}
-                  className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-lg transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer"
+                <a
+                  href={ebook.samplePdfUrl}
+                  download
+                  className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-xl transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer border border-slate-200"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Sample PDF</span>
-                </button>
-              )}
+                </a>
             </div>
 
             {/* Highlights */}

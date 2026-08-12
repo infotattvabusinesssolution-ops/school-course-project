@@ -3,12 +3,14 @@ import { Routes, Route, useLocation, useNavigate, useNavigationType, Navigate } 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
+import RegisterModal from "./components/RegisterModal";
 import CheckoutModal from "./components/CheckoutModal";
+import CartCheckoutModal from "./components/CartCheckoutModal";
 import EnrolModal from "./components/EnrolModal";
 import CartModal from "./components/CartModal";
-import CartWishlistDrawer from "./components/CartWishlistDrawer";
 import { useAOS } from "./hooks/useAOS";
 import { useAuth } from "./context/AuthContext";
+import { useCart } from "./context/CartContext";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -20,6 +22,8 @@ import EbookDetailPage from "./pages/EbookDetailPage";
 import ForumPage from "./pages/ForumPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import ContactPage from "./pages/ContactPage";
+import BlogListPage from "./pages/BlogListPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
 import DashboardLayout from "./pages/DashboardLayout";
 import DashboardCourses from "./pages/DashboardCourses";
 import DashboardEbooks from "./pages/DashboardEbooks";
@@ -36,6 +40,8 @@ import VerifyCertificatePage from "./pages/VerifyCertificatePage";
 import CertificatePage from "./pages/CertificatePage";
 import ExamPage from "./pages/ExamPage";
 import ExamResultPage from "./pages/ExamResultPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import CookieConsent from "./components/CookieConsent";
 
 export default function App() {
   const location = useLocation();
@@ -90,20 +96,14 @@ export default function App() {
   const isLoggedIn = !!user;
 
   // Modals state
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isCartCheckoutOpen, setIsCartCheckoutOpen] = useState(false);
   const [isEnrolOpen, setIsEnrolOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
-  // Cart items state
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      title:
-        "CRMISA – How to Find Buyers Worldwide Marketing, Fairs, B2B Portals & Smart Outreach",
-      price: 499,
-    },
-  ]);
+  const { cartItems, addToCart, removeFromCart } = useCart();
 
   // Track selected course/item for checkout
   const [checkoutCourse, setCheckoutCourse] = useState({
@@ -112,7 +112,6 @@ export default function App() {
     price: "R15000",
   });
 
-  const [wishlistCount, setWishlistCount] = useState(2);
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -141,25 +140,13 @@ export default function App() {
     showToast("Logged out successfully.");
   };
 
-  const handleAddToCart = (item) => {
-    const newItem = {
-      id: Date.now(),
-      title: item.title || "CRMISA Import & Export Learning Material",
-      price: item.price || "R499",
-    };
-    setCartItems((prev) => [...prev, newItem]);
-    showToast(`Added "${newItem.title}" to Cart!`);
+  const handleAddToCartClick = (item) => {
+    addToCart({
+      ...item,
+      type: item.coverImage ? 'ebook' : 'course',
+    });
+    showToast(`Added "${item.title || "Item"}" to Cart!`);
     setIsCartModalOpen(true);
-  };
-
-  const handleRemoveFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-    showToast("Item removed from cart.");
-  };
-
-  const handleAddToWishlist = (item) => {
-    setWishlistCount((prev) => prev + 1);
-    showToast(`Saved "${item.title || "Item"}" to Wishlist!`);
   };
 
   // Determine if we should hide the Navbar/Footer
@@ -178,14 +165,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-slate-900 font-sans selection:bg-sky-400 selection:text-slate-900 overflow-x-hidden">
+      <CookieConsent />
       {!hideLayout && (
         <Navbar
-          wishlistCount={wishlistCount}
           cartCount={cartItems.length}
           isLoggedIn={isLoggedIn}
           user={user}
-          onOpenRegister={() => navigate("/register")}
-          onOpenLogin={() => navigate("/login")}
+          onOpenRegister={() => setIsRegisterModalOpen(true)}
+          onOpenLogin={() => setIsLoginModalOpen(true)}
           onOpenEnrol={() => handleEnrollNowClick()}
           onOpenCartDrawer={() => setIsCartModalOpen(true)}
           onLogout={handleLogout}
@@ -212,6 +199,7 @@ export default function App() {
               <HomePage
                 isLoginMode
                 onOpenEnrol={() => handleEnrollNowClick()}
+                onOpenLogin={() => setIsLoginModalOpen(true)}
               />
             }
           />
@@ -221,6 +209,7 @@ export default function App() {
               <HomePage
                 isRegisterMode
                 onOpenEnrol={() => handleEnrollNowClick()}
+                onOpenRegister={() => setIsRegisterModalOpen(true)}
               />
             }
           />
@@ -230,8 +219,7 @@ export default function App() {
             element={
               <CoursesPage
                 onOpenEnrol={handleEnrollNowClick}
-                onAddToCart={handleAddToCart}
-                onAddToWishlist={handleAddToWishlist}
+                onAddToCart={handleAddToCartClick}
               />
             }
           />
@@ -246,27 +234,19 @@ export default function App() {
             path="/ebook"
             element={
               <EbookPage
-                onAddToCart={handleAddToCart}
-                onAddToWishlist={handleAddToWishlist}
-              />
-            }
-          />
-          <Route
-            path="/ebooks"
-            element={
-              <EbookPage
-                onAddToCart={handleAddToCart}
-                onAddToWishlist={handleAddToWishlist}
+                onAddToCart={handleAddToCartClick}
               />
             }
           />
           <Route
             path="/ebook/:id"
-            element={<EbookDetailPage onAddToCart={handleAddToCart} />}
+            element={<EbookDetailPage onAddToCart={handleAddToCartClick} />}
           />
 
           <Route path="/forum" element={<ForumPage />} />
           <Route path="/forum/:id" element={<PostDetailPage />} />
+          <Route path="/blogs" element={<BlogListPage />} />
+          <Route path="/blogs/:id" element={<BlogDetailPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsConditionsPage />} />
@@ -275,6 +255,7 @@ export default function App() {
           <Route path="/certificate/:certificateId" element={<CertificatePage />} />
           <Route path="/course/:id/exam" element={<ExamPage />} />
           <Route path="/course/:id/exam/result" element={<ExamResultPage />} />
+          <Route path="/payment-success" element={<PaymentSuccessPage />} />
 
           {/* Student Routes */}
           <Route path="/dashboard" element={<DashboardLayout onLogout={handleLogout} />}>
@@ -312,17 +293,34 @@ export default function App() {
 
       {['/', '/login', '/register'].includes(location.pathname) && <Footer />}
 
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        switchToRegister={() => {
+          setIsLoginModalOpen(false);
+          setIsRegisterModalOpen(true);
+        }} 
+      />
+
+      <RegisterModal 
+        isOpen={isRegisterModalOpen} 
+        onClose={() => setIsRegisterModalOpen(false)} 
+        switchToLogin={() => {
+          setIsRegisterModalOpen(false);
+          setIsLoginModalOpen(true);
+        }} 
+      />
+
       <CartModal
         isOpen={isCartModalOpen}
         onClose={() => setIsCartModalOpen(false)}
-        cartItems={cartItems}
-        onRemoveItem={handleRemoveFromCart}
         onProceedToCheckout={() => {
-          const firstItem = cartItems[0] || {
-            title: "CRMISA Ebook",
-            price: "R499",
-          };
-          handleEnrollNowClick(firstItem.title, String(firstItem.price));
+          if (!isLoggedIn) {
+            showToast("Please log in to checkout your cart.");
+            navigate("/login");
+            return;
+          }
+          setIsCartCheckoutOpen(true);
         }}
       />
 
@@ -335,6 +333,12 @@ export default function App() {
         onPaymentSuccess={() => showToast("Payment Received! Access Granted.")}
       />
 
+      <CartCheckoutModal
+        isOpen={isCartCheckoutOpen}
+        onClose={() => setIsCartCheckoutOpen(false)}
+        onPaymentSuccess={() => showToast("Cart Purchase Successful! Access Granted.")}
+      />
+
       <EnrolModal
         isOpen={isEnrolOpen}
         onClose={() => setIsEnrolOpen(false)}
@@ -343,13 +347,7 @@ export default function App() {
         }
       />
 
-      <CartWishlistDrawer
-        isOpen={isCartDrawerOpen}
-        onClose={() => setIsCartDrawerOpen(false)}
-        wishlistCount={wishlistCount}
-        cartCount={cartItems.length}
-        onOpenEnrol={() => handleEnrollNowClick()}
-      />
+
     </div>
   );
 }

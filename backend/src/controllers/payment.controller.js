@@ -1,4 +1,3 @@
-import Razorpay from "razorpay";
 import crypto from "crypto";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -7,26 +6,41 @@ import Ebook from "../models/Ebook.model.js";
 import Enrollment from "../models/Enrollment.model.js";
 import EbookPurchase from "../models/EbookPurchase.model.js";
 import Progress from "../models/Progress.model.js";
+import Coupon from "../models/Coupon.model.js";
 
-// Initialize Razorpay instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "mock_key_id",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "mock_key_secret",
-});
+const generatePayfastSignature = (payload, passPhrase = null) => {
+    let pfOutput = "";
+    for (let key in payload) {
+        if(payload.hasOwnProperty(key)){
+            if (payload[key] !== "") {
+                pfOutput += `${key}=${encodeURIComponent(payload[key].toString().trim()).replace(/%20/g, "+")}&`
+            }
+        }
+    }
+    let getString = pfOutput.slice(0, -1);
+    if (passPhrase) {
+        getString += `&passphrase=${encodeURIComponent(passPhrase.toString().trim()).replace(/%20/g, "+")}`;
+    }
+    return crypto.createHash("md5").update(getString).digest("hex");
+};
 
-// @desc    Create Razorpay Order
-// @route   POST /api/payments/create-razorpay-order
-// @access  Private (Student)
-export const createRazorpayOrder = asyncHandler(async (req, res, next) => {
-  const { courseId } = req.body;
+const getPayfastConfig = () => {
+    const isTest = process.env.PAYFAST_TEST_MODE === "true";
+    return {
+        merchant_id: isTest ? process.env.PAYFAST_SANDBOX_MERCHANT_ID : process.env.PAYFAST_MERCHANT_ID,
+        merchant_key: isTest ? process.env.PAYFAST_SANDBOX_MERCHANT_KEY : process.env.PAYFAST_MERCHANT_KEY,
+        passphrase: isTest ? process.env.PAYFAST_SANDBOX_PASSPHRASE : process.env.PAYFAST_PASSPHRASE,
+        actionUrl: isTest ? "https://sandbox.payfast.co.za/eng/process" : "https://www.payfast.co.za/eng/process"
+    };
+};
+
+export const createPayfastOrder = asyncHandler(async (req, res, next) => {
+  const { courseId, couponCode } = req.body;
   const studentId = req.user._id;
 
   const course = await Course.findById(courseId);
-  if (!course) {
-    throw new ApiError(404, "Course not found");
-  }
+  if (!course) throw new ApiError(404, "Course not found");
 
-  // Check if already actively enrolled
   const existingEnrollments = await Enrollment.find({
     student: studentId,
     course: courseId,
@@ -37,258 +51,343 @@ export const createRazorpayOrder = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "You are already actively enrolled in this course");
   }
 
-  // Create Razorpay Order
-  const amount = Math.round(course.price * 100); // Amount in smallest currency unit (cents for ZAR)
+  let finalPrice = course.price;
+  if (couponCode) {
+    const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+    if (coupon && coupon.isValid()) {
+      if (coupon.discountType === 'percentage') {
+        finalPrice = finalPrice - (finalPrice * (coupon.discountValue / 100));
+      } else {
+        finalPrice = Math.max(0, finalPrice - coupon.discountValue);
+      }
+    }
+  }
 
-  const options = {
-    amount,
-    currency: "ZAR", // Changed to ZAR
-    receipt: `rcpt_${courseId.toString().slice(-8)}_${Date.now().toString().slice(-8)}`,
-    notes: {
-      courseId: courseId.toString(),
-      studentId: studentId.toString(),
-    },
+  const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
+  const m_payment_id = `course_${courseId}_${studentId}_${Date.now()}`;
+
+  const payload = {
+    merchant_id,
+    merchant_key,
+    return_url: `${process.env.CLIENT_URL}/payment-success?type=course&id=${courseId}&m_payment_id=${m_payment_id}`,
+    cancel_url: `${process.env.CLIENT_URL}/courses/${courseId}`,
+    notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
+    name_first: req.user.name.split(' ')[0] || "Student",
+    name_last: req.user.name.split(' ')[1] || "",
+    email_address: req.user.email,
+    m_payment_id,
+    amount: finalPrice.toFixed(2),
+    item_name: course.title.substring(0, 100),
   };
 
-  try {
-    const order = await razorpay.orders.create(options);
+  payload.signature = generatePayfastSignature(payload, passphrase);
+
+  res.status(200).json({ success: true, payload, actionUrl });
+});
+
+export const verifyPayfastPaymentSimulated = asyncHandler(async (req, res, next) => {
+  if (process.env.SIMULATE_PAYMENT !== "true") {
+      throw new ApiError(400, "Simulated payments are disabled");
+  }
+
+  const { courseId, m_payment_id } = req.body;
+  const studentId = req.user._id;
+
+  let enrollment = await Enrollment.findOne({ razorpayOrderId: m_payment_id });
+
+  if (!enrollment) {
+    const course = await Course.findById(courseId);
+    if (!course) throw new ApiError(404, "Course not found");
     
-    res.status(200).json({
-      success: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: process.env.RAZORPAY_KEY_ID, // Send public key to frontend
+    let expiresAt = null;
+    if (course.validityPeriod) {
+      expiresAt = new Date();
+      expiresAt.setMonth(expiresAt.getMonth() + course.validityPeriod);
+    }
+
+    enrollment = await Enrollment.create({
+      student: studentId,
+      course: courseId,
+      enrolledAt: new Date(),
+      status: "ACTIVE",
+      razorpayOrderId: m_payment_id,
+      razorpayPaymentId: "simulated_pf_" + Date.now(),
+      expiresAt: expiresAt,
+      amountPaid: course.price, 
     });
-  } catch (error) {
-    console.error("Razorpay Order Error:", error);
-    throw new ApiError(500, "Failed to create payment order");
+
+    await Course.findByIdAndUpdate(courseId, {
+      $inc: { totalEnrollments: 1, totalRevenue: course.price }
+    });
+
+    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+    await Progress.create({
+      student: studentId,
+      course: courseId,
+      completedLessons: [],
+      totalLessons: totalLessons,
+    });
   }
+
+  const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
+
+  res.status(200).json({
+    success: true,
+    message: "Simulated payment successful",
+    courseId,
+    course: courseDetails
+  });
 });
 
-// @desc    Verify Razorpay Payment and Enroll Student
-// @route   POST /api/payments/verify-razorpay-payment
-// @access  Private (Student)
-export const verifyRazorpayPayment = asyncHandler(async (req, res, next) => {
-  try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
-    const studentId = req.user._id;
-
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courseId) {
-      throw new ApiError(400, "Missing required payment parameters");
-    }
-
-    // Verify signature
-    let isValid = false;
-    if (process.env.SIMULATE_PAYMENT === "true" && razorpay_signature === "SIMULATED_SIGNATURE") {
-      isValid = true;
-    } else {
-      const body = razorpay_order_id + "|" + razorpay_payment_id;
-      const expectedSignature = crypto
-        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
-        .update(body.toString())
-        .digest("hex");
-      isValid = expectedSignature === razorpay_signature;
-    }
-
-    if (!isValid) {
-      throw new ApiError(400, "Invalid payment signature");
-    }
-
-    // Double-check if the payment is already recorded
-    let enrollment = await Enrollment.findOne({ razorpayOrderId: razorpay_order_id });
-
-    if (!enrollment) {
-      const course = await Course.findById(courseId);
-      if (!course) {
-        throw new ApiError(404, "Course not found");
-      }
-      
-      let expiresAt = null;
-      if (course.validityPeriod) {
-        expiresAt = new Date();
-        expiresAt.setMonth(expiresAt.getMonth() + course.validityPeriod);
-      }
-
-      // 1. Create Enrollment
-      try {
-        enrollment = await Enrollment.create({
-          student: studentId,
-          course: courseId,
-          enrolledAt: new Date(),
-          status: "ACTIVE",
-          razorpayOrderId: razorpay_order_id,
-          razorpayPaymentId: razorpay_payment_id,
-          expiresAt: expiresAt,
-          amountPaid: course.price, 
-        });
-
-        // 1.5 Increment Course totalEnrollments and totalRevenue
-        await Course.findByIdAndUpdate(courseId, {
-          $inc: { 
-            totalEnrollments: 1,
-            totalRevenue: course.price
-          }
-        });
-      } catch (createErr) {
-        if (createErr.code === 11000) {
-          // Already verified in concurrent request
-          const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
-          return res.status(200).json({
-            success: true,
-            message: "Enrollment already verified",
-            courseId,
-            course: courseDetails,
-            invoice: {
-              invoiceNumber: razorpay_payment_id,
-              orderTime: new Date(),
-              paymentMethod: "Razorpay",
-              amountPaid: course.price,
-            }
-          });
-        }
-        throw createErr;
-      }
-
-      // 2. Initialize Progress Document
-      const totalLessons = course.modules.reduce(
-        (acc, mod) => acc + mod.lessons.length,
-        0
-      );
-
-      await Progress.create({
-        student: studentId,
-        course: courseId,
-        completedLessons: [],
-        totalLessons: totalLessons,
-      });
-    }
-
-    const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
-
-    res.status(200).json({
-      success: true,
-      message: "Enrollment verified successfully",
-      courseId,
-      course: courseDetails,
-      invoice: {
-        invoiceNumber: razorpay_payment_id,
-        orderTime: enrollment.enrolledAt,
-        paymentMethod: "Razorpay",
-        amountPaid: enrollment.amountPaid,
-      }
-    });
-  } catch (err) {
-    console.error("VERIFY RAZORPAY PAYMENT ERROR:", err);
-    throw err;
-  }
-});
-
-// @desc    Create Razorpay Order for Ebook
-// @route   POST /api/payments/create-ebook-order
-// @access  Private (Student)
 export const createEbookOrder = asyncHandler(async (req, res) => {
   const { ebookId } = req.body;
   const studentId = req.user._id;
 
   const ebook = await Ebook.findById(ebookId);
-  if (!ebook) {
-    throw new ApiError(404, "Ebook not found");
-  }
+  if (!ebook) throw new ApiError(404, "Ebook not found");
 
-  // Check if already purchased
   const existingPurchase = await EbookPurchase.findOne({
     student: studentId,
     ebook: ebookId,
     status: "PAID",
   });
 
-  if (existingPurchase) {
-    throw new ApiError(400, "You have already purchased this E-book");
+  if (existingPurchase) throw new ApiError(400, "You have already purchased this E-book");
+
+  let finalPrice = ebook.price;
+  if (req.body.couponCode) {
+    const coupon = await Coupon.findOne({ code: req.body.couponCode.toUpperCase() });
+    if (coupon && coupon.isValid()) {
+      if (coupon.discountType === 'percentage') {
+        finalPrice = finalPrice - (finalPrice * (coupon.discountValue / 100));
+      } else {
+        finalPrice = Math.max(0, finalPrice - coupon.discountValue);
+      }
+    }
   }
 
-  const amount = Math.round(ebook.price * 100);
+  const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
+  const m_payment_id = `ebook_${ebookId}_${studentId}_${Date.now()}`;
 
-  const options = {
-    amount,
-    currency: "ZAR",
-    receipt: `ebk_${ebookId.toString().slice(-8)}_${Date.now().toString().slice(-8)}`,
-    notes: {
-      ebookId: ebookId.toString(),
-      studentId: studentId.toString(),
-    },
+  const payload = {
+    merchant_id,
+    merchant_key,
+    return_url: `${process.env.CLIENT_URL}/payment-success?type=ebook&id=${ebookId}&m_payment_id=${m_payment_id}`,
+    cancel_url: `${process.env.CLIENT_URL}/ebook`,
+    notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
+    name_first: req.user.name.split(' ')[0] || "Student",
+    name_last: req.user.name.split(' ')[1] || "",
+    email_address: req.user.email,
+    m_payment_id,
+    amount: finalPrice.toFixed(2),
+    item_name: ebook.title.substring(0, 100),
   };
 
-  try {
-    const order = await razorpay.orders.create(options);
+  payload.signature = generatePayfastSignature(payload, passphrase);
 
-    res.status(200).json({
-      success: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: process.env.RAZORPAY_KEY_ID || "mock_key_id",
-    });
-  } catch (error) {
-    console.error("Razorpay Ebook Order Error:", error);
-    throw new ApiError(500, "Failed to create payment order for ebook");
-  }
+  res.status(200).json({ success: true, payload, actionUrl });
 });
 
-// @desc    Verify Razorpay Payment and Record Ebook Purchase
-// @route   POST /api/payments/verify-ebook-payment
-// @access  Private (Student)
-export const verifyEbookPayment = asyncHandler(async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, ebookId } = req.body;
-  const studentId = req.user._id;
+export const verifyEbookPaymentSimulated = asyncHandler(async (req, res) => {
+    if (process.env.SIMULATE_PAYMENT !== "true") {
+        throw new ApiError(400, "Simulated payments are disabled");
+    }
+    const { ebookId, m_payment_id } = req.body;
+    const studentId = req.user._id;
 
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !ebookId) {
-    throw new ApiError(400, "Missing required payment parameters");
-  }
+    let purchase = await EbookPurchase.findOne({ razorpayOrderId: m_payment_id });
 
-  // Verify signature
-  let isValid = false;
-  if (process.env.SIMULATE_PAYMENT === "true" && razorpay_signature === "SIMULATED_SIGNATURE") {
-    isValid = true;
-  } else {
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "mock_key_secret")
-      .update(body.toString())
-      .digest("hex");
-    isValid = expectedSignature === razorpay_signature;
-  }
+    if (!purchase) {
+      const ebook = await Ebook.findById(ebookId);
+      if (!ebook) throw new ApiError(404, "Ebook not found");
 
-  if (!isValid) {
-    throw new ApiError(400, "Invalid payment signature");
-  }
-
-  let purchase = await EbookPurchase.findOne({ razorpayOrderId: razorpay_order_id });
-
-  if (!purchase) {
-    const ebook = await Ebook.findById(ebookId);
-    if (!ebook) {
-      throw new ApiError(404, "Ebook not found");
+      purchase = await EbookPurchase.create({
+        student: studentId,
+        ebook: ebookId,
+        amountPaid: ebook.price,
+        status: "PAID",
+        razorpayOrderId: m_payment_id,
+        razorpayPaymentId: "simulated_pf_" + Date.now(),
+        purchasedAt: new Date(),
+      });
     }
 
-    purchase = await EbookPurchase.create({
-      student: studentId,
-      ebook: ebookId,
-      amountPaid: ebook.price,
-      status: "PAID",
-      razorpayOrderId: razorpay_order_id,
-      razorpayPaymentId: razorpay_payment_id,
-      purchasedAt: new Date(),
-    });
+    return res.status(200).json({ success: true, purchase });
+});
+
+
+export const createCartOrder = asyncHandler(async (req, res) => {
+  const { items } = req.body;
+  const studentId = req.user._id;
+
+  if (!items || items.length === 0) throw new ApiError(400, "Cart is empty");
+
+  let totalAmount = 0;
+  for (const item of items) {
+    if (item.type === 'course') {
+      const course = await Course.findById(item.id);
+      if (course) totalAmount += course.price;
+    } else if (item.type === 'ebook') {
+      const ebook = await Ebook.findById(item.id);
+      if (ebook) totalAmount += ebook.price;
+    }
   }
 
-  const populatedPurchase = await EbookPurchase.findById(purchase._id)
-    .populate("ebook")
-    .populate("student", "name email");
+  if (req.body.couponCode) {
+    const coupon = await Coupon.findOne({ code: req.body.couponCode.toUpperCase() });
+    if (coupon && coupon.isValid()) {
+      if (coupon.discountType === 'percentage') {
+        totalAmount = totalAmount - (totalAmount * (coupon.discountValue / 100));
+      } else {
+        totalAmount = Math.max(0, totalAmount - coupon.discountValue);
+      }
+    }
+  }
 
-  return res.status(200).json({
-    success: true,
-    message: "Ebook purchased successfully",
-    purchase: populatedPurchase,
-  });
+  const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
+  const m_payment_id = `cart_${studentId}_${Date.now()}`;
+
+  const payload = {
+    merchant_id,
+    merchant_key,
+    return_url: `${process.env.CLIENT_URL}/payment-success?type=cart&m_payment_id=${m_payment_id}`,
+    cancel_url: `${process.env.CLIENT_URL}/courses`,
+    notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
+    name_first: req.user.name.split(' ')[0] || "Student",
+    name_last: req.user.name.split(' ')[1] || "",
+    email_address: req.user.email,
+    m_payment_id,
+    amount: totalAmount.toFixed(2),
+    item_name: `Skillwell Cart (${items.length} items)`,
+  };
+
+  payload.signature = generatePayfastSignature(payload, passphrase);
+
+  // Store items info temporarily so it can be retrieved on success or simulated success
+  // Note: For a robust system we'd save a "PendingOrder" in DB. Since this is an MVP cart, we can pass items in simulated call
+  res.status(200).json({ success: true, payload, actionUrl, m_payment_id });
+});
+
+export const verifyCartPaymentSimulated = asyncHandler(async (req, res) => {
+    if (process.env.SIMULATE_PAYMENT !== "true") {
+        throw new ApiError(400, "Simulated payments are disabled");
+    }
+    const { items, m_payment_id } = req.body;
+    const studentId = req.user._id;
+
+    for (const item of items) {
+        if (item.type === 'course') {
+            let enrollment = await Enrollment.findOne({ student: studentId, course: item.id, razorpayOrderId: m_payment_id });
+            if (!enrollment) {
+                const course = await Course.findById(item.id);
+                if (course) {
+                    await Enrollment.create({
+                        student: studentId,
+                        course: item.id,
+                        enrolledAt: new Date(),
+                        status: "ACTIVE",
+                        razorpayOrderId: m_payment_id,
+                        razorpayPaymentId: "simulated_pf_" + Date.now(),
+                        amountPaid: course.price, 
+                    });
+                    await Course.findByIdAndUpdate(item.id, { $inc: { totalEnrollments: 1, totalRevenue: course.price }});
+                    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+                    await Progress.create({ student: studentId, course: item.id, completedLessons: [], totalLessons: totalLessons });
+                }
+            }
+        } else if (item.type === 'ebook') {
+            let purchase = await EbookPurchase.findOne({ student: studentId, ebook: item.id, razorpayOrderId: m_payment_id });
+            if (!purchase) {
+                const ebook = await Ebook.findById(item.id);
+                if (ebook) {
+                    await EbookPurchase.create({
+                        student: studentId,
+                        ebook: item.id,
+                        amountPaid: ebook.price,
+                        status: "PAID",
+                        razorpayOrderId: m_payment_id,
+                        razorpayPaymentId: "simulated_pf_" + Date.now(),
+                        purchasedAt: new Date(),
+                    });
+                }
+            }
+        }
+    }
+    return res.status(200).json({ success: true, message: "Cart items purchased successfully" });
+});
+
+export const payfastItnHandler = asyncHandler(async (req, res) => {
+    // Payfast sends a POST request here
+    const pfData = req.body;
+    const { passphrase } = getPayfastConfig();
+    
+    // 1. Verify signature
+    let pfParamString = "";
+    for (let key in pfData) {
+        if (pfData.hasOwnProperty(key) && key !== "signature") {
+            pfParamString += `${key}=${encodeURIComponent(pfData[key].trim()).replace(/%20/g, "+")}&`;
+        }
+    }
+    let getString = pfParamString.slice(0, -1);
+    if (passphrase) {
+        getString += `&passphrase=${encodeURIComponent(passphrase.trim()).replace(/%20/g, "+")}`;
+    }
+    const signature = crypto.createHash("md5").update(getString).digest("hex");
+
+    if (signature !== pfData.signature) {
+        console.error("ITN Signature mismatch");
+        return res.status(400).send("Signature mismatch");
+    }
+
+    // 2. Process based on m_payment_id
+    if (pfData.payment_status === "COMPLETE") {
+        const m_payment_id = pfData.m_payment_id;
+        
+        // This is where real DB updates happen. 
+        // We parse m_payment_id to know what was bought.
+        // e.g. course_COURSEID_STUDENTID_TIMESTAMP
+        const parts = m_payment_id.split('_');
+        const type = parts[0];
+
+        if (type === 'course') {
+            const courseId = parts[1];
+            const studentId = parts[2];
+            let enrollment = await Enrollment.findOne({ razorpayOrderId: m_payment_id });
+            if (!enrollment) {
+                const course = await Course.findById(courseId);
+                if (course) {
+                    await Enrollment.create({
+                        student: studentId,
+                        course: courseId,
+                        enrolledAt: new Date(),
+                        status: "ACTIVE",
+                        razorpayOrderId: m_payment_id,
+                        razorpayPaymentId: pfData.pf_payment_id,
+                        amountPaid: parseFloat(pfData.amount_gross), 
+                    });
+                    await Course.findByIdAndUpdate(courseId, { $inc: { totalEnrollments: 1, totalRevenue: course.price }});
+                    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+                    await Progress.create({ student: studentId, course: courseId, completedLessons: [], totalLessons: totalLessons });
+                }
+            }
+        } else if (type === 'ebook') {
+            const ebookId = parts[1];
+            const studentId = parts[2];
+            let purchase = await EbookPurchase.findOne({ razorpayOrderId: m_payment_id });
+            if (!purchase) {
+                await EbookPurchase.create({
+                    student: studentId,
+                    ebook: ebookId,
+                    amountPaid: parseFloat(pfData.amount_gross),
+                    status: "PAID",
+                    razorpayOrderId: m_payment_id,
+                    razorpayPaymentId: pfData.pf_payment_id,
+                    purchasedAt: new Date(),
+                });
+            }
+        }
+        // For cart we'd need a more complex tracking mechanism like a pending order in DB mapped to m_payment_id
+    }
+    
+    res.status(200).send("OK");
 });

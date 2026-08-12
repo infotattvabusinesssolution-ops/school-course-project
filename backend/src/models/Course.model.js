@@ -1,64 +1,5 @@
 import mongoose from "mongoose";
 
-const lessonSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, "Lesson title is required"],
-    trim: true,
-    maxlength: 100,
-  },
-  description: {
-    type: String,
-    trim: true,
-    maxlength: 500,
-  },
-  videoUrl: {
-    type: String,
-    default: "",
-  },
-  videoPublicId: {
-    type: String,
-  },
-  thumbnailUrl: {
-    type: String,
-    default: "",
-  },
-  duration: {
-    type: Number, // in seconds
-    default: 0,
-  },
-  order: {
-    type: Number,
-    required: true,
-  },
-  isFreePreview: {
-    type: Boolean,
-    default: false,
-  },
-  averageRating: {
-    type: Number,
-    default: 0,
-  },
-  reviewCount: {
-    type: Number,
-    default: 0,
-  },
-});
-
-const moduleSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, "Module title is required"],
-    trim: true,
-    maxlength: 100,
-  },
-  order: {
-    type: Number,
-    required: true,
-  },
-  lessons: [lessonSchema],
-});
-
 const courseSchema = new mongoose.Schema(
   {
     title: {
@@ -120,7 +61,22 @@ const courseSchema = new mongoose.Schema(
       type: String, // Cloudinary URL
       default: "",
     },
+    defaultThumbnailUrl: {
+      type: String, // Local folder fallback
+      default: "",
+    },
     thumbnailPublicId: {
+      type: String,
+    },
+    bannerUrl: {
+      type: String, // Horizontal 16:9 Image URL
+      default: "",
+    },
+    defaultBannerUrl: {
+      type: String, // Local folder fallback
+      default: "",
+    },
+    bannerPublicId: {
       type: String,
     },
     pdfGuideUrl: {
@@ -135,7 +91,13 @@ const courseSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    modules: [moduleSchema],
+    videoUrl: {
+      type: String,
+      default: "",
+    },
+    videoPublicId: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["DRAFT", "PUBLISHED"],

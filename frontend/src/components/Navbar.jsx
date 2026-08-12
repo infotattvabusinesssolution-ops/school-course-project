@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ChevronDownIcon, MenuIcon, XIcon } from './icons/Icons';
 
@@ -6,19 +6,40 @@ export default function Navbar({
   onOpenLogin, 
   isLoggedIn,
   user,
-  onLogout
+  onLogout,
+  cartCount,
+  onOpenCartDrawer
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // Show navbar if scrolling up, or if at the very top.
+      if (currentScrollY < lastScrollY || currentScrollY < 50) {
+        setShowNavbar(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setShowNavbar(false);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const navLinks = [
     { name: 'About Us', path: '/about' },
     { name: 'Courses', path: '/courses' },
     { name: 'E-book', path: '/ebook' },
     { name: 'Forum', path: '/forum' },
+    { name: 'Blog', path: '/blogs' },
     { name: 'Contact Us', path: '/contact' },
   ];
 
@@ -62,16 +83,22 @@ export default function Navbar({
 
   return (
     <>
-      <header className={`w-full z-[60] transition-all duration-300 ${location.pathname.startsWith('/dashboard') ? 'fixed top-0 bg-white shadow-sm border-b border-slate-200' : 'absolute top-0 bg-white/90 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none shadow-sm sm:shadow-none border-b border-slate-200/50 sm:border-transparent'}`}>
+      <header 
+        className={`w-full z-[60] transition-all duration-300 transform ${showNavbar ? 'translate-y-0' : '-translate-y-full'} ${
+          location.pathname.startsWith('/dashboard') 
+            ? 'fixed top-0 bg-white shadow-sm border-b border-slate-200' 
+            : 'fixed top-0 bg-white/90 sm:bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/50'
+        }`}
+      >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24 sm:h-28">
+        <div className="flex items-center justify-between h-20 sm:h-24">
           
           {/* Logo Section */}
           <div 
             onClick={() => handleNavClick('/')}
             className="flex items-center cursor-pointer group py-1 z-[60] relative"
           >
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               <img src="/image.png" alt="CRMISA Logo" className="w-full h-full object-contain" />
             </div>
           </div>
@@ -88,7 +115,7 @@ export default function Navbar({
                       handleNavClick(link.path);
                     }
                   }}
-                  className={`flex items-center space-x-1 font-normal text-base transition-colors duration-200 py-1 border-b ${
+                  className={`flex items-center space-x-1 font-semibold text-lg transition-colors duration-200 py-1 border-b ${
                     location.pathname === link.path || (link.path === '/courses' && location.pathname.startsWith('/courses'))
                       ? 'text-crmisa-navy border-crmisa-navy'
                       : 'text-slate-700 hover:text-crmisa-navy border-transparent'
@@ -125,7 +152,21 @@ export default function Navbar({
           </nav>
 
           {/* Right Action Icons */}
-          <div className="hidden sm:flex items-center space-x-6">
+          <div className="hidden sm:flex items-center space-x-5">
+            {/* Cart Button */}
+            <button
+              onClick={onOpenCartDrawer}
+              className="relative p-2 text-slate-700 hover:text-blue-600 transition-colors"
+              aria-label="Cart"
+            >
+              <span className="material-symbols-outlined text-2xl">shopping_cart</span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-blue-600 rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
             {isLoggedIn ? (
               <>
                 <button
@@ -136,13 +177,13 @@ export default function Navbar({
                       navigate('/dashboard');
                     }
                   }}
-                  className="text-base font-bold text-crmisa-navy hover:text-blue-600 px-3 py-1.5 transition-colors"
+                  className="text-base font-bold bg-slate-100 hover:bg-slate-200 text-crmisa-navy px-4 py-2 rounded-lg transition-colors"
                 >
                   {user?.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}
                 </button>
                 <button
                   onClick={onLogout}
-                  className="text-base font-normal text-slate-700 hover:text-red-600 px-3 py-1.5 transition-colors"
+                  className="text-base font-semibold text-slate-600 hover:text-red-600 px-3 py-2 transition-colors"
                 >
                   Logout
                 </button>
@@ -150,7 +191,7 @@ export default function Navbar({
             ) : (
               <button
                 onClick={onOpenLogin}
-                className="text-base font-normal text-slate-700 hover:text-crmisa-navy px-3 py-1.5 transition-colors"
+                className="text-base font-bold bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all"
               >
                 Login
               </button>

@@ -7,7 +7,11 @@ import { ebookService } from "../services/ebookService";
 import { downloadPdf } from "../utils/downloadHelper";
 import AdminSidebar from "../components/layout/AdminSidebar";
 import AdminExamManagementPage from "./AdminExamManagementPage";
-
+import AdminBlogTab from "../components/admin/AdminBlogTab";
+import AdminNewsletterTab from "../components/admin/AdminNewsletterTab";
+import AdminCouponTab from "../components/admin/AdminCouponTab";
+import AdminReferralTab from "../components/admin/AdminReferralTab";
+import AdminCourseTab from "../components/admin/AdminCourseTab";
 export default function AdminDashboardPage({ onLogout }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTabState] = useState(() => {
@@ -129,7 +133,7 @@ export default function AdminDashboardPage({ onLogout }) {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h1 className="text-display-lg-mobile md:text-display-lg font-bold text-on-background">
-              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : 'Course Management'}
+              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : activeTab === 7 ? 'Blog Management' : activeTab === 8 ? 'Newsletter Subscribers' : activeTab === 9 ? 'Coupons' : activeTab === 10 ? 'Referrals & Influencers' : 'Course Management'}
             </h1>
             {activeTab === 5 && (
               <button 
@@ -151,98 +155,7 @@ export default function AdminDashboardPage({ onLogout }) {
             )}
           </div>
 
-          {/* Stat Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-            {/* Card 1: Total Revenue */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Revenue</span>
-                <div className="w-10 h-10 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[22px]">payments</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate" title={`R${Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}`}>
-                  R{Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}
-                </div>
-                <div className="text-[11px] font-semibold text-emerald-600 mt-1 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">trending_up</span> All Sales Combined
-                </div>
-              </div>
-            </div>
 
-            {/* Card 2: Total Users */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Users</span>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
-                  <span className="material-symbols-outlined text-[22px]">group</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
-                  {(analytics.totalUsers || 0).toLocaleString("en-IN")}
-                </div>
-                <div className="text-[11px] font-semibold text-slate-500 mt-1">
-                  Registered Members
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3: Total Courses */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Courses</span>
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100">
-                  <span className="material-symbols-outlined text-[22px]">video_library</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
-                  {analytics.totalCourses || 0}
-                </div>
-                <div className="text-[11px] font-semibold text-slate-500 mt-1">
-                  Active Programs
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: Course Enrollments */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Enrollments</span>
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
-                  <span className="material-symbols-outlined text-[22px]">school</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
-                  {(analytics.totalEnrollments || 0).toLocaleString("en-IN")}
-                </div>
-                <div className="text-[11px] font-semibold text-slate-500 mt-1">
-                  Student Enrollments
-                </div>
-              </div>
-            </div>
-
-            {/* Card 5: E-books Sold */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">E-books Sold</span>
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
-                  <span className="material-symbols-outlined text-[22px]">menu_book</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
-                  {analytics.totalEbooksSold || 0}
-                </div>
-                <div className="text-[11px] font-semibold text-emerald-600 mt-1 truncate">
-                  R{Math.round(analytics.totalEbookRevenue || 0).toLocaleString("en-ZA")} E-book Revenue
-                </div>
-              </div>
-            </div>
-          </div>
 
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -253,6 +166,99 @@ export default function AdminDashboardPage({ onLogout }) {
               {/* Tab 0: Overview (Stats Only) */}
               {activeTab === 0 && (
                 <div className="space-y-6">
+                  {/* Stat Metric Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+                    {/* Card 1: Total Revenue */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Revenue</span>
+                        <div className="w-10 h-10 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-[22px]">payments</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate" title={`R${Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}`}>
+                          R{Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}
+                        </div>
+                        <div className="text-[11px] font-semibold text-emerald-600 mt-1 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">trending_up</span> All Sales Combined
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Total Users */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Users</span>
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+                          <span className="material-symbols-outlined text-[22px]">group</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                          {(analytics.totalUsers || 0).toLocaleString("en-IN")}
+                        </div>
+                        <div className="text-[11px] font-semibold text-slate-500 mt-1">
+                          Registered Members
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 3: Total Courses */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Courses</span>
+                        <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100">
+                          <span className="material-symbols-outlined text-[22px]">video_library</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                          {analytics.totalCourses || 0}
+                        </div>
+                        <div className="text-[11px] font-semibold text-slate-500 mt-1">
+                          Active Programs
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 4: Course Enrollments */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Enrollments</span>
+                        <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
+                          <span className="material-symbols-outlined text-[22px]">school</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                          {(analytics.totalEnrollments || 0).toLocaleString("en-IN")}
+                        </div>
+                        <div className="text-[11px] font-semibold text-slate-500 mt-1">
+                          Student Enrollments
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 5: E-books Sold */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">E-books Sold</span>
+                        <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+                          <span className="material-symbols-outlined text-[22px]">menu_book</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                          {analytics.totalEbooksSold || 0}
+                        </div>
+                        <div className="text-[11px] font-semibold text-emerald-600 mt-1 truncate">
+                          R{Math.round(analytics.totalEbookRevenue || 0).toLocaleString("en-ZA")} E-book Revenue
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Quick Action Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div
@@ -357,68 +363,7 @@ export default function AdminDashboardPage({ onLogout }) {
               {/* Tab 5: Course Management */}
               {activeTab === 5 && (
                 <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-headline-sm font-bold text-on-surface">Your Courses</h2>
-                    <button
-                      onClick={() => navigate("/admin/course/create")}
-                      className="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2 text-sm"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">add</span>
-                      Create Course
-                    </button>
-                  </div>
-                  
-                  {courses.length === 0 ? (
-                    <div className="text-center py-16 bg-surface-container-low rounded-xl border border-dashed border-outline">
-                      <span className="material-symbols-outlined text-[64px] text-outline mb-4">video_library</span>
-                      <h3 className="text-headline-sm font-bold text-on-surface mb-2">No Courses Yet</h3>
-                      <p className="text-body-lg text-on-surface-variant mb-6">You haven't created any courses yet.</p>
-                      <button 
-                        onClick={() => navigate("/admin/course/create")}
-                        className="px-6 py-3 rounded-xl bg-primary text-on-primary font-bold shadow-sm"
-                      >
-                        Create Your First Course
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-4">
-                      {courses.map((course) => (
-                        <div key={course._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl border border-outline-variant/50 hover:bg-surface-container-low transition-colors">
-                          <div className="w-24 h-24 sm:w-20 sm:h-20 bg-surface-container-high rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
-                            {course.thumbnailUrl ? (
-                              <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="material-symbols-outlined text-outline text-[40px]">video_file</span>
-                            )}
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-headline-sm text-base font-bold text-on-surface truncate">{course.title}</h3>
-                            <div className="flex flex-wrap items-center gap-3 mt-2">
-                              <span className={`px-2 py-1 rounded-md text-label-caps font-bold ${
-                                course.status === 'PUBLISHED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-high text-on-surface-variant'
-                              }`}>
-                                {course.status}
-                              </span>
-                              <span className="text-body-sm text-on-surface-variant font-medium">R{course.price}</span>
-                              <span className="text-body-sm text-on-surface-variant">• {course.modules?.length || 0} modules</span>
-                              <span className="text-body-sm text-on-surface-variant">• {course.totalEnrollments || 0} students</span>
-                            </div>
-                          </div>
-
-                          <div className="w-full sm:w-auto mt-4 sm:mt-0 flex gap-2">
-                            <button
-                              onClick={() => navigate(`/admin/course/${course._id}/edit`)}
-                              className="w-full sm:w-auto px-4 py-2 rounded-lg border border-outline-variant text-on-surface font-bold hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2"
-                            >
-                              <span className="material-symbols-outlined text-[20px]">edit</span>
-                              Edit
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <AdminCourseTab />
                 </div>
               )}
 
@@ -765,6 +710,18 @@ export default function AdminDashboardPage({ onLogout }) {
 
               {/* Tab 6: Exam Management */}
               {activeTab === 6 && <AdminExamManagementPage />}
+
+              {/* Tab 7: Blog Management */}
+              {activeTab === 7 && <AdminBlogTab />}
+
+              {/* Tab 8: Newsletter Subscribers */}
+              {activeTab === 8 && <AdminNewsletterTab />}
+              
+              {/* Tab 9: Coupons */}
+              {activeTab === 9 && <AdminCouponTab />}
+              
+              {/* Tab 10: Referrals */}
+              {activeTab === 10 && <AdminReferralTab />}
             </>
           )}
         </div>

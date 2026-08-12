@@ -333,6 +333,7 @@ function RegisterForm() {
 export default function HeroSection({ isLoginMode, isRegisterMode }) {
   const isAuthMode = isLoginMode || isRegisterMode;
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <section className={`relative w-full ${isAuthMode ? 'h-screen overflow-hidden' : 'min-h-screen lg:h-screen lg:overflow-hidden'} flex flex-col lg:flex-row lg:items-center lg:justify-center bg-white`}>
@@ -386,7 +387,13 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
                   <button
-                    onClick={() => navigate('/register')}
+                    onClick={() => {
+                      if (user) {
+                        navigate('/courses');
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
                     className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-black border-2 border-black text-white px-8 py-4 rounded-none font-bold text-lg hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-xl"
                   >
                     Start Learning
@@ -461,7 +468,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode }) {
                scale: isAuthMode ? 0.95 : 1.15 
             }}
             transition={{ type: "spring", bounce: 0.15, duration: 2.5, delay: 0.1 }}
-            className="absolute top-0 z-10 w-full max-w-lg lg:max-w-xl"
+            className="absolute top-20 z-10 w-full max-w-lg lg:max-w-xl"
           >
             <img 
               src="/hero/crmisa-stu.png" 
