@@ -173,15 +173,6 @@ export default function EbookDetailPage({ onAddToCart }) {
                   <span>Buy Now</span>
                 </button>
               )}
-
-                <a
-                  href={ebook.samplePdfUrl}
-                  download
-                  className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-xl transition-colors text-sm flex items-center justify-center gap-2 cursor-pointer border border-slate-200"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download Sample PDF</span>
-                </a>
             </div>
 
             {/* Highlights */}

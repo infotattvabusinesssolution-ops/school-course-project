@@ -19,15 +19,15 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "ma
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-hidden">
       {/* Backdrop overlay */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-fade-in"
       />
 
-      {/* Modal Container - Flat design without shadows */}
-      <div className={`relative w-full ${maxWidth} bg-white border border-slate-200 overflow-hidden transform transition-all animate-slide-up z-10 my-8`}>
+      {/* Modal Container - Bottom sheet on mobile, centered modal on desktop */}
+      <div className={`relative w-full ${maxWidth} bg-white sm:border sm:border-slate-200 overflow-hidden transform transition-all animate-slide-up z-10 sm:my-8 flex flex-col rounded-t-2xl sm:rounded-xl max-h-[90vh]`}>
         
         {/* Modal Header - Light theme */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-white">
@@ -42,7 +42,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "ma
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 sm:p-8 max-h-[80vh] overflow-y-auto font-sans text-slate-800">
+        <div className="p-5 sm:p-8 overflow-y-auto font-sans text-slate-800 flex-1 overscroll-contain">
           {children}
         </div>
 
