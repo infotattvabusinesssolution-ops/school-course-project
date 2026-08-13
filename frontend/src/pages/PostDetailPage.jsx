@@ -16,7 +16,7 @@ import { useAuth } from "../context/AuthContext";
 export default function PostDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const isLoggedIn = !!user;
 
   const [post, setPost] = useState(null);
@@ -45,7 +45,7 @@ export default function PostDetailPage() {
     if (!replyText.trim()) return;
 
     if (!isLoggedIn) {
-      navigate("/login");
+      openLogin();
       return;
     }
 
@@ -63,7 +63,7 @@ export default function PostDetailPage() {
 
   const handleLike = async () => {
     if (!isLoggedIn) {
-      navigate("/login");
+      openLogin();
       return;
     }
     try {
@@ -282,7 +282,7 @@ export default function PostDetailPage() {
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center space-y-2">
                 <p className="text-xs font-semibold text-slate-700">Want to join this discussion?</p>
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={openLogin}
                   className="px-5 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors"
                 >
                   Log In to Reply

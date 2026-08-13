@@ -119,7 +119,7 @@ export default function Footer() {
 
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-slate-400 shrink-0" />
-                <span className="text-slate-300">+27 82 496 7256 / +27 72 035 4787</span>
+                <span className="text-slate-300">+27 82 496 7256</span>
               </div>
 
               <div className="flex items-center space-x-3">

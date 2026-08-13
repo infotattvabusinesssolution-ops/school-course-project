@@ -18,7 +18,7 @@ import CreatePostModal from "../components/CreatePostModal";
 
 export default function ForumPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const isLoggedIn = !!user;
 
   const [activeCategory, setActiveCategory] = useState("all");
@@ -63,7 +63,7 @@ export default function ForumPage() {
     if (!quickQuestion.trim()) return;
 
     if (!isLoggedIn) {
-      navigate("/login");
+      openLogin();
       return;
     }
 
@@ -82,7 +82,7 @@ export default function ForumPage() {
 
   const handleModalSubmit = async (data) => {
     if (!isLoggedIn) {
-      navigate("/login");
+      openLogin();
       return;
     }
     await forumService.createPost(data);
@@ -92,7 +92,7 @@ export default function ForumPage() {
   const handleLike = async (e, postId) => {
     e.stopPropagation();
     if (!isLoggedIn) {
-      navigate("/login");
+      openLogin();
       return;
     }
     try {
@@ -126,7 +126,7 @@ export default function ForumPage() {
 
             <button
               onClick={() => {
-                if (!isLoggedIn) navigate("/login");
+                if (!isLoggedIn) openLogin();
                 else setIsCreateModalOpen(true);
               }}
               className="shrink-0 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg text-sm font-semibold shadow-sm transition-colors"
@@ -209,7 +209,7 @@ export default function ForumPage() {
             <p className="text-xs text-slate-500 mb-4">Be the first to start a conversation in this category.</p>
             <button
               onClick={() => {
-                if (!isLoggedIn) navigate("/login");
+                if (!isLoggedIn) openLogin();
                 else setIsCreateModalOpen(true);
               }}
               className="px-5 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors"

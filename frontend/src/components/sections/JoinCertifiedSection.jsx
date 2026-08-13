@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { BookOpen, Clock, Users, Video, ArrowRight } from "lucide-react";
 
 export default function JoinCertifiedSection() {
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const isLoggedIn = !!user;
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export default function JoinCertifiedSection() {
     if (isLoggedIn) {
       navigate("/courses");
     } else {
-      navigate("/login");
+      openLogin();
     }
   };
 

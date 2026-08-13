@@ -18,7 +18,7 @@ import api from "../lib/axios";
 export default function EbookDetailPage({ onAddToCart }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const isAdmin = user?.role === "ADMIN";
   const [ebook, setEbook] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -162,7 +162,7 @@ export default function EbookDetailPage({ onAddToCart }) {
                 <button
                   onClick={() => {
                     if (!user) {
-                      navigate("/login");
+                      openLogin();
                       return;
                     }
                     setIsCheckoutModalOpen(true);

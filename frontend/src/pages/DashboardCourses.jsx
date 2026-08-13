@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { BookOpenIcon, AwardBadgeIcon, CheckIcon, UserIcon } from "../components/icons/Icons";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, Download, Play, FileText, Lock } from "lucide-react";
 import CourseReviewModal from "../components/CourseReviewModal";
+import VideoModal from "../components/VideoModal";
 import { useAuth } from "../context/AuthContext";
 
 export default function DashboardCourses() {
@@ -10,11 +11,32 @@ export default function DashboardCourses() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewModalCourseId, setReviewModalCourseId] = useState(null);
   
+  // Video Modal State
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState({ url: null, title: "" });
+  
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const enrolledCourses = dashboardData?.continueLearning || [];
   const stats = dashboardData?.stats || { enrolledCourses: 0, completedCourses: 0, certificatesEarned: 0 };
+
+  const handleWatchVideo = (course) => {
+    setActiveVideo({ url: course.videoUrl, title: course.title });
+    setIsVideoModalOpen(true);
+  };
+
+  const getDownloadUrl = (url) => {
+    if (!url) return "#";
+    // If it's a cloudinary URL, append fl_attachment to force download
+    if (url.includes('cloudinary.com') && !url.includes('fl_attachment')) {
+      const parts = url.split('/upload/');
+      if (parts.length === 2) {
+        return `${parts[0]}/upload/fl_attachment/${parts[1]}`;
+      }
+    }
+    return url;
+  };
 
   return (
     <div className="space-y-8">
@@ -72,44 +94,98 @@ export default function DashboardCourses() {
           </div>
         ) : (
           enrolledCourses.map((course) => {
-            const courseComplete = course.completionPercentage >= 100;
+            const hasVideo = !!course.videoUrl;
+            const hasPdf = !!course.pdfGuideUrl;
+
             return (
-              <div key={course.courseId} className="bg-white border border-slate-200 rounded-2xl flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer" onClick={() => navigate(`/course-player/${course.courseId}`)}>
-                <div className="relative h-48 bg-slate-100 overflow-hidden border-b border-slate-200">
-                  {course.thumbnailUrl ? (
-                    <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div 
+                key={course.courseId} 
+                className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group shadow-sm hover:shadow-md" 
+                onClick={() => handleWatchVideo(course)}
+              >
+                {/* 4:3 Aspect Ratio Image Container */}
+                <div className="relative w-full aspect-[4/3] bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
+                  {(course.thumbnailUrl || course.defaultThumbnailUrl) ? (
+                    <img 
+                      src={course.thumbnailUrl || course.defaultThumbnailUrl} 
+                      alt={course.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center"><PlayCircle className="w-10 h-10 text-slate-300" /></div>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <PlayCircle className="w-10 h-10 text-slate-300" />
+                    </div>
                   )}
-                  <span className="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 uppercase bg-white/90 backdrop-blur-sm text-slate-900 rounded-md shadow-sm">
-                    {courseComplete ? "Completed" : "In Progress"}
-                  </span>
-                </div>
-                <div className="p-5 flex-1 flex flex-col">
-                  <div className="space-y-1 mb-6">
-                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">{course.category}</span>
-                    <h3 className="font-bold text-base text-slate-900 leading-snug line-clamp-2">{course.title}</h3>
+                  {hasVideo && (
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                        <Play className="w-5 h-5 text-slate-900 ml-1" />
+                      </div>
+                    </div>
+                  )}
+                  {/* Floating Level Badge */}
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-slate-900 uppercase tracking-wide border border-white/50 shadow-sm">
+                    {course.category}
                   </div>
-                  <div className="mt-auto space-y-4">
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs text-slate-500 font-bold">
-                        <span>Progress</span>
-                        <span>{course.completionPercentage}%</span>
-                      </div>
-                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                        <div className={`h-full rounded-full transition-all duration-500 ${courseComplete ? "bg-green-500" : "bg-blue-600"}`} style={{ width: `${course.completionPercentage}%` }}></div>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors border ${courseComplete ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" : "bg-slate-900 border-slate-900 text-white hover:bg-slate-800"}`} onClick={(e) => { e.stopPropagation(); navigate(`/course-player/${course.courseId}`); }}>
-                        {courseComplete ? "Review Course" : "Continue Learning"}
-                      </button>
-                      {courseComplete && reviewStatuses[course.courseId] === false && (
-                        <button className="px-4 py-2.5 border border-slate-200 font-bold text-sm rounded-xl transition-colors bg-white text-slate-700 hover:bg-slate-50 hover:text-blue-600 shrink-0" onClick={(e) => { e.stopPropagation(); setReviewModalCourseId(course.courseId); setIsReviewModalOpen(true); }}>
-                          Rate
-                        </button>
+                </div>
+
+                {/* Content Container */}
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold text-slate-900 leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
+                    {course.title}
+                  </h3>
+                  
+                  {course.subtitle && (
+                    <p className="text-sm font-semibold text-slate-700 mb-3">
+                      {course.subtitle}
+                    </p>
+                  )}
+
+                  {/* Bottom Action Bar */}
+                  <div className="mt-auto pt-5 flex gap-3">
+                    <a
+                      href={hasPdf ? getDownloadUrl(course.pdfGuideUrl) : "#"}
+                      download
+                      target={hasPdf ? "_blank" : "_self"}
+                      rel="noreferrer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!hasPdf) e.preventDefault();
+                      }}
+                      className={`flex-1 flex flex-col items-center justify-center py-2.5 px-2 rounded-sm text-xs font-bold transition-all border ${
+                        hasPdf 
+                          ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100' 
+                          : 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <FileText className="w-4 h-4 mb-1" />
+                      {hasPdf ? "Download PDF" : "No PDF"}
+                    </a>
+                    
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (hasVideo) handleWatchVideo(course);
+                      }}
+                      disabled={!hasVideo}
+                      className={`flex-1 flex flex-col items-center justify-center py-2.5 px-2 rounded-sm text-xs font-bold transition-all border ${
+                        hasVideo
+                          ? 'bg-slate-900 border-slate-900 text-white hover:bg-slate-800'
+                          : 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
+                      }`}
+                    >
+                      {hasVideo ? (
+                        <>
+                          <Play className="w-4 h-4 mb-1" />
+                          Watch Video
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 mb-1" />
+                          No Video
+                        </>
                       )}
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -125,6 +201,16 @@ export default function DashboardCourses() {
         onSuccess={() => {
           setReviewStatuses(prev => ({ ...prev, [reviewModalCourseId]: true }));
         }}
+      />
+
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => {
+          setIsVideoModalOpen(false);
+          setActiveVideo({ url: null, title: "" });
+        }}
+        videoUrl={activeVideo.url}
+        title={activeVideo.title}
       />
     </div>
   );

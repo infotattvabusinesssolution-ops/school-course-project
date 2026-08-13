@@ -9,7 +9,7 @@ import { downloadPdf } from "../utils/downloadHelper";
 
 export default function EbookPage({ onAddToCart }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const isAdmin = user?.role === "ADMIN";
   const [ebooks, setEbooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -164,7 +164,7 @@ export default function EbookPage({ onAddToCart }) {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (!user) {
-                            navigate("/login");
+                            openLogin();
                             return;
                           }
                           setSelectedEbookForCheckout(item);

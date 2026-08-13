@@ -17,7 +17,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   const [loading, setLoading] = useState(true);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const { addToCart, cartItems } = useCart();
   
   const inCart = cartItems.some(item => item.id === courseId && item.type === 'course');
@@ -43,7 +43,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
 
   const handleLessonClick = async (lessonId) => {
     if (!user) {
-      navigate('/login');
+      openLogin();
       return;
     }
     

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Pencil, Trash2, Search, ImageIcon, BookOpen, Users } from 'lucide-react';
+import { Pencil, Trash2, Search, ImageIcon, BookOpen, Users, FileText, Film, CheckCircle2 } from 'lucide-react';
 import api from '../../lib/axios';
+import { courseService } from '../../services/courseService';
 
 export default function AdminCourseTab() {
   const [courses, setCourses] = useState([]);
@@ -22,7 +23,9 @@ export default function AdminCourseTab() {
     price: 0,
     status: 'DRAFT',
     bannerUrl: '',
-    thumbnailUrl: ''
+    thumbnailUrl: '',
+    pdfGuideUrl: '',
+    videoUrl: ''
   });
 
   const fetchCourses = async () => {
@@ -52,7 +55,9 @@ export default function AdminCourseTab() {
       price: course.price || 0,
       status: course.status || 'DRAFT',
       bannerUrl: course.bannerUrl || '',
-      thumbnailUrl: course.thumbnailUrl || ''
+      thumbnailUrl: course.thumbnailUrl || '',
+      pdfGuideUrl: course.pdfGuideUrl || '',
+      videoUrl: course.videoUrl || ''
     });
     setIsEditModalOpen(true);
   };
@@ -79,6 +84,40 @@ export default function AdminCourseTab() {
     } catch (err) {
       console.error("Failed to upload image:", err);
       alert("Failed to upload image. Please try again.");
+    } finally {
+      setUploadingMedia(false);
+      e.target.value = '';
+    }
+  };
+
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploadingMedia(true);
+      const response = await courseService.uploadPdf(file);
+      setFormData(prev => ({ ...prev, pdfGuideUrl: response.data.pdfUrl }));
+    } catch (err) {
+      console.error("Failed to upload PDF:", err);
+      alert("Failed to upload PDF. Please try again.");
+    } finally {
+      setUploadingMedia(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploadingMedia(true);
+      const response = await courseService.uploadVideo(file);
+      setFormData(prev => ({ ...prev, videoUrl: response.data.videoUrl }));
+    } catch (err) {
+      console.error("Failed to upload video:", err);
+      alert("Failed to upload video. Please try again.");
     } finally {
       setUploadingMedia(false);
       e.target.value = '';
@@ -409,6 +448,66 @@ export default function AdminCourseTab() {
                            </div>
                            <p className="text-xs text-slate-500">
                              {formData.bannerUrl ? "Custom image uploaded." : (editingCourse?.defaultBannerUrl ? "Using default folder image." : "No image set.")}
+                           </p>
+                         </div>
+                      </div>
+                    </div>
+                    
+                    {/* Video Upload */}
+                    <div className="space-y-2 border border-slate-200 p-4 rounded-md">
+                      <label className="text-sm font-bold text-slate-900">Course Video</label>
+                      <div className="flex items-center gap-4">
+                         <div className="w-24 aspect-video bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center">
+                           {formData.videoUrl ? (
+                             <CheckCircle2 className="w-8 h-8 text-green-500" />
+                           ) : (
+                             <Film className="w-8 h-8 text-slate-300" />
+                           )}
+                         </div>
+                         <div className="flex flex-col gap-2 w-full">
+                           <div className="flex gap-2 items-center">
+                             <input type="file" id="video-upload" className="hidden" accept="video/*" onChange={handleVideoUpload} disabled={uploadingMedia} />
+                             <label htmlFor="video-upload" className={`cursor-pointer px-4 py-1.5 bg-slate-100 border border-slate-300 text-sm font-medium hover:bg-slate-200 transition-colors ${uploadingMedia ? 'opacity-50 pointer-events-none' : ''}`}>
+                               {uploadingMedia ? 'Uploading...' : 'Upload New'}
+                             </label>
+                             {formData.videoUrl && (
+                               <button type="button" onClick={() => setFormData({...formData, videoUrl: ''})} className="px-4 py-1.5 text-red-600 border border-red-200 hover:bg-red-50 text-sm font-medium transition-colors">
+                                 Remove
+                               </button>
+                             )}
+                           </div>
+                           <p className="text-xs text-slate-500">
+                             {formData.videoUrl ? "Video is uploaded." : "No video set."}
+                           </p>
+                         </div>
+                      </div>
+                    </div>
+
+                    {/* PDF Guide Upload */}
+                    <div className="space-y-2 border border-slate-200 p-4 rounded-md">
+                      <label className="text-sm font-bold text-slate-900">PDF Guide</label>
+                      <div className="flex items-center gap-4">
+                         <div className="w-24 aspect-[3/4] bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center">
+                           {formData.pdfGuideUrl ? (
+                             <CheckCircle2 className="w-8 h-8 text-green-500" />
+                           ) : (
+                             <FileText className="w-8 h-8 text-slate-300" />
+                           )}
+                         </div>
+                         <div className="flex flex-col gap-2 w-full">
+                           <div className="flex gap-2 items-center">
+                             <input type="file" id="pdf-upload" className="hidden" accept="application/pdf" onChange={handlePdfUpload} disabled={uploadingMedia} />
+                             <label htmlFor="pdf-upload" className={`cursor-pointer px-4 py-1.5 bg-slate-100 border border-slate-300 text-sm font-medium hover:bg-slate-200 transition-colors ${uploadingMedia ? 'opacity-50 pointer-events-none' : ''}`}>
+                               {uploadingMedia ? 'Uploading...' : 'Upload New'}
+                             </label>
+                             {formData.pdfGuideUrl && (
+                               <button type="button" onClick={() => setFormData({...formData, pdfGuideUrl: ''})} className="px-4 py-1.5 text-red-600 border border-red-200 hover:bg-red-50 text-sm font-medium transition-colors">
+                                 Remove
+                               </button>
+                             )}
+                           </div>
+                           <p className="text-xs text-slate-500">
+                             {formData.pdfGuideUrl ? <a href={formData.pdfGuideUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View current PDF</a> : "No PDF set."}
                            </p>
                          </div>
                       </div>

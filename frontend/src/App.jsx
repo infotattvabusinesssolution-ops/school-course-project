@@ -88,16 +88,34 @@ export default function App() {
     };
   }, [location.key, navigationType]);
 
+  // Intercept /login and /register to open modals
+  useEffect(() => {
+    if (location.pathname === '/login') {
+      openLogin();
+      navigate('/', { replace: true });
+    } else if (location.pathname === '/register') {
+      openRegister();
+      navigate('/', { replace: true });
+    }
+  }, [location.pathname]);
+
   // Use AOS
   useAOS(location.pathname);
 
-  // Auth state from Context
-  const { user, logout: contextLogout } = useAuth();
+  // Auth state and modals from Context
+  const { 
+    user, 
+    logout: contextLogout,
+    isLoginModalOpen,
+    isRegisterModalOpen,
+    openLogin,
+    openRegister,
+    closeAuthModals
+  } = useAuth();
+  
   const isLoggedIn = !!user;
 
-  // Modals state
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  // Shopping Modals state
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isCartCheckoutOpen, setIsCartCheckoutOpen] = useState(false);
   const [isEnrolOpen, setIsEnrolOpen] = useState(false);
@@ -130,7 +148,7 @@ export default function App() {
       setIsCheckoutOpen(true);
     } else {
       showToast("Please log in to your account to proceed with checkout.");
-      navigate("/login");
+      openLogin();
     }
   };
 
@@ -171,8 +189,8 @@ export default function App() {
           cartCount={cartItems.length}
           isLoggedIn={isLoggedIn}
           user={user}
-          onOpenRegister={() => setIsRegisterModalOpen(true)}
-          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onOpenRegister={openRegister}
+          onOpenLogin={openLogin}
           onOpenEnrol={() => handleEnrollNowClick()}
           onOpenCartDrawer={() => setIsCartModalOpen(true)}
           onLogout={handleLogout}
@@ -191,27 +209,7 @@ export default function App() {
           {/* Public Routes */}
           <Route
             path="/"
-            element={<HomePage onOpenEnrol={() => handleEnrollNowClick()} onOpenLogin={() => setIsLoginModalOpen(true)} onOpenRegister={() => setIsRegisterModalOpen(true)} />}
-          />
-          <Route
-            path="/login"
-            element={
-              <HomePage
-                isLoginMode
-                onOpenEnrol={() => handleEnrollNowClick()}
-                onOpenLogin={() => setIsLoginModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <HomePage
-                isRegisterMode
-                onOpenEnrol={() => handleEnrollNowClick()}
-                onOpenRegister={() => setIsRegisterModalOpen(true)}
-              />
-            }
+            element={<HomePage onOpenEnrol={() => handleEnrollNowClick()} onOpenLogin={openLogin} onOpenRegister={openRegister} />}
           />
           <Route path="/about" element={<AboutPage />} />
           <Route
@@ -291,24 +289,21 @@ export default function App() {
         </Routes>
       </main>
 
-      {['/', '/login', '/register'].includes(location.pathname) && <Footer />}
+      {/* hideLayout includes /login /register so if they briefly load it won't show footer/navbar but then redirects */}
+      {location.pathname === '/' && <Footer />}
 
       <LoginModal 
         isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
-        switchToRegister={() => {
-          setIsLoginModalOpen(false);
-          setIsRegisterModalOpen(true);
-        }} 
+        onClose={closeAuthModals} 
+        switchToRegister={openRegister} 
+        onLoginSuccess={() => navigate('/courses')}
       />
 
       <RegisterModal 
         isOpen={isRegisterModalOpen} 
-        onClose={() => setIsRegisterModalOpen(false)} 
-        switchToLogin={() => {
-          setIsRegisterModalOpen(false);
-          setIsLoginModalOpen(true);
-        }} 
+        onClose={closeAuthModals} 
+        switchToLogin={openLogin} 
+        onRegisterSuccess={() => navigate('/courses')}
       />
 
       <CartModal
@@ -317,7 +312,7 @@ export default function App() {
         onProceedToCheckout={() => {
           if (!isLoggedIn) {
             showToast("Please log in to checkout your cart.");
-            navigate("/login");
+            openLogin();
             return;
           }
           setIsCartCheckoutOpen(true);

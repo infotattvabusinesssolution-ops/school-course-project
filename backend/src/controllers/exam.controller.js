@@ -147,14 +147,7 @@ export const getExamForStudent = asyncHandler(async (req, res) => {
   const passedAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId, passed: true });
   if (passedAttempt) throw new ApiError(400, "You have already passed this exam");
 
-  // Ensure course is complete
-  const course = await Course.findById(courseId);
-  const progress = await Progress.findOne({ student: studentId, course: courseId });
-  const totalLessons = course.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 0;
-  const completedLessons = progress?.lessonProgress?.filter((lp) => lp.isCompleted)?.length || 0;
-  if (totalLessons > 0 && completedLessons < totalLessons) {
-    throw new ApiError(400, "You must complete all lessons before taking the exam");
-  }
+  // Lessons completion requirement removed as per new flow
 
   const exam = await Exam.findOne({ course: courseId, isActive: true });
   if (!exam) throw new ApiError(404, "No active exam found for this course");
@@ -348,12 +341,8 @@ export const getExamStatus = asyncHandler(async (req, res) => {
   const attemptCount = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
   const certificate = await Certificate.findOne({ student: studentId, course: courseId }).select("certificateId examScore issueDate");
 
-  // Check lesson completion
-  const course = await Course.findById(courseId);
-  const progress = await Progress.findOne({ student: studentId, course: courseId });
-  const totalLessons = course?.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 0;
-  const completedLessons = progress?.lessonProgress?.filter((lp) => lp.isCompleted)?.length || 0;
-  const lessonsComplete = totalLessons > 0 && completedLessons >= totalLessons;
+  // Lessons completion requirement removed, so lessons are considered implicitly complete for exam access
+  const lessonsComplete = true;
 
   res.status(200).json(
     new ApiResponse(200, {

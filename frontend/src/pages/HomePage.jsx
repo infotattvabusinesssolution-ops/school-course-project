@@ -13,15 +13,8 @@ import HeadlineTicker from '../components/sections/HeadlineTicker';
 import FloatingSocialBar from '../components/FloatingSocialBar';
 import NewsletterModal from '../components/NewsletterModal';
 
-export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, isLoginMode, isRegisterMode, onViewCourseDetails }) {
+export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, onViewCourseDetails }) {
   useEffect(() => {
-    // If we land on /login or /register, wait for DOM to settle then open the modal
-    if (isLoginMode) {
-      setTimeout(() => document.getElementById('login-btn')?.click(), 100);
-    } else if (isRegisterMode) {
-      setTimeout(() => document.getElementById('register-btn')?.click(), 100);
-    }
-
     // Scroll to hash if present
     if (window.location.hash) {
       const id = window.location.hash.substring(1);
@@ -32,21 +25,16 @@ export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, isL
         }
       }, 100);
     }
-  }, [isLoginMode, isRegisterMode]);
-
-  const isAuthMode = isLoginMode || isRegisterMode;
+  }, []);
 
   return (
     <div className="animate-fade-in bg-slate-900">
-      {!isAuthMode ? (
         <main className="animate-fade-in relative z-10">
           <div className="relative">
             <NewsletterModal />
             <HeroSection 
               onOpenRegister={onOpenRegister} 
               onOpenLogin={onOpenLogin}
-              isLoginMode={isLoginMode}
-              isRegisterMode={isRegisterMode}
             />
             
             <FloatingSocialBar />
@@ -66,14 +54,6 @@ export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, isL
             <ContactSection />
           </div>
         </main>
-      ) : (
-        <HeroSection 
-          onOpenRegister={onOpenRegister} 
-          onOpenLogin={onOpenLogin}
-          isLoginMode={isLoginMode}
-          isRegisterMode={isRegisterMode}
-        />
-      )}
     </div>
   );
 }

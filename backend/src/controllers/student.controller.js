@@ -35,7 +35,7 @@ export const getStudentDashboard = asyncHandler(async (req, res, next) => {
     .limit(3)
     .populate({
       path: "course",
-      select: "title subtitle thumbnailUrl modules category",
+      select: "title subtitle thumbnailUrl defaultThumbnailUrl pdfGuideUrl videoUrl category",
     });
 
   const continueLearning = enrollments
@@ -46,6 +46,9 @@ export const getStudentDashboard = asyncHandler(async (req, res, next) => {
         courseId: enrollment.course._id,
         title: enrollment.course.title,
         thumbnailUrl: enrollment.course.thumbnailUrl,
+        defaultThumbnailUrl: enrollment.course.defaultThumbnailUrl,
+        pdfGuideUrl: enrollment.course.pdfGuideUrl,
+        videoUrl: enrollment.course.videoUrl,
         category: enrollment.course.category,
         completionPercentage: enrollment.completionPercentage,
         lastAccessed: enrollment.lastAccessed,
@@ -113,12 +116,8 @@ export const getCoursePlayerDetails = asyncHandler(async (req, res, next) => {
     throw new ApiError(403, "Your access to this course has expired.");
   }
 
-  // 2. Fetch Course with modules and lessons
+  // 2. Fetch Course
   const course = await Course.findById(courseId)
-    .populate({
-      path: "modules",
-      populate: { path: "lessons" }
-    })
     .populate("admin", "name")
     .select("-draftData");
 

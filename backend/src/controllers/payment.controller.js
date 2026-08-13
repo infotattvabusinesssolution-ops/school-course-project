@@ -120,7 +120,7 @@ export const verifyPayfastPaymentSimulated = asyncHandler(async (req, res, next)
       $inc: { totalEnrollments: 1, totalRevenue: course.price }
     });
 
-    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+    const totalLessons = (course.modules || []).reduce((acc, mod) => acc + (mod.lessons ? mod.lessons.length : 0), 0);
     await Progress.create({
       student: studentId,
       course: courseId,
@@ -291,7 +291,7 @@ export const verifyCartPaymentSimulated = asyncHandler(async (req, res) => {
                         amountPaid: course.price, 
                     });
                     await Course.findByIdAndUpdate(item.id, { $inc: { totalEnrollments: 1, totalRevenue: course.price }});
-                    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+                    const totalLessons = (course.modules || []).reduce((acc, mod) => acc + (mod.lessons ? mod.lessons.length : 0), 0);
                     await Progress.create({ student: studentId, course: item.id, completedLessons: [], totalLessons: totalLessons });
                 }
             }
@@ -366,7 +366,7 @@ export const payfastItnHandler = asyncHandler(async (req, res) => {
                         amountPaid: parseFloat(pfData.amount_gross), 
                     });
                     await Course.findByIdAndUpdate(courseId, { $inc: { totalEnrollments: 1, totalRevenue: course.price }});
-                    const totalLessons = course.modules.reduce((acc, mod) => acc + mod.lessons.length, 0);
+                    const totalLessons = (course.modules || []).reduce((acc, mod) => acc + (mod.lessons ? mod.lessons.length : 0), 0);
                     await Progress.create({ student: studentId, course: courseId, completedLessons: [], totalLessons: totalLessons });
                 }
             }

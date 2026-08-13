@@ -76,7 +76,6 @@ export default function ContactSection() {
             <div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Call Us</h3>
               <p className="text-sm text-slate-600 font-medium">+27 82 496 7256</p>
-              <p className="text-sm text-slate-600 font-medium">+27 72 035 4787</p>
             </div>
           </div>
 
