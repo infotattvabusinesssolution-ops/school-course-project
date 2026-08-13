@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Award, Star, Globe, Plane, GraduationCap, ShieldCheck, TrendingUp } from "lucide-react";
+import { ArrowRight, ArrowLeft, Award, Star, Globe, Plane, GraduationCap, ShieldCheck, TrendingUp, Users, BookOpen, Briefcase } from "lucide-react";
 import { EyeIcon } from '../icons/Icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -540,54 +540,90 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
             <motion.div
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-              className="absolute top-[8%] left-1 z-0 w-14 h-14 rounded-full bg-amber-400 shadow-[0_8px_24px_rgba(251,191,36,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[8%] left-2 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <Star className="w-6 h-6 text-white fill-white" />
+              <Star className="w-4 h-4 text-white fill-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">4.9</span>
             </motion.div>
 
             {/* Floating Chip 2 — Top Right: Shield */}
             <motion.div
               animate={{ y: [0, -16, 0], x: [0, 4, 0] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-              className="absolute top-[18%] right-0 z-0 w-12 h-12 rounded-full bg-blue-500 shadow-[0_8px_24px_rgba(59,130,246,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[18%] right-2 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <ShieldCheck className="w-5 h-5 text-white" />
+              <ShieldCheck className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">100%</span>
             </motion.div>
 
-            {/* Floating Chip 3 — Mid Left: Globe */}
+            {/* Floating Chip 3 — Mid-Top Left: Globe */}
             <motion.div
               animate={{ y: [0, 14, 0], x: [0, -4, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-              className="absolute top-[40%] left-0 z-0 w-[52px] h-[52px] rounded-full bg-emerald-500 shadow-[0_8px_24px_rgba(16,185,129,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[26%] left-1 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <Globe className="w-5 h-5 text-white" />
+              <Globe className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">50+</span>
             </motion.div>
 
-            {/* Floating Chip 4 — Mid Right: Award */}
+            {/* Floating Chip 4 — Top Right: Award */}
             <motion.div
               animate={{ y: [0, -14, 0] }}
               transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 2.2 }}
-              className="absolute top-[52%] right-1 z-0 w-14 h-14 rounded-full bg-purple-500 shadow-[0_8px_24px_rgba(168,85,247,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[2%] right-6 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <Award className="w-6 h-6 text-white" />
+              <Award className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">Top 1</span>
             </motion.div>
 
-            {/* Floating Chip 5 — Lower Left: Graduation Cap */}
+            {/* Floating Chip 5 — Top Middle: Users */}
+            <motion.div
+              animate={{ y: [0, -10, 0], x: [0, 3, 0] }}
+              transition={{ duration: 3.9, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+              className="absolute top-[35%] left-[35%] z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
+            >
+              <Users className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">5k+</span>
+            </motion.div>
+
+            {/* Floating Chip 6 — Mid-Low Right: Briefcase */}
+            <motion.div
+              animate={{ y: [0, -15, 0], x: [0, -2, 0] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+              className="absolute top-[54%] right-3 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
+            >
+              <Briefcase className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">100+</span>
+            </motion.div>
+
+            {/* Floating Chip 7 — Low Left: Graduation Cap */}
             <motion.div
               animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute top-[72%] left-2 z-0 w-12 h-12 rounded-full bg-rose-500 shadow-[0_8px_24px_rgba(244,63,94,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[64%] left-2 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <GraduationCap className="w-5 h-5 text-white" />
+              <GraduationCap className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">10k+</span>
             </motion.div>
 
-            {/* Floating Chip 6 — Lower Right: TrendingUp */}
+            {/* Floating Chip 8 — Low Right: TrendingUp */}
             <motion.div
               animate={{ y: [0, -18, 0], x: [0, -3, 0] }}
               transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-              className="absolute top-[83%] right-3 z-0 w-11 h-11 rounded-full bg-sky-500 shadow-[0_8px_24px_rgba(14,165,233,0.5)] flex items-center justify-center border-2 border-white"
+              className="absolute top-[75%] right-2 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
             >
-              <TrendingUp className="w-4 h-4 text-white" />
+              <TrendingUp className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">95%</span>
+            </motion.div>
+
+            {/* Floating Chip 9 — Bottom Left: BookOpen */}
+            <motion.div
+              animate={{ y: [0, -12, 0], x: [0, 4, 0] }}
+              transition={{ duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 1.8 }}
+              className="absolute top-[84%] left-4 z-0 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex flex-col items-center justify-center border-2 border-white"
+            >
+              <BookOpen className="w-4 h-4 text-white mb-0.5" />
+              <span className="text-white text-[10px] font-bold leading-none text-center">200+</span>
             </motion.div>
 
             <img src={mobileImageSrc} alt="CRMISA Student" className="relative z-10 w-[135%] max-w-[135%] translate-x-6 drop-shadow-2xl origin-bottom object-bottom" />
