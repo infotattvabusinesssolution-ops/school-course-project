@@ -35,7 +35,7 @@ export default function CartModal({
             <div className="flex-1 overflow-y-auto pr-2 space-y-4 mb-6">
               {cartItems.map((item, idx) => {
                 const isEbook = item.type === 'ebook';
-                const imageSrc = item.coverImage || item.thumbnail;
+                const imageSrc = item.coverImage || item.thumbnail || item.image;
                 
                 return (
                   <div key={item._id || item.id || idx} className="flex gap-4 p-4 bg-white border border-slate-200 rounded-xl shadow-xs relative group">
