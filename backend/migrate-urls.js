@@ -52,8 +52,12 @@ async function migrate() {
         ebook.pdfUrl = updateUrls(ebook.pdfUrl);
         changed = true;
       }
-      if (ebook.defaultThumbnailUrl && ebook.defaultThumbnailUrl.startsWith('/ebooks/')) {
-        ebook.defaultThumbnailUrl = updateUrls(ebook.defaultThumbnailUrl);
+      if (ebook.samplePdfUrl && ebook.samplePdfUrl.startsWith('/ebooks/')) {
+        ebook.samplePdfUrl = updateUrls(ebook.samplePdfUrl);
+        changed = true;
+      }
+      if (ebook.coverImage && ebook.coverImage.startsWith('/ebooks/')) {
+        ebook.coverImage = updateUrls(ebook.coverImage);
         changed = true;
       }
       if (changed) {
