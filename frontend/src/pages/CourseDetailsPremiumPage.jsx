@@ -103,7 +103,6 @@ export default function CourseDetailsPremiumPage() {
   
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
@@ -347,12 +346,14 @@ export default function CourseDetailsPremiumPage() {
 
                 {course.pdfGuideUrl && (
                   <>
-                    <button
-                      onClick={() => setIsPdfModalOpen(true)}
+                    <a
+                      href={course.pdfGuideUrl}
+                      target="_blank"
+                      rel="noreferrer"
                       className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-lg rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
                     >
-                      <FileText className="w-5 h-5" /> Preview PDF Guide
-                    </button>
+                      <FileText className="w-5 h-5" /> View PDF Guide
+                    </a>
                     
                     <a
                       href={course.pdfGuideUrl}
@@ -404,58 +405,6 @@ export default function CourseDetailsPremiumPage() {
         </div>
       )}
 
-      {/* PDF Modal */}
-      {isPdfModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-slate-900/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-slate-100 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-300">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 bg-white border-b border-slate-200 shrink-0">
-              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-blue-600" />
-                Course Guide Preview
-              </h3>
-              <div className="flex items-center gap-3">
-                <a
-                  href={course.pdfGuideUrl}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2 shadow-sm"
-                >
-                  <Download className="w-4 h-4" /> Download
-                </a>
-                <button 
-                  onClick={() => setIsPdfModalOpen(false)}
-                  className="w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            {/* Modal Body */}
-            <div className="flex-1 w-full bg-slate-200 relative">
-              <object
-                data={course.pdfGuideUrl}
-                type="application/pdf"
-                className="absolute inset-0 w-full h-full"
-              >
-                <iframe
-                  src={course.pdfGuideUrl}
-                  className="absolute inset-0 w-full h-full border-none"
-                  title="Course Guide Preview"
-                >
-                  <div className="flex flex-col items-center justify-center h-full p-8 text-center text-slate-500 bg-slate-50">
-                    <p className="mb-4">Your browser does not support inline PDF viewing.</p>
-                    <a href={course.pdfGuideUrl} download target="_blank" rel="noreferrer" className="text-blue-600 underline font-semibold">
-                      Download PDF instead
-                    </a>
-                  </div>
-                </iframe>
-              </object>
-            </div>
-          </div>
-        </div>
-      )}
 
       <CourseReviewModal 
         isOpen={isReviewModalOpen}
