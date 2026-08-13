@@ -8,7 +8,8 @@ export default function Navbar({
   user,
   onLogout,
   cartCount,
-  onOpenCartDrawer
+  onOpenCartDrawer,
+  onOpenRegister
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
@@ -155,14 +156,14 @@ export default function Navbar({
 
           {/* Right Action Icons */}
           <div className="hidden sm:flex items-center space-x-5">
-            {/* Cart Button */}
+            {/* Cart Button - only show if logged in, else prompt login */}
             <button
-              onClick={onOpenCartDrawer}
+              onClick={isLoggedIn ? onOpenCartDrawer : onOpenLogin}
               className="relative p-2 text-slate-700 hover:text-blue-600 transition-colors"
               aria-label="Cart"
             >
               <span className="material-symbols-outlined text-2xl">shopping_cart</span>
-              {cartCount > 0 && (
+              {isLoggedIn && cartCount > 0 && (
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-blue-600 rounded-full">
                   {cartCount}
                 </span>

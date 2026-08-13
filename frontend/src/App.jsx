@@ -162,6 +162,11 @@ export default function App() {
   };
 
   const handleAddToCartClick = (item) => {
+    if (!isLoggedIn) {
+      showToast("Please log in to add items to your cart.");
+      openLogin();
+      return;
+    }
     addToCart({
       ...item,
       type: item.coverImage ? 'ebook' : 'course',
