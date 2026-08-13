@@ -171,7 +171,6 @@ export default function App() {
   const hideLayoutPaths = [
     "/login", 
     "/register", 
-    "/course-premium", 
     "/admin", 
     "/course/", 
     "/certificate/", 

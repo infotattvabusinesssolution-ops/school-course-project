@@ -194,85 +194,56 @@ export default function CourseDetailsPremiumPage() {
   return (
     <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-slate-800">
       
-      {/* ── Hero Banner Section (16:9) ── */}
-      <div className="relative w-full aspect-[21/9] sm:aspect-[16/7] md:aspect-[16/5] lg:aspect-[16/4] bg-slate-900 border-b border-slate-200">
-        {(course.bannerUrl || course.defaultBannerUrl) ? (
-          <img 
-            src={course.bannerUrl || course.defaultBannerUrl} 
-            alt={course.title} 
-            className="w-full h-full object-cover opacity-60"
-          />
-        ) : (course.thumbnailUrl || course.defaultThumbnailUrl) ? (
-           <img 
-            src={course.thumbnailUrl || course.defaultThumbnailUrl} 
-            alt={course.title} 
-            className="w-full h-full object-cover opacity-60"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Video className="w-16 h-16 text-slate-700" />
-          </div>
-        )}
-        
-        {/* Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
-
-        {/* Content Over Banner */}
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-10 lg:pb-16">
-            <button 
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center text-slate-300 hover:text-white transition-colors text-sm font-medium mb-6 group"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </button>
-
-            <div className="flex flex-col max-w-4xl">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight drop-shadow-md">
-                  {course.title}
-                </h1>
-                <div className="flex items-center gap-3 mt-1 sm:mt-0">
-                  <span className="text-white font-semibold text-sm uppercase tracking-wide bg-blue-600/90 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-md">
-                    {course.category}
-                  </span>
-                </div>
+      
+      {/* ── Main Content Area ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          
+          {/* Left Column (Course Details) */}
+          <div className="lg:col-span-8 space-y-12">
+            
+            {/* Top Info Section: Thumbnail + Title */}
+            <div className="flex flex-col sm:flex-row gap-6 items-start border-b border-slate-200 pb-8">
+              <div className="w-full sm:w-[45%] aspect-[4/3] rounded-xl overflow-hidden shadow-md shrink-0 bg-slate-100 flex items-center justify-center">
+                {(course.thumbnailUrl || course.defaultThumbnailUrl) ? (
+                  <img 
+                    src={course.thumbnailUrl || course.defaultThumbnailUrl} 
+                    alt={course.title} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Video className="w-12 h-12 text-slate-300" />
+                )}
               </div>
               
-              {course.subtitle && (
-                <p className="text-lg text-slate-300 leading-relaxed mb-6 drop-shadow-sm max-w-3xl">
-                  {course.subtitle}
-                </p>
-              )}
-
-              {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-300">
-                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
-                  <Star className="w-4 h-4 text-amber-400 fill-current" />
-                  <span className="font-bold text-white">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
-                  <span>({course.reviewCount || 0} reviews)</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
-                  <Users className="w-4 h-4 text-slate-300" />
-                  <span className="text-white">{course.totalEnrollments || 0} Students</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
-                  <BarChart className="w-4 h-4 text-slate-300" />
-                  <span className="capitalize text-white">{course.level || 'All Levels'}</span>
+              <div className="flex-1 flex flex-col pt-1">
+                <span className="inline-block text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider mb-3 w-fit border border-blue-100">
+                  {course.category}
+                </span>
+                
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
+                  {course.title}
+                </h1>
+                
+                {course.subtitle && (
+                  <p className="text-slate-600 text-sm leading-relaxed mb-5">
+                    {course.subtitle}
+                  </p>
+                )}
+                
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium text-slate-600 mt-auto">
+                  <div className="flex items-center gap-1.5">
+                    <Star className="w-4 h-4 text-amber-500 fill-current" />
+                    <span className="font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+                    <span>({course.reviewCount || 0} reviews)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-slate-400" />
+                    <span>{course.totalEnrollments || 0} Students</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main Content Area ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
-          {/* Left Column (Course Details) */}
-          <div className="lg:col-span-8 space-y-16">
             
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Course</h2>
