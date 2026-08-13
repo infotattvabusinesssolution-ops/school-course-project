@@ -102,6 +102,17 @@ export default function DashboardLayout({ onLogout }) {
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-3">Dashboard</p>
           {tabs.map(tab => {
             const Icon = tab.icon;
+            
+            // Determine badge count
+            let badgeCount = 0;
+            if (tab.id === 'ebooks' && purchasedEbooks?.length) {
+              badgeCount = purchasedEbooks.length;
+            } else if (tab.id === 'courses' && dashboardData?.continueLearning?.length) {
+              badgeCount = dashboardData.continueLearning.length;
+            } else if (tab.id === 'exams' && dashboardData?.continueLearning?.length) {
+              badgeCount = dashboardData.continueLearning.length;
+            }
+
             return (
               <NavLink
                 key={tab.id}
@@ -116,9 +127,9 @@ export default function DashboardLayout({ onLogout }) {
                   <>
                     <Icon className={`w-4 h-4 ${isActive || (tab.id === 'courses' && location.pathname === '/dashboard') ? 'text-white' : 'text-slate-400'}`} />
                     <span>{tab.label}</span>
-                    {tab.id === 'ebooks' && purchasedEbooks.length > 0 && (
+                    {badgeCount > 0 && (
                       <span className="ml-auto bg-slate-200 text-slate-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                        {purchasedEbooks.length}
+                        {badgeCount}
                       </span>
                     )}
                   </>
@@ -178,6 +189,16 @@ export default function DashboardLayout({ onLogout }) {
         {tabs.map(tab => {
           const Icon = tab.icon;
           const active = location.pathname.includes(tab.path) || (tab.id === 'courses' && location.pathname === '/dashboard');
+          
+          let badgeCount = 0;
+          if (tab.id === 'ebooks' && purchasedEbooks?.length) {
+            badgeCount = purchasedEbooks.length;
+          } else if (tab.id === 'courses' && dashboardData?.continueLearning?.length) {
+            badgeCount = dashboardData.continueLearning.length;
+          } else if (tab.id === 'exams' && dashboardData?.continueLearning?.length) {
+            badgeCount = dashboardData.continueLearning.length;
+          }
+
           return (
             <NavLink
               key={tab.id}
@@ -198,9 +219,9 @@ export default function DashboardLayout({ onLogout }) {
                 )}
               </div>
               <span className="text-[10px] font-medium leading-none">{tab.label}</span>
-              {tab.id === 'ebooks' && purchasedEbooks.length > 0 && (
+              {badgeCount > 0 && (
                 <span className="absolute top-1 right-5 bg-red-500 text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
-                  {purchasedEbooks.length}
+                  {badgeCount}
                 </span>
               )}
             </NavLink>

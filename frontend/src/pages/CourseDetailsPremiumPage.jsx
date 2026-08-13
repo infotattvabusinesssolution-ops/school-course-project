@@ -97,9 +97,6 @@ export default function CourseDetailsPremiumPage() {
   
   const [myReview, setMyReview] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
-  const [reviewRating, setReviewRating] = useState(0);
-  const [reviewComment, setReviewComment] = useState("");
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -117,8 +114,6 @@ export default function CourseDetailsPremiumPage() {
           const reviewRes = await reviewService.getMyReview(courseId);
           if (reviewRes.data) {
             setMyReview(reviewRes.data);
-            setReviewRating(reviewRes.data.rating);
-            setReviewComment(reviewRes.data.comment);
           }
         } catch (err) {
           console.error("Failed to fetch my review:", err);
@@ -139,26 +134,11 @@ export default function CourseDetailsPremiumPage() {
     })();
   }, [courseId]);
 
-  const handleSubmitReview = async (e) => {
-    e.preventDefault();
-    if (!reviewRating) return alert("Please select a rating between 1 and 5.");
-    setIsSubmittingReview(true);
-    try {
-      const res = await reviewService.submitReview(courseId, reviewRating, reviewComment);
-      setMyReview(res.data);
-      // Refresh all reviews list
-      try {
-        const allReviewsRes = await reviewService.getCourseReviews(courseId);
-        setAllReviews(allReviewsRes.data || []);
-      } catch (_) {}
-      alert("Review submitted successfully!");
-      setIsReviewModalOpen(false);
-    } catch (err) {
-      console.error("Failed to submit review:", err);
-      alert(err.response?.data?.message || "Failed to submit review.");
-    } finally {
-      setIsSubmittingReview(false);
-    }
+  const handleReviewSubmitted = (updatedReview) => {
+    setMyReview(updatedReview);
+    // Refresh all reviews list
+    reviewService.getCourseReviews(courseId).then(res => setAllReviews(res.data || []));
+    setIsReviewModalOpen(false);
   };
 
   if (loading) {
@@ -409,12 +389,15 @@ export default function CourseDetailsPremiumPage() {
       <CourseReviewModal 
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
-        reviewRating={reviewRating}
-        setReviewRating={setReviewRating}
-        reviewComment={reviewComment}
-        setReviewComment={setReviewComment}
-        isSubmittingReview={isSubmittingReview}
-        onSubmit={handleSubmitReview}
+        courseId={courseId}
+        existingReview={myReview}
+        onSuccess={(newReview) => {
+          setMyReview(newReview);
+          // Refresh all reviews list
+          reviewService.getCourseReviews(courseId)
+            .then(res => setAllReviews(res.data || []))
+            .catch(err => console.error("Failed to fetch course reviews:", err));
+        }}
       />
     </div>
   );

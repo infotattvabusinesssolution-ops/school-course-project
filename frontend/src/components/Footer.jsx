@@ -76,6 +76,16 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <Link to="/rss-feeds" className="hover:text-white transition-colors">
+                  RSS Feeds
+                </Link>
+              </li>
+              <li>
+                <Link to="/glossary" className="hover:text-white transition-colors">
+                  Glossary
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -80,25 +80,7 @@ export default function EbookCheckoutModal({
         return;
       }
 
-      // SIMULATION MODE BYPASS
-      if (import.meta.env.VITE_SIMULATE_PAYMENT === 'true') {
-        const verifyRes = await api.post("/payments/verify-ebook-payment", {
-          ebookId: ebook._id,
-          m_payment_id: data.payload.m_payment_id
-        });
-
-        if (verifyRes.data.success) {
-          setSuccess(true);
-          if (onPaymentSuccess) onPaymentSuccess();
-          setTimeout(() => {
-            setSuccess(false);
-            onClose();
-            navigate(`/ebook`); // Or a specific success page
-          }, 2000);
-        }
-        setProcessing(false);
-        return;
-      }
+      // Removed simulation mode bypass to ensure live PayFast checkout is always used for e-books.
 
       // LIVE MODE: Create dynamic form and submit
       const form = document.createElement('form');

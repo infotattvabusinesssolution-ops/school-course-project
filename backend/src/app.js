@@ -24,7 +24,8 @@ import newsletterRoutes from './routes/newsletter.routes.js';
 import couponRoutes from './routes/coupon.routes.js';
 import referralRoutes from './routes/referral.routes.js';
 import testimonialRoutes from './routes/testimonial.routes.js';
-import emailTestRoutes from './routes/emailTest.routes.js';
+import feedRoutes from './routes/feed.routes.js';
+import glossaryRoutes from './routes/glossary.routes.js';
 const app = express();
 
 // Security Middlewares
@@ -78,7 +79,8 @@ app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/referrals', referralRoutes);
 app.use('/api/testimonials', testimonialRoutes);
-app.use('/api/email-test', emailTestRoutes);
+app.use('/api/feeds', feedRoutes);
+app.use('/api/glossary', glossaryRoutes);
 
 // Base route
 app.get('/', (req, res) => {

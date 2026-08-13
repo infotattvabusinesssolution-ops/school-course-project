@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+
 import api from '../lib/axios';
 import ReactMarkdown from 'react-markdown';
 
@@ -30,11 +29,9 @@ export default function BlogDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-        <Navbar />
         <main className="flex-grow pt-32 pb-20 flex justify-center items-center">
           <span className="material-symbols-outlined animate-spin text-4xl text-blue-600">progress_activity</span>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -42,7 +39,6 @@ export default function BlogDetailPage() {
   if (error || !blog) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-        <Navbar />
         <main className="flex-grow pt-32 pb-20 flex flex-col items-center justify-center text-center px-4">
           <span className="material-symbols-outlined text-6xl text-slate-300 mb-4">article</span>
           <h1 className="text-2xl font-bold text-crmisa-accentNavy mb-4">{error || 'Blog not found'}</h1>
@@ -50,14 +46,12 @@ export default function BlogDetailPage() {
             <span className="material-symbols-outlined mr-1">arrow_back</span> Back to Blogs
           </Link>
         </main>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Navbar />
 
       <main className="flex-grow pt-32 pb-20">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,8 +94,6 @@ export default function BlogDetailPage() {
           </div>
         </article>
       </main>
-
-      <Footer />
     </div>
   );
 }

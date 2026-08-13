@@ -40,6 +40,8 @@ export default function Navbar({
     { name: 'E-book', path: '/ebook' },
     { name: 'Forum', path: '/forum' },
     { name: 'Blog', path: '/blogs' },
+    { name: 'RSS Feeds', path: '/rss-feeds', mobileOnly: true },
+    { name: 'Glossary', path: '/glossary', mobileOnly: true },
     { name: 'Contact Us', path: '/contact' },
   ];
 
@@ -105,7 +107,7 @@ export default function Navbar({
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-            {navLinks.map((link, i) => (
+            {navLinks.filter(link => !link.mobileOnly).map((link, i) => (
               <div key={i} className="relative group">
                 <button
                   onClick={() => {

@@ -14,7 +14,8 @@ import AdminReferralTab from "../components/admin/AdminReferralTab";
 import AdminCourseTab from "../components/admin/AdminCourseTab";
 import AdminTestimonialsTab from "../components/admin/AdminTestimonialsTab";
 import AdminReviewsTab from "../components/admin/AdminReviewsTab";
-import AdminEmailsTab from "../components/admin/AdminEmailsTab";
+import AdminRssTab from '../components/admin/AdminRssTab';
+import AdminGlossaryTab from '../components/admin/AdminGlossaryTab';
 export default function AdminDashboardPage({ onLogout }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTabState] = useState(() => {
@@ -136,7 +137,7 @@ export default function AdminDashboardPage({ onLogout }) {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h1 className="text-display-lg-mobile md:text-display-lg font-bold text-on-background">
-              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : activeTab === 7 ? 'Blog Management' : activeTab === 8 ? 'Newsletter Subscribers' : activeTab === 9 ? 'Coupons' : activeTab === 10 ? 'Referrals & Influencers' : activeTab === 11 ? 'Testimonials' : activeTab === 12 ? 'Course Reviews' : activeTab === 13 ? 'Email Testing' : 'Course Management'}
+              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : activeTab === 7 ? 'Blog Management' : activeTab === 8 ? 'Newsletter Subscribers' : activeTab === 9 ? 'Coupons' : activeTab === 10 ? 'Referrals & Influencers' : activeTab === 11 ? 'Testimonials' : activeTab === 12 ? 'Course Reviews' : activeTab === 13 ? 'RSS Feeds' : activeTab === 14 ? 'Glossary' : 'Course Management'}
             </h1>
             {activeTab === 5 && (
               <button 
@@ -731,9 +732,13 @@ export default function AdminDashboardPage({ onLogout }) {
               
               {/* Tab 12: Reviews */}
               {activeTab === 12 && <AdminReviewsTab />}
+              
+              {/* Tab 13: RSS Feeds */}
+              {activeTab === 13 && <AdminRssTab />}
+              
+              {/* Tab 14: Glossary */}
+              {activeTab === 14 && <AdminGlossaryTab />}
 
-              {/* Tab 13: Emails */}
-              {activeTab === 13 && <AdminEmailsTab />}
             </>
           )}
         </div>

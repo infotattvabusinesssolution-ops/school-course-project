@@ -36,6 +36,8 @@ import CourseDetailsPremiumPage from "./pages/CourseDetailsPremiumPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsConditionsPage from "./pages/TermsConditionsPage";
 import FaqPage from "./pages/FaqPage";
+import RssFeedsPage from './pages/RssFeedsPage';
+import GlossaryPage from './pages/GlossaryPage';
 import VerifyCertificatePage from "./pages/VerifyCertificatePage";
 import CertificatePage from "./pages/CertificatePage";
 import ExamPage from "./pages/ExamPage";
@@ -248,6 +250,8 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsConditionsPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/rss-feeds" element={<RssFeedsPage />} />
+          <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="/verify-certificate/:certificateId" element={<VerifyCertificatePage />} />
           <Route path="/certificate/:certificateId" element={<CertificatePage />} />
           <Route path="/course/:id/exam" element={<ExamPage />} />
@@ -289,7 +293,7 @@ export default function App() {
       </main>
 
       {/* hideLayout includes /login /register so if they briefly load it won't show footer/navbar but then redirects */}
-      {location.pathname === '/' && <Footer />}
+      {(!hideLayout && !location.pathname.startsWith('/dashboard')) && <Footer />}
 
       <LoginModal 
         isOpen={isLoginModalOpen} 

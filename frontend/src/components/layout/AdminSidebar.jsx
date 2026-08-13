@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
   const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const adminNavItems = [
     { id: 0, icon: "dashboard", label: "Overview" },
@@ -19,7 +21,8 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
     { id: 10, icon: "campaign", label: "Referrals & Influencers" },
     { id: 11, icon: "format_quote", label: "Testimonials" },
     { id: 12, icon: "reviews", label: "Course Reviews" },
-    { id: 13, icon: "forward_to_inbox", label: "Email Testing" },
+    { id: 13, icon: "rss_feed", label: "RSS Feeds" },
+    { id: 14, icon: "menu_book", label: "Glossary" },
   ];
 
   return (
@@ -102,13 +105,23 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
             );
           })}
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto flex flex-col gap-2">
+          <button
+            onClick={() => {
+              window.open('/certificate/preview', '_blank');
+              setMobileOpen(false);
+            }}
+            className="flex items-center gap-3 text-amber-700 hover:bg-amber-50 rounded-xl px-4 py-3 transition-all w-full"
+          >
+            <span className="material-symbols-outlined">workspace_premium</span>
+            <span className="font-label-md text-label-md font-bold">Preview Certificate</span>
+          </button>
           <button
             onClick={onLogout}
             className="flex items-center gap-3 text-error hover:bg-error-container/20 rounded-xl px-4 py-3 transition-all w-full"
           >
             <span className="material-symbols-outlined">logout</span>
-            <span className="font-label-md text-label-md">Logout</span>
+            <span className="font-label-md text-label-md font-bold">Logout</span>
           </button>
         </div>
       </nav>
@@ -166,13 +179,20 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
             );
           })}
         </div>
-        <div className="mt-auto flex flex-col gap-4">
+        <div className="mt-auto flex flex-col gap-2">
+          <button
+            onClick={() => window.open('/certificate/preview', '_blank')}
+            className="flex items-center gap-3 text-amber-700 hover:bg-amber-50 rounded-xl px-4 py-3 transition-all"
+          >
+            <span className="material-symbols-outlined">workspace_premium</span>
+            <span className="font-label-md text-label-md font-bold">Preview Certificate</span>
+          </button>
           <button
             onClick={onLogout}
             className="flex items-center gap-3 text-error hover:bg-error-container/20 rounded-xl px-4 py-3 transition-all"
           >
             <span className="material-symbols-outlined">logout</span>
-            <span className="font-label-md text-label-md">Logout</span>
+            <span className="font-label-md text-label-md font-bold">Logout</span>
           </button>
         </div>
       </nav>

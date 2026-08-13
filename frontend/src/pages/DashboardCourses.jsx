@@ -101,7 +101,7 @@ export default function DashboardCourses() {
               <div 
                 key={course.courseId} 
                 className="bg-white border border-slate-200 flex flex-col h-full cursor-pointer hover:border-slate-400 transition-colors group shadow-sm hover:shadow-md" 
-                onClick={() => handleWatchVideo(course)}
+                onClick={() => navigate(`/course-premium/${course.courseId}`)}
               >
                 {/* 4:3 Aspect Ratio Image Container */}
                 <div className="relative w-full aspect-[4/3] bg-slate-100 shrink-0 border-b border-slate-200 overflow-hidden">
