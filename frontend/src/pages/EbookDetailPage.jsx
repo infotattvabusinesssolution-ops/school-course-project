@@ -64,7 +64,7 @@ export default function EbookDetailPage({ onAddToCart }) {
       <div className="min-h-screen bg-white pt-28 flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-xl font-bold text-crmisa-navy mb-2">E-book Not Found</h2>
         <p className="text-slate-500 text-sm mb-6">The trade handbook you are looking for does not exist.</p>
-        <Link to="/ebooks" className="px-6 py-2.5 bg-crmisa-navy text-white font-semibold text-sm rounded-lg">
+        <Link to="/ebook" className="px-6 py-2.5 bg-crmisa-navy text-white font-semibold text-sm rounded-lg">
           Back to E-books
         </Link>
       </div>
@@ -76,7 +76,7 @@ export default function EbookDetailPage({ onAddToCart }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Back Link */}
         <button
-          onClick={() => navigate("/ebooks")}
+          onClick={() => navigate("/ebook")}
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-crmisa-navy transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />

@@ -43,6 +43,7 @@ import CertificatePage from "./pages/CertificatePage";
 import ExamPage from "./pages/ExamPage";
 import ExamResultPage from "./pages/ExamResultPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import CookieConsent from "./components/CookieConsent";
 
 export default function App() {
@@ -289,6 +290,9 @@ export default function App() {
             path="/admin/ebook/:id/edit"
             element={<AdminEbookCreatePage />}
           />
+
+          {/* 404 Page */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
