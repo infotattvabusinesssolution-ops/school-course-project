@@ -145,7 +145,7 @@ export default function ExamPage() {
         <p className="text-slate-900 text-xl font-bold mb-2">Cannot Start Exam</p>
         <p className="text-slate-600 mb-6">{error}</p>
         <button
-          onClick={() => navigate(`/course-player/${courseId}`)}
+          onClick={() => navigate(`/course-premium/${courseId}`)}
           className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors"
         >
           Return to Course

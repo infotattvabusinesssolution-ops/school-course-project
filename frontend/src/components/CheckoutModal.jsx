@@ -96,7 +96,7 @@ export default function CheckoutModal({
           setTimeout(() => {
             setSuccess(false);
             onClose();
-            navigate(`/course-player/${courseId}`);
+            navigate(`/course-premium/${courseId}`);
           }, 2000);
         }
         setProcessing(false);

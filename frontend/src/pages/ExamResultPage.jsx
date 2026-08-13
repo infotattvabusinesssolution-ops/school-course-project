@@ -16,7 +16,7 @@ export default function ExamResultPage() {
         <p className="text-slate-900 text-xl font-bold mb-2">No Result Found</p>
         <p className="text-slate-600 mb-6">Please take the exam first.</p>
         <button
-          onClick={() => navigate(`/course-player/${courseId}`)}
+          onClick={() => navigate(`/course-premium/${courseId}`)}
           className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl shadow-sm hover:bg-slate-800 transition-colors"
         >
           Go to Course
@@ -140,7 +140,7 @@ export default function ExamResultPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            onClick={() => navigate(`/course-player/${courseId}`)}
+            onClick={() => navigate(`/course-premium/${courseId}`)}
             className="flex-1 flex items-center justify-center gap-2 py-4 border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm font-bold rounded-2xl transition-colors text-base"
           >
             <FileText className="w-5 h-5" /> Back to Course

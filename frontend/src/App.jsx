@@ -32,7 +32,7 @@ import DashboardProfile from "./pages/DashboardProfile";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminCreateCoursePage from "./pages/AdminCreateCoursePage";
 import AdminEbookCreatePage from "./pages/AdminEbookCreatePage";
-import CoursePlayerPage from "./pages/CoursePlayerPage";
+import CourseDetailsPremiumPage from "./pages/CourseDetailsPremiumPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsConditionsPage from "./pages/TermsConditionsPage";
 import FaqPage from "./pages/FaqPage";
@@ -171,7 +171,7 @@ export default function App() {
   const hideLayoutPaths = [
     "/login", 
     "/register", 
-    "/course-player", 
+    "/course-premium", 
     "/admin", 
     "/course/", 
     "/certificate/", 
@@ -263,7 +263,7 @@ export default function App() {
             <Route path="exams" element={<DashboardExams />} />
             <Route path="profile" element={<DashboardProfile />} />
           </Route>
-          <Route path="/course-player/:id" element={<CoursePlayerPage />} />
+          <Route path="/course-premium/:id" element={<CourseDetailsPremiumPage />} />
 
           {/* Admin Routes */}
           <Route

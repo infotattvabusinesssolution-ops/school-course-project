@@ -12,7 +12,6 @@ import api from "../lib/axios";
 import reviewService from "../services/reviewService";
 import CustomVideoPlayer from "../components/CustomVideoPlayer";
 import CourseReviewModal from "../components/CourseReviewModal";
-import { getExamStatus } from "../services/exam.service";
 
 // ─── Video Detection ────────────────────────────────────────────────────────
 
@@ -83,17 +82,13 @@ function VideoPlayer({ videoUrl }) {
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
-export default function CoursePlayerPage() {
+export default function CourseDetailsPremiumPage() {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const [activeCertificate, setActiveCertificate] = useState(null);
-  const [issuingCertificate, setIssuingCertificate] = useState(false);
-  const [examStatus, setExamStatus] = useState(null); 
   
   const [myReview, setMyReview] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
@@ -109,16 +104,6 @@ export default function CoursePlayerPage() {
         setLoading(true);
         const res = await api.get(`/student/courses/${courseId}/player`);
         setCourse(res.data.data.course);
-        
-        // Check for certificate
-        try {
-          const certRes = await api.get(`/certificates/verify-student/${courseId}`);
-          if (certRes.data.success) {
-            setActiveCertificate(certRes.data.data);
-          }
-        } catch (err) {
-          console.error("Certificate check failed:", err);
-        }
         
         // Check for reviews
         try {
@@ -137,14 +122,6 @@ export default function CoursePlayerPage() {
           setAllReviews(allReviewsRes.data || []);
         } catch (err) {
           console.error("Failed to fetch course reviews:", err);
-        }
-
-        // Fetch exam status
-        try {
-          const examSt = await getExamStatus(courseId);
-          setExamStatus(examSt);
-        } catch (err) {
-          console.error("Exam status check failed:", err);
         }
 
       } catch (err) {
@@ -177,20 +154,6 @@ export default function CoursePlayerPage() {
     }
   };
 
-  const handleClaimCertificate = async () => {
-    if (!courseId) return;
-    try {
-      setIssuingCertificate(true);
-      const res = await api.post("/certificates/issue", { courseId });
-      setActiveCertificate(res.data.data);
-      navigate(`/certificate/${res.data.data.certificateId}`);
-    } catch (err) {
-      console.error("Failed to claim certificate:", err);
-      alert(err.response?.data?.message || "Failed to generate certificate.");
-    } finally {
-      setIssuingCertificate(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -243,90 +206,53 @@ export default function CoursePlayerPage() {
       {/* ── Body ── */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {/* ── Smart Exam / Certificate CTA Banner ── */}
-        <div className="mb-8">
-          {/* CASE 1: No exam configured — show old-style cert claim */}
-          {(!examStatus || !examStatus.hasExam) && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-amber-400 text-slate-900 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0 shadow-xs">
-                  <Award className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm sm:text-base leading-snug">🎉 Course Unlocked!</h4>
-                  <p className="text-xs font-medium text-slate-900/80">Your official CRMISA Certificate of Completion is ready to claim.</p>
-                </div>
-              </div>
-              <button
-                onClick={handleClaimCertificate}
-                disabled={issuingCertificate}
-                className="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Award className="w-4 h-4 text-amber-400" />
-                <span>{issuingCertificate ? "Generating Certificate..." : "Claim Official Certificate"}</span>
-              </button>
-            </div>
-          )}
 
-          {/* CASE 2: Exam exists, student has already PASSED */}
-          {examStatus?.hasExam && examStatus?.hasPassed && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-emerald-500 text-white border border-emerald-400 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm sm:text-base leading-snug">✅ Exam Passed! Certificate Issued.</h4>
-                  <p className="text-xs font-medium text-white/80">
-                    Score: {examStatus.certificate?.examScore ?? "—"}% &nbsp;·&nbsp; You've earned your CRMISA certificate.
-                  </p>
-                </div>
-              </div>
-              {examStatus.certificate?.certificateId && (
-                <button
-                  onClick={() => navigate(`/certificate/${examStatus.certificate.certificateId}`)}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-white hover:bg-white/90 text-emerald-700 font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Award className="w-4 h-4" />
-                  <span>View My Certificate</span>
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* CASE 3: Exam exists, NOT yet passed — show Start Exam CTA */}
-          {examStatus?.hasExam && !examStatus?.hasPassed && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-900 text-white border border-indigo-700 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/30 flex items-center justify-center shrink-0">
-                  <BookOpen className="w-6 h-6 text-indigo-300" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm sm:text-base leading-snug">
-                    🎓 Course Exam Unlocked!
-                  </h4>
-                  <p className="text-xs font-medium text-white/70">
-                    {examStatus.questionCount} questions &nbsp;·&nbsp; Pass ≥{examStatus.passingPercentage}%
-                    {examStatus.timeLimitMinutes > 0 && ` · ⏱ ${examStatus.timeLimitMinutes} min limit`}
-                    {examStatus.attemptCount > 0 && ` · Attempt #${examStatus.attemptCount + 1}`}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => navigate(`/course/${courseId}/exam`)}
-                className="w-full sm:w-auto px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all shrink-0 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Play className="w-4 h-4" />
-                <span>{examStatus.attemptCount > 0 ? "Retake Exam" : "Start Exam"}</span>
-              </button>
-            </div>
-          )}
-        </div>
 
         {/* ── Main Video Area ── */}
         <div className="mb-8">
            <VideoPlayer videoUrl={course.videoUrl} />
         </div>
+
+        {/* ── PDF Guide Viewer ── */}
+        {course.pdfGuideUrl && (
+          <div className="mb-8 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+              <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                Course Guide Preview
+              </h3>
+              <a 
+                href={course.pdfGuideUrl}
+                download
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2 shadow-sm"
+              >
+                Download PDF
+              </a>
+            </div>
+            <div className="w-full h-[600px] sm:h-[800px]">
+              <object
+                data={course.pdfGuideUrl}
+                type="application/pdf"
+                className="w-full h-full"
+              >
+                <iframe
+                  src={course.pdfGuideUrl}
+                  className="w-full h-full border-none"
+                  title="Course Guide Preview"
+                >
+                  <div className="flex flex-col items-center justify-center h-full p-8 text-center text-slate-500">
+                    <p className="mb-4">Your browser does not support inline PDF viewing.</p>
+                    <a href={course.pdfGuideUrl} download target="_blank" rel="noreferrer" className="text-blue-600 underline">
+                      Download PDF instead
+                    </a>
+                  </div>
+                </iframe>
+              </object>
+            </div>
+          </div>
+        )}
 
         {/* ── Course Info & Resources ── */}
         <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm mb-8">

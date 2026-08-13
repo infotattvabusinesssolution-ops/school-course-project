@@ -16,7 +16,7 @@ export default function PaymentSuccessPage() {
 
   const handleContinue = () => {
     if (type === 'course' && id) {
-      navigate(`/course-player/${id}`);
+      navigate(`/course-premium/${id}`);
     } else if (type === 'ebook') {
       navigate('/dashboard'); // Ebooks are usually in dashboard or a specific ebook viewer
     } else {

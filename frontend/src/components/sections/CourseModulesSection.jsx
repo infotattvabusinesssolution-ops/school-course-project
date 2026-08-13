@@ -153,7 +153,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/course-player/${course._id}?tab=review`);
+                  navigate(`/course-premium/${course._id}?tab=review`);
                 }}
                 className="bg-amber-100 border border-amber-200 text-amber-800 hover:bg-amber-200 px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-bold transition-colors flex items-center gap-1 shadow-sm"
               >
@@ -164,7 +164,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/course-player/${course._id}`);
+                  navigate(`/course-premium/${course._id}`);
                 }}
                 className="bg-slate-900 text-white hover:bg-slate-800 px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
               >

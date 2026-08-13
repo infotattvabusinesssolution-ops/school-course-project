@@ -48,7 +48,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
     }
     
     if (isEnrolled) {
-      navigate(`/course-player/${courseId}?lessonId=${lessonId}`);
+      navigate(`/course-premium/${courseId}?lessonId=${lessonId}`);
     } else {
       onOpenEnrol(course.title, course.price, courseId);
     }
@@ -277,14 +277,14 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
 
                 {isCompleted ? (
                   <button
-                    onClick={() => navigate(`/course-player/${courseId}?tab=review`)}
+                    onClick={() => navigate(`/course-premium/${courseId}?tab=review`)}
                     className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
                   >
                     <Star className="w-5 h-5 fill-current" /> Review Course
                   </button>
                 ) : isEnrolled ? (
                   <button
-                    onClick={() => navigate(`/course-player/${courseId}`)}
+                    onClick={() => navigate(`/course-premium/${courseId}`)}
                     className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-colors mb-4"
                   >
                     Start Learning
@@ -344,14 +344,14 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         </div>
         {isCompleted ? (
           <button
-            onClick={() => navigate(`/course-player/${courseId}?tab=review`)}
+            onClick={() => navigate(`/course-premium/${courseId}?tab=review`)}
             className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-center flex items-center justify-center gap-2"
           >
             <Star className="w-4 h-4 fill-current" /> Review Course
           </button>
         ) : isEnrolled ? (
           <button
-            onClick={() => navigate(`/course-player/${courseId}`)}
+            onClick={() => navigate(`/course-premium/${courseId}`)}
             className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-center"
           >
             Start Learning

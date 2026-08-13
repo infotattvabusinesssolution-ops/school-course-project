@@ -294,7 +294,7 @@ export default function DashboardPage({
                   enrolledCourses.map((course) => {
                     const courseComplete = course.completionPercentage >= 100;
                     return (
-                      <div key={course.courseId} className="bg-white border border-slate-200 rounded-2xl flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer" onClick={() => navigate(`/course-player/${course.courseId}`)}>
+                      <div key={course.courseId} className="bg-white border border-slate-200 rounded-2xl flex flex-col group hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer" onClick={() => navigate(`/course-premium/${course.courseId}`)}>
                         <div className="relative h-48 bg-slate-100 overflow-hidden border-b border-slate-200">
                           {course.thumbnailUrl ? (
                             <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -321,7 +321,7 @@ export default function DashboardPage({
                               </div>
                             </div>
                             <div className="flex gap-2">
-                              <button className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors border ${courseComplete ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" : "bg-slate-900 border-slate-900 text-white hover:bg-slate-800"}`} onClick={(e) => { e.stopPropagation(); navigate(`/course-player/${course.courseId}`); }}>
+                              <button className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors border ${courseComplete ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" : "bg-slate-900 border-slate-900 text-white hover:bg-slate-800"}`} onClick={(e) => { e.stopPropagation(); navigate(`/course-premium/${course.courseId}`); }}>
                                 {courseComplete ? "Review Course" : "Continue Learning"}
                               </button>
                               {courseComplete && reviewStatuses[course.courseId] === false && (
