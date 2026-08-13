@@ -26,6 +26,7 @@ import referralRoutes from './routes/referral.routes.js';
 import testimonialRoutes from './routes/testimonial.routes.js';
 import feedRoutes from './routes/feed.routes.js';
 import glossaryRoutes from './routes/glossary.routes.js';
+import invoiceRoutes from './routes/invoice.routes.js';
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy (Nginx) to correctly get client IPs for rate limiting
 
@@ -82,6 +83,7 @@ app.use('/api/referrals', referralRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/feeds', feedRoutes);
 app.use('/api/glossary', glossaryRoutes);
+app.use('/api/invoices', invoiceRoutes);
 
 // Base route
 app.get('/', (req, res) => {

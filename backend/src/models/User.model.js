@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema(
     avatarPublicId: {
       type: String,
     },
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     role: {
       type: String,
       enum: ["STUDENT", "ADMIN"],

@@ -58,4 +58,28 @@ const uploadImageOnCloudinary = async (localFilePath) => {
   }
 };
 
-export { uploadOnCloudinary, deleteFromCloudinary, uploadImageOnCloudinary };
+const uploadBufferOnCloudinary = async (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: 'image',
+        folder: 'avatars',
+        transformation: [
+          { width: 500, height: 500, crop: "fill", gravity: "face" },
+          { quality: "auto", fetch_format: "auto" }
+        ]
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Error uploading buffer to cloudinary', error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary, uploadImageOnCloudinary, uploadBufferOnCloudinary };

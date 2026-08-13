@@ -10,6 +10,7 @@ import Coupon from "../models/Coupon.model.js";
 import Order from "../models/Order.model.js";
 import Exam from "../models/Exam.model.js";
 import User from "../models/User.model.js";
+import Invoice from "../models/Invoice.model.js";
 import { sendPurchaseInvoiceEmail, sendReExamReceiptEmail } from "../utils/email.js";
 
 const generatePayfastSignature = (payload, passPhrase = null) => {
@@ -27,6 +28,56 @@ const generatePayfastSignature = (payload, passPhrase = null) => {
         getString += `&passphrase=${encodeURIComponent(String(passPhrase).trim()).replace(/%20/g, "+")}`;
     }
     return crypto.createHash("md5").update(getString).digest("hex");
+};
+
+// Helper: Generate sequential invoice number
+const generateInvoiceNumber = async () => {
+  const count = await Invoice.countDocuments();
+  const year = new Date().getFullYear();
+  const seq = String(count + 1).padStart(5, '0');
+  return `CRMISA-${year}-${seq}`;
+};
+
+// Helper: Create invoice record + send email
+const createAndSendInvoice = async ({ studentId, type, items, totalAmount, m_payment_id }) => {
+  try {
+    const invoiceNumber = await generateInvoiceNumber();
+    const invoice = await Invoice.create({
+      invoiceNumber,
+      student: studentId,
+      type,
+      items,
+      subtotal: totalAmount,
+      discount: 0,
+      totalAmount,
+      m_payment_id,
+      status: "PAID",
+      paidAt: new Date(),
+    });
+
+    const user = await User.findById(studentId);
+    if (user) {
+      const itemList = items
+        .map(i => `<tr>
+          <td style="padding:8px 0;border-bottom:1px solid #e5e7eb;color:#374151;">${i.name}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #e5e7eb;text-align:right;color:#374151;">ZAR ${i.unitPrice.toFixed(2)}</td>
+        </tr>`)
+        .join('');
+
+      await sendPurchaseInvoiceEmail(user.email, user.name, {
+        invoiceNumber,
+        invoiceDate: new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' }),
+        itemName: items.map(i => i.name).join(', '),
+        amount: totalAmount,
+        itemList,
+      });
+    }
+
+    return invoice;
+  } catch (err) {
+    console.error('Invoice creation failed:', err.message);
+    // Non-fatal — payment already succeeded
+  }
 };
 
 const getPayfastConfig = () => {
@@ -136,11 +187,23 @@ export const verifyPayfastPaymentSimulated = asyncHandler(async (req, res, next)
   }
 
   const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
-  const user = await User.findById(studentId);
-  if (user && courseDetails) {
-    sendPurchaseInvoiceEmail(user.email, user.name, {
-      itemName: courseDetails.title,
-      amount: courseDetails.price
+  
+  // Only create invoice once (on first enrollment)
+  if (!Enrollment.findOne({ razorpayOrderId: m_payment_id })) {
+    await createAndSendInvoice({
+      studentId,
+      type: 'course',
+      items: [{ name: courseDetails?.title || 'Course', type: 'course', unitPrice: courseDetails?.price || 0, quantity: 1 }],
+      totalAmount: courseDetails?.price || 0,
+      m_payment_id,
+    });
+  } else {
+    await createAndSendInvoice({
+      studentId,
+      type: 'course',
+      items: [{ name: courseDetails?.title || 'Course', type: 'course', unitPrice: courseDetails?.price || 0, quantity: 1 }],
+      totalAmount: courseDetails?.price || 0,
+      m_payment_id,
     });
   }
 
@@ -224,13 +287,15 @@ export const verifyEbookPaymentSimulated = asyncHandler(async (req, res) => {
         razorpayPaymentId: "simulated_pf_" + Date.now(),
         purchasedAt: new Date(),
       });
-      const user = await User.findById(studentId);
-      if (user && ebook) {
-        sendPurchaseInvoiceEmail(user.email, user.name, {
-          itemName: ebook.title,
-          amount: ebook.price
-        });
-      }
+      
+      // Generate invoice + send rich email
+      await createAndSendInvoice({
+        studentId,
+        type: 'ebook',
+        items: [{ name: ebook.title, type: 'ebook', unitPrice: ebook.price, quantity: 1 }],
+        totalAmount: ebook.price,
+        m_payment_id,
+      });
     }
 
     return res.status(200).json({ success: true, purchase });
@@ -341,6 +406,21 @@ export const verifyCartPaymentSimulated = asyncHandler(async (req, res) => {
             }
         }
     }
+
+    // Build invoice items from all purchased items
+    const invoiceItems = [];
+    for (const item of items) {
+      if (item.type === 'course') {
+        const course = await Course.findById(item.id);
+        if (course) invoiceItems.push({ name: course.title, type: 'course', unitPrice: course.price, quantity: 1 });
+      } else if (item.type === 'ebook') {
+        const ebook = await Ebook.findById(item.id);
+        if (ebook) invoiceItems.push({ name: ebook.title, type: 'ebook', unitPrice: ebook.price, quantity: 1 });
+      }
+    }
+    const totalAmount = invoiceItems.reduce((sum, i) => sum + i.unitPrice, 0);
+    await createAndSendInvoice({ studentId, type: 'cart', items: invoiceItems, totalAmount, m_payment_id });
+
     return res.status(200).json({ success: true, message: "Cart items purchased successfully" });
 });
 

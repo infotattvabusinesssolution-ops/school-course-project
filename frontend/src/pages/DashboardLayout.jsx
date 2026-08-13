@@ -158,18 +158,20 @@ export default function DashboardLayout({ onLogout }) {
           <div className="flex justify-between items-end">
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight">
-                {currentTab.label}
+                {currentTab.id !== 'profile' ? currentTab.label : null}
               </h1>
             </div>
             
             {/* Quick Mobile Profile Snippet */}
-            <div className="md:hidden flex items-center gap-3 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-              <div className="flex flex-col text-right">
-                 <span className="text-xs font-bold text-crmisa-navy leading-tight truncate max-w-[80px]">{user?.name?.split(' ')[0]}</span>
-                 <button onClick={onLogout} className="text-[9px] font-bold text-red-600 uppercase">Sign Out</button>
+            {currentTab.id !== 'profile' && (
+              <div className="md:hidden flex items-center gap-3 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <div className="flex flex-col text-right">
+                   <span className="text-xs font-bold text-crmisa-navy leading-tight truncate max-w-[80px]">{user?.name?.split(' ')[0]}</span>
+                   <button onClick={onLogout} className="text-[9px] font-bold text-red-600 uppercase">Sign Out</button>
+                </div>
+                <img onClick={() => navigate('/dashboard/profile')} src={user?.avatar && user.avatar.includes('http') && !user.avatar.includes('user-placeholder.png') ? user.avatar : "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128"} className="w-8 h-8 rounded-full border border-slate-200 object-cover cursor-pointer" alt="Profile" />
               </div>
-              <img onClick={() => navigate('/dashboard/profile')} src={user?.avatar && user.avatar.includes('http') && !user.avatar.includes('user-placeholder.png') ? user.avatar : "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128"} className="w-8 h-8 rounded-full border border-slate-200 object-cover cursor-pointer" alt="Profile" />
-            </div>
+            )}
           </div>
 
           <Outlet context={{
@@ -220,7 +222,7 @@ export default function DashboardLayout({ onLogout }) {
               </div>
               <span className="text-[10px] font-medium leading-none">{tab.label}</span>
               {badgeCount > 0 && (
-                <span className="absolute top-1 right-5 bg-red-500 text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                <span className="absolute top-1 right-5 bg-blue-600 text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
                   {badgeCount}
                 </span>
               )}

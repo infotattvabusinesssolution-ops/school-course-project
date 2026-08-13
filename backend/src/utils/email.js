@@ -166,44 +166,101 @@ export const sendPasswordResetEmail = async (email, resetLink) => {
   try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
 };
 
-// 3. Purchase Invoice
+// 3. Purchase Invoice (Rich Professional)
 export const sendPurchaseInvoiceEmail = async (email, name, orderDetails) => {
+  const invoiceNumber = orderDetails.invoiceNumber || 'N/A';
+  const invoiceDate = orderDetails.invoiceDate || new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Support both itemList (rich, from createAndSendInvoice) and simple itemName
+  const lineItemsHtml = orderDetails.itemList || `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid #e5e7eb;color:#374151;">${orderDetails.itemName}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #e5e7eb;text-align:right;color:#374151;">ZAR ${parseFloat(orderDetails.amount || 0).toFixed(2)}</td>
+    </tr>
+  `;
+
   const content = `
-    <p style="font-size: 16px; margin-bottom: 15px;">Hi ${name},</p>
-    <p style="font-size: 16px; margin-bottom: 15px;">Thank you for your recent purchase! Your payment was successful and your order is complete.</p>
-    
-    <div style="background-color: #f8f9fa; border-left: 4px solid #d4af37; padding: 20px; border-radius: 0 8px 8px 0; margin: 25px 0;">
-      <h3 style="margin-top: 0; color: #223e7c;">Order Details</h3>
-      <table style="width: 100%; font-size: 15px;">
-        <tr>
-          <td style="padding: 6px 0; color: #4b5563;"><strong>Item:</strong></td>
-          <td style="padding: 6px 0; color: #111827; text-align: right;">${orderDetails.itemName}</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 0; color: #4b5563;"><strong>Date:</strong></td>
-          <td style="padding: 6px 0; color: #111827; text-align: right;">${new Date().toLocaleDateString()}</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px 0 6px 0; color: #4b5563; border-top: 1px solid #e5e7eb;"><strong>Total Paid:</strong></td>
-          <td style="padding: 12px 0 6px 0; color: #10b981; text-align: right; font-size: 18px; font-weight: bold;">ZAR ${orderDetails.amount}</td>
-        </tr>
-      </table>
+    <p style="font-size: 16px; margin-bottom: 5px;">Hi <strong>${name}</strong>,</p>
+    <p style="font-size: 15px; color: #6b7280; margin-bottom: 25px;">Thank you for your purchase. Please find your official invoice below.</p>
+
+    <!-- Invoice Header Box -->
+    <div style="border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; margin-bottom:25px;">
+      
+      <!-- Invoice Meta -->
+      <div style="background:#f8fafc; padding:16px 20px; display:flex; justify-content:space-between; border-bottom:1px solid #e5e7eb;">
+        <table style="width:100%">
+          <tr>
+            <td style="font-size:20px;font-weight:bold;color:#223e7c;">TAX INVOICE</td>
+            <td style="text-align:right;font-size:13px;color:#6b7280;">
+              <strong style="color:#111827;">Invoice #:</strong> ${invoiceNumber}<br>
+              <strong style="color:#111827;">Date:</strong> ${invoiceDate}<br>
+              <strong style="color:#111827;">Status:</strong> <span style="color:#10b981;font-weight:bold;">PAID</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Billed To + From -->
+      <div style="padding:16px 20px; border-bottom:1px solid #e5e7eb;">
+        <table style="width:100%">
+          <tr>
+            <td style="vertical-align:top;width:50%;padding-right:10px;">
+              <p style="margin:0 0 4px 0;font-size:11px;text-transform:uppercase;color:#9ca3af;letter-spacing:1px;">Billed To</p>
+              <p style="margin:0;font-size:14px;font-weight:bold;color:#111827;">${name}</p>
+              <p style="margin:2px 0 0 0;font-size:13px;color:#6b7280;">${email}</p>
+            </td>
+            <td style="vertical-align:top;width:50%;text-align:right;padding-left:10px;">
+              <p style="margin:0 0 4px 0;font-size:11px;text-transform:uppercase;color:#9ca3af;letter-spacing:1px;">Issued By</p>
+              <p style="margin:0;font-size:14px;font-weight:bold;color:#223e7c;">CRMISA Academy</p>
+              <p style="margin:2px 0 0 0;font-size:13px;color:#6b7280;">admin@crmisa.co.za</p>
+              <p style="margin:2px 0 0 0;font-size:13px;color:#6b7280;">crmisa.co.za</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Line Items -->
+      <div style="padding:16px 20px;border-bottom:1px solid #e5e7eb;">
+        <table style="width:100%;font-size:14px;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#f1f5f9;">
+              <th style="padding:8px 6px;text-align:left;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Item / Description</th>
+              <th style="padding:8px 6px;text-align:right;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${lineItemsHtml}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total -->
+      <div style="padding:14px 20px;background:#f8fafc;">
+        <table style="width:100%;">
+          <tr>
+            <td style="font-size:16px;font-weight:bold;color:#111827;">Total Paid</td>
+            <td style="text-align:right;font-size:20px;font-weight:bold;color:#10b981;">ZAR ${parseFloat(orderDetails.amount || 0).toFixed(2)}</td>
+          </tr>
+        </table>
+      </div>
     </div>
-    
-    ${getButton("Access Your Purchase", "https://crmisa.co.za/dashboard")}
+
+    ${getButton("Go to Dashboard", "https://crmisa.co.za/dashboard")}
+    <p style="font-size:13px;color:#9ca3af;margin-top:20px;">This is your official invoice. Please save it for your records. For any queries, contact <a href="mailto:admin@crmisa.co.za" style="color:#223e7c;">admin@crmisa.co.za</a>.</p>
   `;
   const mailOptions = {
     from: `"${process.env.SMTP_FROM_NAME} Billing" <${process.env.SMTP_FROM_EMAIL}>`,
     to: email,
-    subject: "Your CRMISA Purchase Receipt & Invoice",
+    subject: `Invoice ${invoiceNumber} - CRMISA Purchase Receipt`,
     html: getEmailTemplate({
-      title: "Purchase Receipt",
-      subtitle: "Thank you for your business!",
+      title: "Purchase Invoice",
+      subtitle: "Official Tax Invoice",
       content,
     })
   };
   try { await transporter.sendMail(mailOptions); } catch (e) { console.error(e); }
 };
+
 
 // 4. Re-Exam Receipt
 export const sendReExamReceiptEmail = async (email, name) => {
