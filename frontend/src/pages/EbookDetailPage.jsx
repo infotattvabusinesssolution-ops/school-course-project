@@ -85,11 +85,10 @@ export default function EbookDetailPage({ onAddToCart }) {
 
         {/* Main Product Card */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start shadow-xs">
-          {/* Left Column: 3D Ebook Cover Graphic */}
           <div className="md:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-[280px] aspect-[3/4] rounded-r-2xl rounded-l-md overflow-hidden bg-crmisa-navy border-l-[20px] border-slate-800 shadow-[6px_6px_0px_#f8fafc,12px_12px_0px_#f1f5f9,18px_18px_0px_#e2e8f0,19px_19px_0px_#cbd5e1] flex flex-col justify-between group">
+            <div className="relative w-full max-w-[280px] aspect-[3/4] rounded-r-xl rounded-l-sm overflow-hidden bg-crmisa-navy border-l-[14px] border-slate-800 shadow-[4px_0px_0px_#f8fafc,8px_0px_0px_#f1f5f9,12px_0px_0px_#e2e8f0,13px_0px_0px_#cbd5e1] flex flex-col justify-between group">
               {/* Book Spine Highlight */}
-              <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white/20 to-transparent z-20 mix-blend-overlay"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-white/30 to-transparent z-20 mix-blend-overlay"></div>
               
               {ebook.coverImage ? (
                 <img src={ebook.coverImage} alt={ebook.title} className="absolute inset-0 w-full h-full object-cover z-0" />
@@ -97,14 +96,12 @@ export default function EbookDetailPage({ onAddToCart }) {
                 <div className="absolute inset-0 flex items-center justify-center bg-crmisa-accentNavy text-slate-500 font-bold text-sm z-0">No Cover</div>
               )}
               
-              {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/90 via-transparent to-crmisa-navy/40 z-10"></div>
-
-
+              {/* Fallback overlay if no image or to darken */}
+              <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/80 via-transparent to-crmisa-navy/40 z-10"></div>
 
               {/* Bottom Notice */}
-              <div className="relative z-20 p-5 text-[11px] font-bold text-slate-100 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 bg-crmisa-navy/80 px-2.5 py-1.5 rounded-md backdrop-blur-md shadow-sm">
+              <div className="relative z-20 p-3 text-[10px] font-bold text-slate-100 flex items-center justify-between">
+                <span className="flex items-center gap-1.5 bg-crmisa-navy/80 px-2 py-1 rounded-md backdrop-blur-md">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant PDF
                 </span>
               </div>
