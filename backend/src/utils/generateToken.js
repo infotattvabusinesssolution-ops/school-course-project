@@ -8,8 +8,8 @@ const generateToken = (res, userId) => {
   // Set JWT as HTTP-Only cookie
   res.cookie('jwt', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax', // Must be lax to allow cookies on redirects from Stripe
+    secure: true, // Always true - site runs on HTTPS
+    sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
