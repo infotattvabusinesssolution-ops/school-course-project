@@ -101,7 +101,7 @@ export default function Navbar({
             onClick={() => handleNavClick('/')}
             className="flex items-center cursor-pointer group py-1 z-[60] relative"
           >
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-16 lg:h-16 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               <img src="/image.png" alt="CRMISA Logo" className="w-full h-full object-contain" />
             </div>
           </div>
