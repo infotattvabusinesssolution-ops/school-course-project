@@ -12,14 +12,15 @@ const generatePayfastSignature = (payload, passPhrase = null) => {
     let pfOutput = "";
     for (let key in payload) {
         if(payload.hasOwnProperty(key)){
-            if (payload[key] !== "") {
-                pfOutput += `${key}=${encodeURIComponent(payload[key].toString().trim()).replace(/%20/g, "+")}&`
+            // Skip empty strings, nulls, and undefineds
+            if (payload[key] !== "" && payload[key] !== null && payload[key] !== undefined) {
+                pfOutput += `${key}=${encodeURIComponent(String(payload[key]).trim()).replace(/%20/g, "+")}&`
             }
         }
     }
     let getString = pfOutput.slice(0, -1);
     if (passPhrase) {
-        getString += `&passphrase=${encodeURIComponent(passPhrase.toString().trim()).replace(/%20/g, "+")}`;
+        getString += `&passphrase=${encodeURIComponent(String(passPhrase).trim()).replace(/%20/g, "+")}`;
     }
     return crypto.createHash("md5").update(getString).digest("hex");
 };
@@ -66,18 +67,19 @@ export const createPayfastOrder = asyncHandler(async (req, res, next) => {
   const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
   const m_payment_id = `course_${courseId}_${studentId}_${Date.now()}`;
 
+  const nameParts = (req.user.name || 'Student').trim().split(' ');
   const payload = {
     merchant_id,
     merchant_key,
     return_url: `${process.env.CLIENT_URL}/payment-success?type=course&id=${courseId}&m_payment_id=${m_payment_id}`,
     cancel_url: `${process.env.CLIENT_URL}/courses/${courseId}`,
     notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
-    name_first: req.user.name.split(' ')[0] || "Student",
-    name_last: req.user.name.split(' ')[1] || "",
-    email_address: req.user.email,
+    name_first: nameParts[0] || 'Student',
+    name_last: nameParts.slice(1).join(' ') || '',
+    email_address: req.user.email || '',
     m_payment_id,
     amount: finalPrice.toFixed(2),
-    item_name: course.title.substring(0, 100),
+    item_name: (course.title || 'Course').substring(0, 100),
   };
 
   payload.signature = generatePayfastSignature(payload, passphrase);
@@ -169,18 +171,19 @@ export const createEbookOrder = asyncHandler(async (req, res) => {
   const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
   const m_payment_id = `ebook_${ebookId}_${studentId}_${Date.now()}`;
 
+  const nameParts2 = (req.user.name || 'Student').trim().split(' ');
   const payload = {
     merchant_id,
     merchant_key,
     return_url: `${process.env.CLIENT_URL}/payment-success?type=ebook&id=${ebookId}&m_payment_id=${m_payment_id}`,
     cancel_url: `${process.env.CLIENT_URL}/ebook`,
     notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
-    name_first: req.user.name.split(' ')[0] || "Student",
-    name_last: req.user.name.split(' ')[1] || "",
-    email_address: req.user.email,
+    name_first: nameParts2[0] || 'Student',
+    name_last: nameParts2.slice(1).join(' ') || '',
+    email_address: req.user.email || '',
     m_payment_id,
     amount: finalPrice.toFixed(2),
-    item_name: ebook.title.substring(0, 100),
+    item_name: (ebook.title || 'Ebook').substring(0, 100),
   };
 
   payload.signature = generatePayfastSignature(payload, passphrase);
@@ -247,18 +250,19 @@ export const createCartOrder = asyncHandler(async (req, res) => {
   const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
   const m_payment_id = `cart_${studentId}_${Date.now()}`;
 
+  const nameParts3 = (req.user.name || 'Student').trim().split(' ');
   const payload = {
     merchant_id,
     merchant_key,
     return_url: `${process.env.CLIENT_URL}/payment-success?type=cart&m_payment_id=${m_payment_id}`,
     cancel_url: `${process.env.CLIENT_URL}/courses`,
     notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
-    name_first: req.user.name.split(' ')[0] || "Student",
-    name_last: req.user.name.split(' ')[1] || "",
-    email_address: req.user.email,
+    name_first: nameParts3[0] || 'Student',
+    name_last: nameParts3.slice(1).join(' ') || '',
+    email_address: req.user.email || '',
     m_payment_id,
     amount: totalAmount.toFixed(2),
-    item_name: `Skillwell Cart (${items.length} items)`,
+    item_name: `CRMISA Cart (${items.length} items)`,
   };
 
   payload.signature = generatePayfastSignature(payload, passphrase);
