@@ -27,6 +27,7 @@ import testimonialRoutes from './routes/testimonial.routes.js';
 import feedRoutes from './routes/feed.routes.js';
 import glossaryRoutes from './routes/glossary.routes.js';
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Nginx) to correctly get client IPs for rate limiting
 
 // Security Middlewares
 app.use(helmet());
