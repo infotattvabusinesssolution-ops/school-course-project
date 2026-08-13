@@ -181,7 +181,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-slate-900 font-sans selection:bg-sky-400 selection:text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen flex flex-col justify-between bg-crmisa-navy font-sans selection:bg-sky-400 selection:text-crmisa-navy overflow-x-hidden">
       <CookieConsent />
       {!hideLayout && (
         <Navbar

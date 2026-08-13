@@ -31,10 +31,10 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center space-x-3 pt-2 text-xs font-medium text-slate-400">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-crmisa-navy border border-slate-800">
                 <Globe className="w-3.5 h-3.5 text-blue-400" /> Global Trade
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-crmisa-navy border border-slate-800">
                 <Award className="w-3.5 h-3.5 text-amber-400" /> Certified
               </span>
             </div>

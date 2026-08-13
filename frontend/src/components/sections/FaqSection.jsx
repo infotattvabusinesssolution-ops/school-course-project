@@ -39,11 +39,11 @@ export default function FaqSection() {
 
         {/* Heading */}
         <div className="mb-10 text-center sm:text-left flex flex-col sm:flex-row items-center sm:items-start gap-4">
-          <div className="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+          <div className="w-11 h-11 rounded-xl bg-crmisa-navy text-white flex items-center justify-center shrink-0 mt-0.5">
             <HelpCircle className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-crmisa-navy tracking-tight leading-tight">
               Frequently Asked Questions
             </h2>
             <p className="text-slate-500 text-sm mt-2">
@@ -61,14 +61,14 @@ export default function FaqSection() {
                 key={i}
                 className={`border rounded-xl overflow-hidden transition-all duration-200 ${
                   isOpen
-                    ? 'border-slate-900 shadow-sm'
+                    ? 'border-crmisa-navy shadow-sm'
                     : 'border-slate-200 hover:border-slate-400'
                 }`}
               >
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : i)}
                   className={`w-full px-5 py-4 text-left flex items-center justify-between gap-4 transition-colors ${
-                    isOpen ? 'bg-slate-900 text-white' : 'bg-white text-slate-800 hover:bg-slate-50'
+                    isOpen ? 'bg-crmisa-navy text-white' : 'bg-white text-crmisa-accentNavy hover:bg-slate-50'
                   }`}
                 >
                   <span className="text-sm font-semibold leading-snug">
@@ -103,7 +103,7 @@ export default function FaqSection() {
         <div className="text-center">
           <Link
             to="/faq"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-full transition-colors text-sm uppercase tracking-wider"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-crmisa-navy font-bold rounded-full transition-colors text-sm uppercase tracking-wider"
           >
             View More FAQs <ArrowRight className="w-4 h-4" />
           </Link>

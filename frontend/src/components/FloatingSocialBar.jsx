@@ -23,10 +23,10 @@ export default function FloatingSocialBar() {
     },
     {
       name: 'TikTok',
-      bgClass: 'bg-black',
+      bgClass: 'bg-crmisa-darkNavy',
       hoverBgClass: 'hover:bg-white',
       textClass: 'text-white',
-      hoverTextClass: 'group-hover:text-black',
+      hoverTextClass: 'group-hover:text-crmisa-darkNavy',
       Icon: TikTokIcon,
       url: 'https://www.tiktok.com/@_crmisa3',
     },

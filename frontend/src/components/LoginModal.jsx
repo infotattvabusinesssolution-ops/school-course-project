@@ -34,7 +34,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
         
         {/* Header matching Image 2 */}
         <div className="space-y-1">
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+          <h3 className="text-2xl font-black text-crmisa-navy tracking-tight">
             LOGIN <span className="text-[#1c3c78]">CRMISA</span>
           </h3>
           <p className="text-sm text-slate-500 font-medium">
@@ -52,7 +52,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
           
           {/* Email Address */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">
               Email Address
             </label>
             <input
@@ -60,14 +60,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               placeholder="Enter your email address"
             />
           </div>
 
           {/* Password with Eye Toggle */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">
               Password
             </label>
             <div className="relative">
@@ -76,7 +76,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 pr-11 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+                className="w-full px-4 py-3 pr-11 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               />
               <button
                 type="button"

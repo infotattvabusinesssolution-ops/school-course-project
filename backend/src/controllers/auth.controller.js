@@ -4,6 +4,7 @@ import generateToken from '../utils/generateToken.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { sendAccountWelcomeEmail } from "../utils/email.js";
 import crypto from 'crypto';
 
 import { uploadImageOnCloudinary } from '../utils/cloudinary.js';
@@ -44,6 +45,12 @@ export const signup = asyncHandler(async (req, res) => {
     // Create Profile
     if (user.role === 'STUDENT') {
       await StudentProfile.create({ userId: user._id });
+    }
+
+    try {
+      sendAccountWelcomeEmail(user.email, user.name);
+    } catch (e) {
+      console.error(e);
     }
 
     const token = generateToken(res, user._id);

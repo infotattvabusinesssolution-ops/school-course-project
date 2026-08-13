@@ -40,7 +40,7 @@ const isDirectVideo = (url) => {
 function VideoPlayer({ videoUrl }) {
   if (!videoUrl) {
     return (
-      <div className="w-full aspect-video bg-slate-900 flex flex-col items-center justify-center gap-3">
+      <div className="w-full aspect-video bg-crmisa-navy flex flex-col items-center justify-center gap-3">
         <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
           <Play className="w-7 h-7 text-white ml-1" />
         </div>
@@ -52,7 +52,7 @@ function VideoPlayer({ videoUrl }) {
   const ytId = getYouTubeId(videoUrl);
   if (ytId) {
     return (
-      <div className="w-full aspect-video bg-black shadow-lg">
+      <div className="w-full aspect-video bg-crmisa-darkNavy shadow-lg">
         <iframe
           className="w-full h-full"
           src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`}
@@ -76,7 +76,7 @@ function VideoPlayer({ videoUrl }) {
   }
 
   return (
-    <div className="w-full aspect-video bg-slate-900 flex flex-col items-center justify-center gap-3">
+    <div className="w-full aspect-video bg-crmisa-navy flex flex-col items-center justify-center gap-3">
       <Play className="w-12 h-12 text-white/30" />
       <a href={videoUrl} target="_blank" rel="noreferrer" className="text-blue-400 underline text-sm">
         Open video link
@@ -164,7 +164,7 @@ export default function CourseDetailsPremiumPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy"></div>
       </div>
     );
   }
@@ -172,9 +172,9 @@ export default function CourseDetailsPremiumPage() {
   if (error === "not-enrolled") {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 gap-4 text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Access Restricted</h2>
+        <h2 className="text-2xl font-bold text-crmisa-navy">Access Restricted</h2>
         <p className="text-slate-500 text-lg max-w-sm">You need to enroll to access the premium content for this course.</p>
-        <button onClick={() => navigate(`/courses/${courseId}`)} className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg mt-4">
+        <button onClick={() => navigate(`/courses/${courseId}`)} className="px-6 py-2.5 bg-crmisa-navy text-white text-sm font-semibold rounded-lg mt-4">
           View Public Course Details
         </button>
       </div>
@@ -184,14 +184,14 @@ export default function CourseDetailsPremiumPage() {
   if (error || !course) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 gap-4 text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Course Not Found</h2>
-        <button onClick={() => navigate("/dashboard")} className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg">Dashboard</button>
+        <h2 className="text-2xl font-bold text-crmisa-navy">Course Not Found</h2>
+        <button onClick={() => navigate("/dashboard")} className="px-6 py-2.5 bg-crmisa-navy text-white text-sm font-semibold rounded-lg">Dashboard</button>
       </div>
     );
   }
 
   return (
-    <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-slate-800">
+    <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-crmisa-accentNavy">
       
       
       {/* ── Main Content Area ── */}
@@ -220,7 +220,7 @@ export default function CourseDetailsPremiumPage() {
                   {course.category}
                 </span>
                 
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-crmisa-navy mb-3 leading-tight">
                   {course.title}
                 </h1>
                 
@@ -233,7 +233,7 @@ export default function CourseDetailsPremiumPage() {
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium text-slate-600 mt-auto">
                   <div className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 text-amber-500 fill-current" />
-                    <span className="font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+                    <span className="font-bold text-crmisa-navy">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
                     <span>({course.reviewCount || 0} reviews)</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -245,7 +245,7 @@ export default function CourseDetailsPremiumPage() {
             </div>
             
             <section>
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Course</h2>
+              <h2 className="text-2xl font-bold text-crmisa-navy mb-4">About This Course</h2>
               <div className="text-slate-600 leading-relaxed text-base sm:text-lg whitespace-pre-wrap">
                 <p>{course.description}</p>
               </div>
@@ -253,11 +253,11 @@ export default function CourseDetailsPremiumPage() {
 
             {course.whatYouWillLearn && course.whatYouWillLearn.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">What you'll learn</h2>
+                <h2 className="text-2xl font-bold text-crmisa-navy mb-6">What you'll learn</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                   {course.whatYouWillLearn.map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-slate-900 shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-crmisa-navy shrink-0 mt-0.5" />
                       <span className="text-slate-700">{item}</span>
                     </div>
                   ))}
@@ -267,11 +267,11 @@ export default function CourseDetailsPremiumPage() {
 
             {/* Student Reviews Section */}
             <section className="pt-8 border-t border-slate-200">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Student Reviews</h2>
+              <h2 className="text-2xl font-bold text-crmisa-navy mb-6">Student Reviews</h2>
               
               <div className="flex items-center gap-4 mb-8 bg-slate-50 p-6 border border-slate-200 rounded-lg">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</div>
+                  <div className="text-5xl font-bold text-crmisa-navy">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</div>
                   <div className="flex items-center justify-center gap-1 my-2 text-amber-500">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star key={star} className={`w-4 h-4 ${star <= Math.round(course.averageRating || 0) ? 'fill-current' : 'text-slate-300'}`} />
@@ -301,7 +301,7 @@ export default function CourseDetailsPremiumPage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-bold text-slate-900">{review.student?.name || 'Anonymous User'}</h4>
+                            <h4 className="font-bold text-crmisa-navy">{review.student?.name || 'Anonymous User'}</h4>
                             <span className="text-xs text-slate-400">• {new Date(review.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center gap-1 mb-3 text-amber-500">
@@ -324,7 +324,7 @@ export default function CourseDetailsPremiumPage() {
             <div className="border border-slate-200 bg-white rounded-2xl shadow-xl overflow-hidden">
               
               <div className="p-6 sm:p-8 bg-slate-50 border-b border-slate-200">
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Content</h3>
+                <h3 className="text-2xl font-bold text-crmisa-navy mb-2">Premium Content</h3>
                 <p className="text-sm text-slate-500">You have full access to this course.</p>
               </div>
 
@@ -350,7 +350,7 @@ export default function CourseDetailsPremiumPage() {
                       href={course.pdfGuideUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-lg rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
+                      className="w-full py-3.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-semibold text-lg rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
                     >
                       <FileText className="w-5 h-5" /> View PDF Guide
                     </a>
@@ -389,11 +389,11 @@ export default function CourseDetailsPremiumPage() {
       {/* Video Modal */}
       {isVideoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/90 backdrop-blur-sm">
-          <div className="relative w-full max-w-5xl bg-black rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div className="relative w-full max-w-5xl bg-crmisa-darkNavy rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             <div className="absolute top-0 right-0 z-10 p-4">
               <button 
                 onClick={() => setIsVideoModalOpen(false)}
-                className="w-10 h-10 bg-black/50 hover:bg-black text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
+                className="w-10 h-10 bg-crmisa-darkNavy/50 hover:bg-crmisa-darkNavy text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
               >
                 <X className="w-6 h-6" />
               </button>

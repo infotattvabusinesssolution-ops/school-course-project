@@ -57,7 +57,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, swit
         
         {/* Header */}
         <div className="space-y-1">
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+          <h3 className="text-2xl font-black text-crmisa-navy tracking-tight">
             JOIN <span className="text-[#1c3c78]">CRMISA</span>
           </h3>
           <p className="text-sm text-slate-500 font-medium">
@@ -74,50 +74,50 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, swit
           )}
           
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Full Name</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Full Name</label>
             <input
               type="text"
               required
               value={formData.fullName}
               onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               placeholder="John Doe"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Email Address</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Email Address</label>
             <input
               type="email"
               required
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               placeholder="john@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Phone Number</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Phone Number</label>
             <input
               type="tel"
               required
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               placeholder="+27 82 123 4567"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Password</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+                className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
                 placeholder="••••••••"
               />
               <button
@@ -131,19 +131,19 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, swit
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Confirm Password</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Confirm Password</label>
             <input
               type="password"
               required
               value={formData.confirmPassword}
               onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               placeholder="••••••••"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1.5">Profile Photo (Optional)</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1.5">Profile Photo (Optional)</label>
             <input
               type="file"
               accept="image/*"

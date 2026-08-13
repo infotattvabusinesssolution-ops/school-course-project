@@ -56,6 +56,10 @@ const examSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    reExamFee: {
+      type: Number,
+      default: 500,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

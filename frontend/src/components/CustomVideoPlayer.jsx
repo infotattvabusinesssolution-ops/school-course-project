@@ -238,7 +238,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
       onClick={(e) => {
         if (e.target === containerRef.current || e.target === videoRef.current) togglePlay();
       }}
-      className="relative w-full aspect-video bg-black rounded-xl overflow-hidden outline-none group select-none"
+      className="relative w-full aspect-video bg-crmisa-darkNavy rounded-xl overflow-hidden outline-none group select-none"
       style={{ cursor: showControls ? "default" : "none" }}
     >
       {/* Video element */}
@@ -258,7 +258,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
       {/* Buffering spinner */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <div className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm">
+          <div className="w-14 h-14 rounded-full bg-crmisa-darkNavy/40 flex items-center justify-center backdrop-blur-sm">
             <Loader className="w-6 h-6 text-white animate-spin" />
           </div>
         </div>
@@ -267,7 +267,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
       {/* Big play/pause indicator on click */}
       {!loading && !playing && (
         <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <div className="w-20 h-20 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
+          <div className="w-20 h-20 rounded-full bg-crmisa-darkNavy/50 flex items-center justify-center backdrop-blur-sm">
             <Play className="w-9 h-9 text-white ml-1.5" />
           </div>
         </div>
@@ -275,7 +275,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
 
       {/* Top gradient (title bar) */}
       <div
-        className={`absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/70 to-transparent z-20 flex items-start px-4 pt-3 transition-opacity duration-300 ${
+        className={`absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-crmisa-darkNavy/70 to-transparent z-20 flex items-start px-4 pt-3 transition-opacity duration-300 ${
           showControls ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -291,7 +291,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
         }`}
       >
         {/* Bottom gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-crmisa-darkNavy/80 via-black/30 to-transparent pointer-events-none" />
 
         <div className="relative px-4 pb-3 pt-8">
           {/* ── Progress bar ── */}
@@ -433,7 +433,7 @@ export default function CustomVideoPlayer({ src, title, autoPlay = true, onProgr
                 </button>
 
                 {showSpeedMenu && (
-                  <div className="absolute bottom-full right-0 mb-2 bg-slate-900/95 backdrop-blur rounded-xl overflow-hidden shadow-2xl border border-white/10 min-w-[90px]">
+                  <div className="absolute bottom-full right-0 mb-2 bg-crmisa-navy/95 backdrop-blur rounded-xl overflow-hidden shadow-2xl border border-white/10 min-w-[90px]">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pt-2.5 pb-1">Speed</p>
                     {SPEEDS.map((s) => (
                       <button

@@ -157,7 +157,7 @@ export default function AdminCourseTab() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy"></div>
       </div>
     );
   }
@@ -168,7 +168,7 @@ export default function AdminCourseTab() {
       {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 border border-slate-200">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Course Management</h2>
+          <h2 className="text-xl font-bold text-crmisa-navy">Course Management</h2>
           <p className="text-sm text-slate-500 mt-1">Manage, edit, and publish your courses.</p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -181,7 +181,7 @@ export default function AdminCourseTab() {
               placeholder="Search courses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-9 pr-3 py-2 border border-slate-200 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+              className="block w-full pl-9 pr-3 py-2 border border-slate-200 text-sm focus:outline-none focus:border-crmisa-navy transition-colors"
             />
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function AdminCourseTab() {
       <div className="bg-white border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-slate-900 text-xs uppercase font-semibold border-b border-slate-200">
+            <thead className="bg-slate-50 text-crmisa-navy text-xs uppercase font-semibold border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4">Course Info</th>
                 <th className="px-6 py-4">Price</th>
@@ -222,12 +222,12 @@ export default function AdminCourseTab() {
                           )}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900 line-clamp-1">{course.title}</div>
+                          <div className="font-bold text-crmisa-navy line-clamp-1">{course.title}</div>
                           <div className="text-xs text-slate-500 mt-1">{course.category} • {course.level}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-medium text-slate-900">
+                    <td className="px-6 py-4 font-medium text-crmisa-navy">
                       R{course.price}
                     </td>
                     <td className="px-6 py-4">
@@ -242,7 +242,7 @@ export default function AdminCourseTab() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-slate-400" />
-                        <span className="font-medium text-slate-900">{course.totalEnrollments || 0}</span>
+                        <span className="font-medium text-crmisa-navy">{course.totalEnrollments || 0}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
@@ -271,20 +271,20 @@ export default function AdminCourseTab() {
 
       {/* Edit Course Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm sm:p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-crmisa-navy/50 backdrop-blur-sm sm:p-4">
           <div className="relative w-full h-full sm:h-auto max-w-4xl bg-white sm:shadow-xl sm:border border-slate-200 max-h-screen sm:max-h-[90vh] flex flex-col sm:rounded-xl">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-slate-200 shrink-0 bg-slate-50">
               <div>
-                <h3 className="text-xl font-bold text-slate-900">
+                <h3 className="text-xl font-bold text-crmisa-navy">
                   Edit Course
                 </h3>
                 <p className="text-sm text-slate-500 mt-1">Update course metadata, pricing, and imagery.</p>
               </div>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
-                className="text-slate-400 hover:text-slate-900 transition-colors"
+                className="text-slate-400 hover:text-crmisa-navy transition-colors"
               >
                 <span className="sr-only">Close modal</span>
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -299,7 +299,7 @@ export default function AdminCourseTab() {
                 
                 {/* Basic Info */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Basic Information</h4>
+                  <h4 className="text-sm font-bold text-crmisa-navy uppercase tracking-wider border-b border-slate-100 pb-2">Basic Information</h4>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
@@ -309,7 +309,7 @@ export default function AdminCourseTab() {
                         required
                         value={formData.title}
                         onChange={(e) => setFormData({...formData, title: e.target.value})}
-                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                       />
                     </div>
                     
@@ -319,7 +319,7 @@ export default function AdminCourseTab() {
                         type="text"
                         value={formData.subtitle}
                         onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
-                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                       />
                     </div>
                   </div>
@@ -331,14 +331,14 @@ export default function AdminCourseTab() {
                       rows="4"
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
-                      className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                      className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                     />
                   </div>
                 </div>
 
                 {/* Classification & Pricing */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Classification & Pricing</h4>
+                  <h4 className="text-sm font-bold text-crmisa-navy uppercase tracking-wider border-b border-slate-100 pb-2">Classification & Pricing</h4>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
@@ -346,7 +346,7 @@ export default function AdminCourseTab() {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                       >
                         <option value="Full Certification">Full Certification</option>
                         <option value="Customs & Compliance">Customs & Compliance</option>
@@ -361,7 +361,7 @@ export default function AdminCourseTab() {
                       <select
                         value={formData.level}
                         onChange={(e) => setFormData({...formData, level: e.target.value})}
-                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                       >
                         <option value="all">All Levels</option>
                         <option value="beginner">Beginner</option>
@@ -378,7 +378,7 @@ export default function AdminCourseTab() {
                         required
                         value={formData.price}
                         onChange={(e) => setFormData({...formData, price: Number(e.target.value)})}
-                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                        className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm"
                       />
                     </div>
                   </div>
@@ -386,12 +386,12 @@ export default function AdminCourseTab() {
 
                 {/* Media Links */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Media Paths</h4>
+                  <h4 className="text-sm font-bold text-crmisa-navy uppercase tracking-wider border-b border-slate-100 pb-2">Media Paths</h4>
                   
                   <div className="space-y-4">
                     {/* Thumbnail Upload */}
                     <div className="space-y-2 border border-slate-200 p-4 rounded-md">
-                      <label className="text-sm font-bold text-slate-900">Thumbnail Image (4:3 Card Image)</label>
+                      <label className="text-sm font-bold text-crmisa-navy">Thumbnail Image (4:3 Card Image)</label>
                       <div className="flex items-center gap-4">
                          <div className="w-24 aspect-[4/3] bg-slate-100 shrink-0 border border-slate-200">
                            {formData.thumbnailUrl ? (
@@ -423,7 +423,7 @@ export default function AdminCourseTab() {
                     
                     {/* Banner Upload */}
                     <div className="space-y-2 border border-slate-200 p-4 rounded-md">
-                      <label className="text-sm font-bold text-slate-900">Banner Image (16:9 Details Header)</label>
+                      <label className="text-sm font-bold text-crmisa-navy">Banner Image (16:9 Details Header)</label>
                       <div className="flex items-center gap-4">
                          <div className="w-32 aspect-[16/9] bg-slate-100 shrink-0 border border-slate-200">
                            {formData.bannerUrl ? (
@@ -455,7 +455,7 @@ export default function AdminCourseTab() {
                     
                     {/* Video Upload */}
                     <div className="space-y-2 border border-slate-200 p-4 rounded-md">
-                      <label className="text-sm font-bold text-slate-900">Course Video</label>
+                      <label className="text-sm font-bold text-crmisa-navy">Course Video</label>
                       <div className="flex items-center gap-4">
                          <div className="w-24 aspect-video bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center">
                            {formData.videoUrl ? (
@@ -485,7 +485,7 @@ export default function AdminCourseTab() {
 
                     {/* PDF Guide Upload */}
                     <div className="space-y-2 border border-slate-200 p-4 rounded-md">
-                      <label className="text-sm font-bold text-slate-900">PDF Guide</label>
+                      <label className="text-sm font-bold text-crmisa-navy">PDF Guide</label>
                       <div className="flex items-center gap-4">
                          <div className="w-24 aspect-[3/4] bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center">
                            {formData.pdfGuideUrl ? (
@@ -517,14 +517,14 @@ export default function AdminCourseTab() {
 
                 {/* Status */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Visibility</h4>
+                  <h4 className="text-sm font-bold text-crmisa-navy uppercase tracking-wider border-b border-slate-100 pb-2">Visibility</h4>
                   
                   <div className="space-y-1.5 max-w-xs">
                     <label className="text-sm font-medium text-slate-700">Course Status</label>
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData({...formData, status: e.target.value})}
-                      className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-slate-900 transition-colors text-sm font-medium"
+                      className="w-full px-3 py-2 border border-slate-200 focus:outline-none focus:border-crmisa-navy transition-colors text-sm font-medium"
                     >
                       <option value="DRAFT">DRAFT (Hidden)</option>
                       <option value="PUBLISHED">PUBLISHED (Visible)</option>
@@ -540,14 +540,14 @@ export default function AdminCourseTab() {
               <button 
                 type="button"
                 onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-crmisa-navy transition-colors"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
                 form="editCourseForm"
-                className="px-6 py-2 bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-colors"
+                className="px-6 py-2 bg-crmisa-navy text-white text-sm font-bold hover:bg-crmisa-accentNavy transition-colors"
               >
                 Save Changes
               </button>

@@ -69,7 +69,7 @@ export default function DashboardProfile() {
         {/* Profile Photo Update */}
         <div className="flex flex-col items-start text-left space-y-6">
           <div>
-            <h3 className="text-xl font-black text-black">Avatar & Details</h3>
+            <h3 className="text-xl font-black text-crmisa-darkNavy">Avatar & Details</h3>
             <p className="text-sm text-slate-500 mt-1">Update your profile picture</p>
           </div>
           
@@ -86,12 +86,12 @@ export default function DashboardProfile() {
                 type="file" 
                 accept="image/*"
                 onChange={(e) => setProfilePhoto(e.target.files[0])}
-                className="max-w-xs text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer transition-colors"
+                className="max-w-xs text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-crmisa-navy file:text-white hover:file:bg-crmisa-accentNavy cursor-pointer transition-colors"
               />
               <button 
                 onClick={handleUpdateProfilePhoto}
                 disabled={!profilePhoto || isUploading}
-                className="px-8 py-2.5 bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-slate-800 transition-colors"
+                className="px-8 py-2.5 bg-crmisa-darkNavy text-white text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-crmisa-accentNavy transition-colors"
               >
                 {isUploading ? "Uploading..." : "Save Photo"}
               </button>
@@ -102,42 +102,42 @@ export default function DashboardProfile() {
         {/* Password Reset */}
         <div className="space-y-6">
           <div>
-            <h3 className="text-xl font-black text-black">Security</h3>
+            <h3 className="text-xl font-black text-crmisa-darkNavy">Security</h3>
             <p className="text-sm text-slate-500 mt-1">Ensure your account is using a long, random password to stay secure.</p>
           </div>
           
           <div className="space-y-5 max-w-md w-full">
             <div>
-              <label className="block text-sm font-bold text-slate-900 mb-1.5">Current Password</label>
+              <label className="block text-sm font-bold text-crmisa-navy mb-1.5">Current Password</label>
               <input 
                 type="password" 
                 value={oldPassword}
                 onChange={e => setOldPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-black outline-none text-sm transition-all bg-white"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-crmisa-darkNavy outline-none text-sm transition-all bg-white"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-900 mb-1.5">New Password</label>
+              <label className="block text-sm font-bold text-crmisa-navy mb-1.5">New Password</label>
               <input 
                 type="password" 
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-black outline-none text-sm transition-all bg-white"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-crmisa-darkNavy outline-none text-sm transition-all bg-white"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-900 mb-1.5">Confirm New Password</label>
+              <label className="block text-sm font-bold text-crmisa-navy mb-1.5">Confirm New Password</label>
               <input 
                 type="password" 
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-black outline-none text-sm transition-all bg-white"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-black focus:border-crmisa-darkNavy outline-none text-sm transition-all bg-white"
               />
             </div>
             <button 
               onClick={handleResetPassword}
               disabled={isUpdatingPassword}
-              className="px-6 py-3 bg-black text-white text-sm font-bold rounded-lg hover:bg-slate-800 transition-colors w-full disabled:opacity-70 mt-2"
+              className="px-6 py-3 bg-crmisa-darkNavy text-white text-sm font-bold rounded-lg hover:bg-crmisa-accentNavy transition-colors w-full disabled:opacity-70 mt-2"
             >
               {isUpdatingPassword ? "Updating..." : "Update Password"}
             </button>

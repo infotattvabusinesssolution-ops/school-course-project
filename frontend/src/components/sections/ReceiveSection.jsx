@@ -16,7 +16,7 @@ export default function ReceiveSection() {
   ];
 
   return (
-    <section className="w-full bg-slate-50 text-slate-800 flex flex-col lg:flex-row">
+    <section className="w-full bg-slate-50 text-crmisa-accentNavy flex flex-col lg:flex-row">
       
       {/* Left Side: Full Bleed Image */}
       <div className="w-full lg:w-1/2 min-h-[400px] lg:min-h-[700px] relative overflow-hidden group">
@@ -59,7 +59,7 @@ export default function ReceiveSection() {
                 Program Benefits
               </span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl">
               What You Will<br />Receive
             </h2>
           </div>

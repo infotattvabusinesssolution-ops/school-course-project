@@ -25,7 +25,7 @@ export default function CookieConsent() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-200 text-black p-4 md:p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 animate-slide-up flex flex-col md:flex-row gap-4 items-center justify-between">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-200 text-crmisa-darkNavy p-4 md:p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 animate-slide-up flex flex-col md:flex-row gap-4 items-center justify-between">
       <div className="flex-1 w-full">
         <h4 className="font-bold text-gray-900 mb-1 flex items-center gap-2 text-lg">
           <span className="material-symbols-outlined text-gray-700">
@@ -47,7 +47,7 @@ export default function CookieConsent() {
         </button>
         <button
           onClick={handleAccept}
-          className="px-6 py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap"
+          className="px-6 py-2.5 bg-crmisa-darkNavy hover:bg-gray-800 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap"
         >
           Accept All
         </button>

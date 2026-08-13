@@ -7,6 +7,10 @@ import Enrollment from "../models/Enrollment.model.js";
 import EbookPurchase from "../models/EbookPurchase.model.js";
 import Progress from "../models/Progress.model.js";
 import Coupon from "../models/Coupon.model.js";
+import Order from "../models/Order.model.js";
+import Exam from "../models/Exam.model.js";
+import User from "../models/User.model.js";
+import { sendPurchaseInvoiceEmail, sendReExamReceiptEmail } from "../utils/email.js";
 
 const generatePayfastSignature = (payload, passPhrase = null) => {
     let pfOutput = "";
@@ -132,6 +136,13 @@ export const verifyPayfastPaymentSimulated = asyncHandler(async (req, res, next)
   }
 
   const courseDetails = await Course.findById(courseId).populate('admin', 'name email');
+  const user = await User.findById(studentId);
+  if (user && courseDetails) {
+    sendPurchaseInvoiceEmail(user.email, user.name, {
+      itemName: courseDetails.title,
+      amount: courseDetails.price
+    });
+  }
 
   res.status(200).json({
     success: true,
@@ -213,6 +224,13 @@ export const verifyEbookPaymentSimulated = asyncHandler(async (req, res) => {
         razorpayPaymentId: "simulated_pf_" + Date.now(),
         purchasedAt: new Date(),
       });
+      const user = await User.findById(studentId);
+      if (user && ebook) {
+        sendPurchaseInvoiceEmail(user.email, user.name, {
+          itemName: ebook.title,
+          amount: ebook.price
+        });
+      }
     }
 
     return res.status(200).json({ success: true, purchase });
@@ -267,8 +285,14 @@ export const createCartOrder = asyncHandler(async (req, res) => {
 
   payload.signature = generatePayfastSignature(payload, passphrase);
 
-  // Store items info temporarily so it can be retrieved on success or simulated success
-  // Note: For a robust system we'd save a "PendingOrder" in DB. Since this is an MVP cart, we can pass items in simulated call
+  const orderItems = items.map(i => ({ type: i.type, id: i.id, price: i.price }));
+  await Order.create({
+    student: studentId,
+    m_payment_id,
+    items: orderItems,
+    totalAmount
+  });
+
   res.status(200).json({ success: true, payload, actionUrl, m_payment_id });
 });
 
@@ -319,6 +343,62 @@ export const verifyCartPaymentSimulated = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({ success: true, message: "Cart items purchased successfully" });
 });
+
+export const createReexamPayment = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const studentId = req.user._id;
+
+  const exam = await Exam.findOne({ course: courseId });
+  if (!exam) throw new ApiError(404, "Exam not found for this course");
+
+  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
+  if (!enrollment) throw new ApiError(400, "You must be enrolled to take the exam");
+
+  const finalPrice = exam.reExamFee || 500;
+  
+  const { merchant_id, merchant_key, passphrase, actionUrl } = getPayfastConfig();
+  const m_payment_id = `reexam_${courseId}_${studentId}_${Date.now()}`;
+
+  const nameParts = (req.user.name || 'Student').trim().split(' ');
+  const payload = {
+    merchant_id,
+    merchant_key,
+    return_url: `${process.env.CLIENT_URL}/payment-success?type=reexam&id=${courseId}&m_payment_id=${m_payment_id}`,
+    cancel_url: `${process.env.CLIENT_URL}/dashboard/exams`,
+    notify_url: `${process.env.SERVER_URL}/api/payments/payfast-itn`,
+    name_first: nameParts[0] || 'Student',
+    name_last: nameParts.slice(1).join(' ') || '',
+    email_address: req.user.email || '',
+    m_payment_id,
+    amount: finalPrice.toFixed(2),
+    item_name: `Re-Exam Fee`,
+  };
+
+  payload.signature = generatePayfastSignature(payload, passphrase);
+
+  res.status(200).json({ success: true, payload, actionUrl, m_payment_id });
+});
+
+export const verifyReexamPaymentSimulated = asyncHandler(async (req, res) => {
+  if (process.env.SIMULATE_PAYMENT !== "true") {
+      throw new ApiError(400, "Simulated payments are disabled");
+  }
+  const { courseId, m_payment_id } = req.body;
+  const studentId = req.user._id;
+
+  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
+  if (enrollment) {
+      enrollment.reexamPaid = true;
+      await enrollment.save();
+      const user = await User.findById(studentId);
+      if (user) {
+         sendReExamReceiptEmail(user.email, user.name);
+      }
+  }
+
+  return res.status(200).json({ success: true, message: "Re-exam payment simulated successfully" });
+});
+
 
 export const payfastItnHandler = asyncHandler(async (req, res) => {
     // Payfast sends a POST request here
@@ -372,6 +452,8 @@ export const payfastItnHandler = asyncHandler(async (req, res) => {
                     await Course.findByIdAndUpdate(courseId, { $inc: { totalEnrollments: 1, totalRevenue: course.price }});
                     const totalLessons = (course.modules || []).reduce((acc, mod) => acc + (mod.lessons ? mod.lessons.length : 0), 0);
                     await Progress.create({ student: studentId, course: courseId, completedLessons: [], totalLessons: totalLessons });
+                    const user = await User.findById(studentId);
+                    if (user) sendPurchaseInvoiceEmail(user.email, user.name, { itemName: course.title, amount: parseFloat(pfData.amount_gross) });
                 }
             }
         } else if (type === 'ebook') {
@@ -388,9 +470,65 @@ export const payfastItnHandler = asyncHandler(async (req, res) => {
                     razorpayPaymentId: pfData.pf_payment_id,
                     purchasedAt: new Date(),
                 });
+                const user = await User.findById(studentId);
+                const ebook = await Ebook.findById(ebookId);
+                if (user && ebook) sendPurchaseInvoiceEmail(user.email, user.name, { itemName: ebook.title, amount: parseFloat(pfData.amount_gross) });
+            }
+        } else if (type === 'reexam') {
+            const courseId = parts[1];
+            const studentId = parts[2];
+            const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
+            if (enrollment) {
+                enrollment.reexamPaid = true;
+                await enrollment.save();
+                const user = await User.findById(studentId);
+                if (user) sendReExamReceiptEmail(user.email, user.name);
+            }
+        } else if (type === 'cart') {
+            const order = await Order.findOne({ m_payment_id });
+            if (order && order.status !== "COMPLETED") {
+                const studentId = order.student;
+                for (const item of order.items) {
+                    if (item.type === 'course') {
+                        let enrollment = await Enrollment.findOne({ student: studentId, course: item.id });
+                        if (!enrollment) {
+                            const course = await Course.findById(item.id);
+                            if (course) {
+                                await Enrollment.create({
+                                    student: studentId,
+                                    course: item.id,
+                                    enrolledAt: new Date(),
+                                    status: "ACTIVE",
+                                    razorpayOrderId: m_payment_id,
+                                    razorpayPaymentId: pfData.pf_payment_id,
+                                    amountPaid: item.price || 0, 
+                                });
+                                await Course.findByIdAndUpdate(item.id, { $inc: { totalEnrollments: 1, totalRevenue: item.price || 0 }});
+                                const totalLessons = (course.modules || []).reduce((acc, mod) => acc + (mod.lessons ? mod.lessons.length : 0), 0);
+                                await Progress.create({ student: studentId, course: item.id, completedLessons: [], totalLessons: totalLessons });
+                            }
+                        }
+                    } else if (item.type === 'ebook') {
+                        let purchase = await EbookPurchase.findOne({ student: studentId, ebook: item.id });
+                        if (!purchase) {
+                            await EbookPurchase.create({
+                                student: studentId,
+                                ebook: item.id,
+                                amountPaid: item.price || 0,
+                                status: "PAID",
+                                razorpayOrderId: m_payment_id,
+                                razorpayPaymentId: pfData.pf_payment_id,
+                                purchasedAt: new Date(),
+                            });
+                        }
+                    }
+                }
+                order.status = "COMPLETED";
+                await order.save();
+                const user = await User.findById(studentId);
+                if (user) sendPurchaseInvoiceEmail(user.email, user.name, { itemName: "CRMISA Cart Purchase", amount: parseFloat(pfData.amount_gross) });
             }
         }
-        // For cart we'd need a more complex tracking mechanism like a pending order in DB mapped to m_payment_id
     }
     
     res.status(200).send("OK");

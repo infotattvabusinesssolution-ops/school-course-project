@@ -81,7 +81,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   if (loading) {
     return (
       <div className="py-32 bg-white min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy"></div>
       </div>
     );
   }
@@ -89,9 +89,9 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   if (!course) {
     return (
       <div className="py-32 bg-white min-h-screen flex flex-col items-center justify-center text-center px-4">
-        <h2 className="text-2xl font-semibold text-slate-900 mb-2">Course Not Found</h2>
+        <h2 className="text-2xl font-semibold text-crmisa-navy mb-2">Course Not Found</h2>
         <p className="text-slate-500 mb-6">The course you are looking for does not exist or has been removed.</p>
-        <button onClick={() => navigate('/courses')} className="px-6 py-2 bg-slate-900 text-white rounded-md font-medium">
+        <button onClick={() => navigate('/courses')} className="px-6 py-2 bg-crmisa-navy text-white rounded-md font-medium">
           Browse Courses
         </button>
       </div>
@@ -101,10 +101,10 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
   // Modules and lessons have been removed from the architecture
 
   return (
-    <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-slate-800">
+    <div className="bg-white min-h-screen font-sans pt-24 pb-24 text-crmisa-accentNavy">
       
       {/* Hero Banner Section (16:9) */}
-      <div className="relative w-full aspect-[21/9] sm:aspect-[16/7] md:aspect-[16/5] lg:aspect-[16/4] bg-slate-900 border-b border-slate-200">
+      <div className="relative w-full aspect-[21/9] sm:aspect-[16/7] md:aspect-[16/5] lg:aspect-[16/4] bg-crmisa-navy border-b border-slate-200">
         {(course.bannerUrl || course.defaultBannerUrl) ? (
           <img 
             src={course.bannerUrl || course.defaultBannerUrl} 
@@ -124,7 +124,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
         )}
         
         {/* Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy via-slate-900/60 to-transparent"></div>
 
         {/* Content Over Banner */}
         <div className="absolute inset-0 flex items-end">
@@ -190,7 +190,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
             
             {/* About This Course */}
             <section>
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Course</h2>
+              <h2 className="text-2xl font-bold text-crmisa-navy mb-4">About This Course</h2>
               <div className="text-slate-600 leading-relaxed text-base sm:text-lg">
                 <p>{course.description}</p>
               </div>
@@ -199,11 +199,11 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
             {/* What you'll learn */}
             {course.whatYouWillLearn && course.whatYouWillLearn.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">What you'll learn</h2>
+                <h2 className="text-2xl font-bold text-crmisa-navy mb-6">What you'll learn</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                   {course.whatYouWillLearn.map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-slate-900 shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-crmisa-navy shrink-0 mt-0.5" />
                       <span className="text-slate-700">{item}</span>
                     </div>
                   ))}
@@ -214,11 +214,11 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
 
             {/* Student Reviews Section */}
             <section className="pt-8 border-t border-slate-200">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Student Reviews</h2>
+              <h2 className="text-2xl font-bold text-crmisa-navy mb-6">Student Reviews</h2>
               
               <div className="flex items-center gap-4 mb-8 bg-slate-50 p-6 border border-slate-200 rounded-lg">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</div>
+                  <div className="text-5xl font-bold text-crmisa-navy">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</div>
                   <div className="flex items-center justify-center gap-1 my-2 text-amber-500">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star key={star} className={`w-4 h-4 ${star <= Math.round(course.averageRating || 0) ? 'fill-current' : 'text-slate-300'}`} />
@@ -248,7 +248,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-bold text-slate-900">{review.student?.name || 'Anonymous User'}</h4>
+                            <h4 className="font-bold text-crmisa-navy">{review.student?.name || 'Anonymous User'}</h4>
                             <span className="text-xs text-slate-400">• {new Date(review.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center gap-1 mb-3 text-amber-500">
@@ -272,13 +272,13 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
               
               <div className="p-6 sm:p-8">
                 <div className="mb-6">
-                  <span className="text-3xl font-bold text-slate-900">R{course.price}</span>
+                  <span className="text-3xl font-bold text-crmisa-navy">R{course.price}</span>
                 </div>
 
                 {isCompleted ? (
                   <button
                     onClick={() => navigate(`/course-premium/${courseId}?tab=review`)}
-                    className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-crmisa-navy font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
                   >
                     <Star className="w-5 h-5 fill-current" /> Review Course
                   </button>
@@ -293,7 +293,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                   <div className="flex flex-col gap-3 mb-4">
                     <button
                       onClick={() => onOpenEnrol(course.title, course.price, courseId)}
-                      className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-lg transition-colors shadow-sm"
+                      className="w-full py-3.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-semibold text-lg transition-colors shadow-sm"
                     >
                       Enroll Now
                     </button>
@@ -305,7 +305,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                           navigate('/cart');
                         }
                       }}
-                      className="w-full py-3.5 bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 font-bold text-lg transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-3.5 bg-white border-2 border-crmisa-navy text-crmisa-navy hover:bg-slate-50 font-bold text-lg transition-colors flex items-center justify-center gap-2"
                     >
                       <span className="material-symbols-outlined">{inCart ? 'shopping_bag' : 'add_shopping_cart'}</span>
                       {inCart ? 'View Cart' : 'Add to Cart'}
@@ -316,7 +316,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
 
                 {/* Features List */}
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-slate-900 mb-4">This course includes:</h4>
+                  <h4 className="font-semibold text-crmisa-navy mb-4">This course includes:</h4>
                   <div className="flex items-center gap-3 text-slate-700">
                     <Video className="w-5 h-5 text-slate-400" />
                     <span>1 on-demand course video</span>
@@ -340,12 +340,12 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
       {/* Mobile Sticky Bottom Bar (Flat) */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 flex items-center justify-between gap-4 z-50">
         <div className="flex flex-col">
-          <span className="text-xl font-bold text-slate-900">R{course.price}</span>
+          <span className="text-xl font-bold text-crmisa-navy">R{course.price}</span>
         </div>
         {isCompleted ? (
           <button
             onClick={() => navigate(`/course-premium/${courseId}?tab=review`)}
-            className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-center flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-crmisa-navy font-bold text-center flex items-center justify-center gap-2"
           >
             <Star className="w-4 h-4 fill-current" /> Review Course
           </button>
@@ -360,7 +360,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
           <div className="flex-1 flex gap-2">
             <button
               onClick={() => onOpenEnrol(course.title, `R${course.price}`, courseId)}
-              className="flex-1 py-3 bg-slate-900 text-white font-semibold text-center rounded-lg shadow-sm"
+              className="flex-1 py-3 bg-crmisa-navy text-white font-semibold text-center rounded-lg shadow-sm"
             >
               Enroll
             </button>
@@ -372,7 +372,7 @@ export default function CourseDetailsPage({ onOpenEnrol, initialModuleId = null 
                   navigate('/cart');
                 }
               }}
-              className="px-4 py-3 bg-slate-100 text-slate-900 border border-slate-300 font-semibold flex items-center justify-center rounded-lg"
+              className="px-4 py-3 bg-slate-100 text-crmisa-navy border border-slate-300 font-semibold flex items-center justify-center rounded-lg"
               title="Add to Cart"
             >
               <span className="material-symbols-outlined">{inCart ? 'shopping_bag' : 'add_shopping_cart'}</span>

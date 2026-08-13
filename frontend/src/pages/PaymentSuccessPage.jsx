@@ -31,7 +31,7 @@ export default function PaymentSuccessPage() {
           <CheckCircle className="w-20 h-20 text-emerald-500" />
         </div>
         
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Payment Successful!</h1>
+        <h1 className="text-3xl font-bold text-crmisa-navy mb-4">Payment Successful!</h1>
         
         <p className="text-slate-600 mb-8 leading-relaxed">
           Thank you for your purchase. Your transaction has been completed successfully and a receipt has been emailed to you.
@@ -40,7 +40,7 @@ export default function PaymentSuccessPage() {
         <div className="space-y-4">
           <button
             onClick={handleContinue}
-            className="w-full bg-slate-900 text-white py-3 px-6 font-bold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-crmisa-navy text-white py-3 px-6 font-bold hover:bg-crmisa-accentNavy transition-colors flex items-center justify-center gap-2"
           >
             <span>Continue to Learning</span>
             <ArrowRight className="w-4 h-4" />
@@ -48,7 +48,7 @@ export default function PaymentSuccessPage() {
           
           <Link
             to="/dashboard"
-            className="block w-full bg-slate-100 text-slate-900 py-3 px-6 font-semibold hover:bg-slate-200 transition-colors border border-slate-300"
+            className="block w-full bg-slate-100 text-crmisa-navy py-3 px-6 font-semibold hover:bg-slate-200 transition-colors border border-slate-300"
           >
             Go to Dashboard
           </Link>

@@ -8,6 +8,8 @@ import Enrollment from "../models/Enrollment.model.js";
 import Progress from "../models/Progress.model.js";
 import { Course } from "../models/Course.model.js";
 import { generateCertificateId } from "../utils/generateCertificateId.js";
+import User from "../models/User.model.js";
+import { sendExamPassedEmail, sendExamFailedEmail } from "../utils/email.js";
 
 // Helper: shuffle array (Fisher-Yates)
 const shuffleArray = (arr) => {
@@ -147,6 +149,12 @@ export const getExamForStudent = asyncHandler(async (req, res) => {
   const passedAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId, passed: true });
   if (passedAttempt) throw new ApiError(400, "You have already passed this exam");
 
+  // Check if payment is required for retake
+  const lastAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId }).sort({ createdAt: -1 });
+  if (lastAttempt && !lastAttempt.passed && !enrollment.reexamPaid) {
+    throw new ApiError(402, "Payment required to retake the exam");
+  }
+
   // Lessons completion requirement removed as per new flow
 
   const exam = await Exam.findOne({ course: courseId, isActive: true });
@@ -228,6 +236,15 @@ export const submitExam = asyncHandler(async (req, res) => {
   const percentage = Math.round((correctCount / totalQuestions) * 100);
   const passed = percentage >= exam.passingPercentage;
 
+  // Consume the re-exam payment if they used it
+  enrollment.reexamPaid = false;
+  if (passed) {
+    enrollment.status = "COMPLETED";
+    enrollment.completionPercentage = 100;
+    enrollment.completedAt = new Date();
+  }
+  await enrollment.save();
+
   // Save attempt
   const attemptNumber =
     (await ExamAttempt.countDocuments({ student: studentId, course: courseId })) + 1;
@@ -251,10 +268,6 @@ export const submitExam = asyncHandler(async (req, res) => {
 
   if (passed) {
     // Auto-generate certificate
-    enrollment.status = "COMPLETED";
-    enrollment.completionPercentage = 100;
-    enrollment.completedAt = new Date();
-    await enrollment.save();
 
     let certId = generateCertificateId();
     let certExists = await Certificate.findOne({ certificateId: certId });
@@ -310,6 +323,15 @@ export const submitExam = asyncHandler(async (req, res) => {
     });
   }
 
+  const user = await User.findById(studentId);
+  if (user) {
+    if (passed) {
+      sendExamPassedEmail(user.email, user.name, percentage);
+    } else {
+      sendExamFailedEmail(user.email, user.name, percentage);
+    }
+  }
+
   res.status(200).json(new ApiResponse(200, result, passed ? "Congratulations! You passed." : "You did not pass. Please retake the exam."));
 });
 
@@ -334,12 +356,16 @@ export const getExamStatus = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
   const studentId = req.user._id;
 
-  const exam = await Exam.findOne({ course: courseId, isActive: true }).select("_id passingPercentage timeLimitMinutes questions");
+  const exam = await Exam.findOne({ course: courseId, isActive: true }).select("_id passingPercentage timeLimitMinutes questions reExamFee");
   const hasExam = !!exam;
 
-  const passedAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId, passed: true });
+  const lastAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId }).sort({ createdAt: -1 });
+  const hasPassed = lastAttempt ? lastAttempt.passed : false;
+  const hasFailed = lastAttempt ? !lastAttempt.passed : false;
+  
   const attemptCount = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
   const certificate = await Certificate.findOne({ student: studentId, course: courseId }).select("certificateId examScore issueDate");
+  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId }).select("reexamPaid");
 
   // Lessons completion requirement removed, so lessons are considered implicitly complete for exam access
   const lessonsComplete = true;
@@ -349,12 +375,15 @@ export const getExamStatus = asyncHandler(async (req, res) => {
       hasExam,
       examId: exam?._id || null,
       lessonsComplete,
-      hasPassed: !!passedAttempt,
+      hasPassed,
+      hasFailed,
       attemptCount,
       certificate: certificate || null,
       questionCount: exam?.questions?.length || 0,
       passingPercentage: exam?.passingPercentage || 40,
       timeLimitMinutes: exam?.timeLimitMinutes || 0,
+      reexamPaid: enrollment?.reexamPaid || false,
+      reExamFee: exam?.reExamFee || 500,
     }, "Exam status fetched")
   );
 });

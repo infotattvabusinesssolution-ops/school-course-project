@@ -48,6 +48,10 @@ const enrollmentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    reexamPaid: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

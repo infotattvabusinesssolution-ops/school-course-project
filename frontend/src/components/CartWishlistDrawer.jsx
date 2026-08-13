@@ -42,7 +42,7 @@ export default function CartWishlistDrawer({
       {/* Backdrop */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-crmisa-navy/60 backdrop-blur-sm transition-opacity animate-fade-in"
       />
 
       {/* Drawer */}
@@ -70,7 +70,7 @@ export default function CartWishlistDrawer({
                 className={`flex-1 py-3 text-center text-xs font-bold transition-colors flex items-center justify-center space-x-2 ${
                   activeTab === 'cart'
                     ? 'border-b-2 border-crmisa-navy text-crmisa-navy bg-white'
-                    : 'text-slate-500 hover:text-slate-800'
+                    : 'text-slate-500 hover:text-crmisa-accentNavy'
                 }`}
               >
                 <CartIcon className="w-4 h-4" />
@@ -81,7 +81,7 @@ export default function CartWishlistDrawer({
                 className={`flex-1 py-3 text-center text-xs font-bold transition-colors flex items-center justify-center space-x-2 ${
                   activeTab === 'wishlist'
                     ? 'border-b-2 border-crmisa-navy text-crmisa-navy bg-white'
-                    : 'text-slate-500 hover:text-slate-800'
+                    : 'text-slate-500 hover:text-crmisa-accentNavy'
                 }`}
               >
                 <HeartIcon className="w-4 h-4" />
@@ -99,9 +99,9 @@ export default function CartWishlistDrawer({
                         <span className="text-xs font-extrabold px-2 py-0.5 bg-crmisa-lightBlue text-crmisa-navy rounded">
                           {item.tag}
                         </span>
-                        <span className="text-sm font-bold text-slate-900">{item.price}</span>
+                        <span className="text-sm font-bold text-crmisa-navy">{item.price}</span>
                       </div>
-                      <h5 className="font-bold text-slate-800 text-sm">{item.title}</h5>
+                      <h5 className="font-bold text-crmisa-accentNavy text-sm">{item.title}</h5>
                       <p className="text-xs text-blue-700 font-semibold flex items-center">
                         <CheckIcon className="w-3.5 h-3.5 mr-1" />
                         {item.perks}
@@ -118,9 +118,9 @@ export default function CartWishlistDrawer({
                       <span className="text-xs font-extrabold px-2 py-0.5 bg-slate-200 text-slate-700 rounded">
                         {item.tag}
                       </span>
-                      <span className="text-sm font-bold text-slate-900">{item.price}</span>
+                      <span className="text-sm font-bold text-crmisa-navy">{item.price}</span>
                     </div>
-                    <h5 className="font-bold text-slate-800 text-sm">{item.title}</h5>
+                    <h5 className="font-bold text-crmisa-accentNavy text-sm">{item.title}</h5>
                   </div>
                 ))
               )}
@@ -129,7 +129,7 @@ export default function CartWishlistDrawer({
 
           {/* Drawer Footer */}
           <div className="p-6 border-t border-slate-200 bg-slate-50 space-y-3">
-            <div className="flex justify-between text-sm font-bold text-slate-800">
+            <div className="flex justify-between text-sm font-bold text-crmisa-accentNavy">
               <span>Subtotal:</span>
               <span className="text-crmisa-navy text-lg font-black">R15,000</span>
             </div>

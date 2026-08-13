@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Award, Star, Globe, Plane, GraduationCap, ShieldCheck, TrendingUp } from "lucide-react";
 import { EyeIcon } from '../icons/Icons';
@@ -36,7 +36,7 @@ function LoginForm() {
     <div className="w-full max-w-md space-y-8 bg-white p-8 sm:p-12">
       {/* Header */}
       <div className="space-y-2">
-        <h3 className="text-3xl font-black text-slate-900 tracking-tight">
+        <h3 className="text-3xl font-black text-crmisa-navy tracking-tight">
           LOGIN <span className="text-blue-600">CRMISA</span>
         </h3>
         <p className="text-base text-slate-500 font-medium">
@@ -54,7 +54,7 @@ function LoginForm() {
         
         {/* Email Address */}
         <div className="space-y-2">
-          <label className="block text-sm font-bold text-slate-800">
+          <label className="block text-sm font-bold text-crmisa-accentNavy">
             Email Address
           </label>
           <input
@@ -62,14 +62,14 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm text-slate-900 font-medium transition-all"
+            className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm text-crmisa-navy font-medium transition-all"
             placeholder="Enter your email"
           />
         </div>
 
         {/* Password */}
         <div className="space-y-2">
-          <label className="block text-sm font-bold text-slate-800">
+          <label className="block text-sm font-bold text-crmisa-accentNavy">
             Password
           </label>
           <div className="relative">
@@ -78,7 +78,7 @@ function LoginForm() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3.5 pr-12 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm text-slate-900 font-medium transition-all"
+              className="w-full px-4 py-3.5 pr-12 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm text-crmisa-navy font-medium transition-all"
               placeholder="••••••••"
             />
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -185,7 +185,7 @@ function RegisterForm() {
   return (
     <div className="w-full max-w-md space-y-6 bg-white p-8 sm:p-12 h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
       <div className="space-y-2">
-        <h3 className="text-3xl font-black text-slate-900 tracking-tight">
+        <h3 className="text-3xl font-black text-crmisa-navy tracking-tight">
           REGISTER <span className="text-blue-600">CRMISA</span>
         </h3>
         <p className="text-base text-slate-500 font-medium">
@@ -203,23 +203,23 @@ function RegisterForm() {
         {/* Name Fields */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">First Name</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">First Name</label>
             <input
               type="text"
               required
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">Last Name</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Last Name</label>
             <input
               type="text"
               required
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
             />
           </div>
         </div>
@@ -227,49 +227,49 @@ function RegisterForm() {
         {/* Email & Phone */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">Email Address</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Email Address</label>
             <input
               type="email"
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">Phone Number</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Phone Number</label>
             <input
               type="tel"
               required
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
             />
           </div>
         </div>
 
         {/* Profile Picture */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1">Profile Picture (Optional)</label>
+          <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Profile Picture (Optional)</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setFormData({ ...formData, profilePhoto: e.target.files[0] })}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
         </div>
 
         {/* Passwords */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">Password</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                 <button
@@ -283,14 +283,14 @@ function RegisterForm() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-1">Confirm</label>
+            <label className="block text-sm font-bold text-crmisa-accentNavy mb-1">Confirm</label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 required
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-slate-900 font-medium"
+                className="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 text-sm text-crmisa-navy font-medium"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                 <button
@@ -335,6 +335,38 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  const [desktopImageSrc, setDesktopImageSrc] = useState('/hero/crmisa-stu.png');
+  const [mobileImageSrc, setMobileImageSrc] = useState('/hero/mobile-coont.png');
+
+  useEffect(() => {
+    const loadCachedImage = async (key, url, setter) => {
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        setter(cached);
+      } else {
+        try {
+          const res = await fetch(url);
+          const blob = await res.blob();
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64data = reader.result;
+            try {
+              localStorage.setItem(key, base64data);
+            } catch (e) {
+              console.warn('LocalStorage full, could not cache image', e);
+            }
+          };
+          reader.readAsDataURL(blob);
+        } catch (err) {
+          console.error("Failed to fetch image for caching", err);
+        }
+      }
+    };
+
+    loadCachedImage('hero_desktop_img', '/hero/crmisa-stu.png', setDesktopImageSrc);
+    loadCachedImage('hero_mobile_img', '/hero/mobile-coont.png', setMobileImageSrc);
+  }, []);
+
   return (
     <section className={`relative w-full ${isAuthMode ? 'h-screen overflow-hidden' : 'min-h-screen lg:h-screen lg:overflow-hidden'} flex flex-col lg:flex-row lg:items-center lg:justify-center bg-white`}>
       
@@ -343,7 +375,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
          initial={false}
          animate={{ x: isAuthMode ? '0%' : '-100%' }}
          transition={{ type: "tween", ease: "easeInOut", duration: 0.6 }}
-         className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-slate-900 z-0"
+         className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-crmisa-navy z-0"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex-1 relative z-10 flex flex-col lg:block pt-24 pb-0 lg:pt-0">
@@ -375,13 +407,13 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
               transition={{ duration: 0.4 }}
             >
               <div className="flex flex-col items-center text-center w-full max-w-2xl px-4 mt-8 lg:mt-0 mx-auto">
-                <h1 className="text-black text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1]">
+                <h1 className="text-crmisa-darkNavy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1]">
                   Master
                 </h1>
-                <h2 className="text-black text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] pt-2">
+                <h2 className="text-crmisa-darkNavy text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-tight leading-[1.1] pt-2">
                   Global trade
                 </h2>
-                <p className="mt-6 text-black text-base md:text-lg font-medium max-w-lg leading-relaxed">
+                <p className="mt-6 text-crmisa-darkNavy text-base md:text-lg font-medium max-w-lg leading-relaxed">
                   South Africa's leading online academy for Import & Export education.
                   Gain the expertise to navigate international trade, customs, and global shipping.
                 </p>
@@ -395,7 +427,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
                         else navigate('/login');
                       }
                     }}
-                    className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-black border-2 border-black text-white px-8 py-4 rounded-none font-bold text-lg hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-xl"
+                    className="group flex items-center justify-center w-full sm:w-auto gap-3 bg-crmisa-darkNavy border-2 border-crmisa-darkNavy text-white px-8 py-4 rounded-none font-bold text-lg hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-xl"
                   >
                     Start Learning
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -472,7 +504,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
             className="absolute top-20 z-10 w-full max-w-lg lg:max-w-xl"
           >
             <img 
-              src="/hero/crmisa-stu.png" 
+              src={desktopImageSrc} 
               alt="CRMISA Logistics" 
               className="w-full drop-shadow-2xl object-contain animate-swing origin-top"
             />
@@ -558,7 +590,7 @@ export default function HeroSection({ isLoginMode, isRegisterMode, onOpenLogin, 
               <TrendingUp className="w-4 h-4 text-white" />
             </motion.div>
 
-            <img src="/hero/mobile-coont.png" alt="CRMISA Student" className="relative z-10 w-[135%] max-w-[135%] translate-x-6 drop-shadow-2xl origin-bottom object-bottom" />
+            <img src={mobileImageSrc} alt="CRMISA Student" className="relative z-10 w-[135%] max-w-[135%] translate-x-6 drop-shadow-2xl origin-bottom object-bottom" />
           </div>
         )}
 

@@ -35,7 +35,7 @@ export default function AdminNewsletterTab() {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-800">Newsletter Subscribers</h2>
+        <h2 className="text-lg font-bold text-crmisa-accentNavy">Newsletter Subscribers</h2>
         <div className="text-sm font-semibold text-slate-500">{subscribers.length} total</div>
       </div>
       
@@ -58,7 +58,7 @@ export default function AdminNewsletterTab() {
             <tbody className="divide-y divide-slate-100">
               {subscribers.map(sub => (
                 <tr key={sub._id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-medium text-slate-900">{sub.name || '-'}</td>
+                  <td className="px-4 py-3 font-medium text-crmisa-navy">{sub.name || '-'}</td>
                   <td className="px-4 py-3 text-slate-600 font-medium">{sub.email}</td>
                   <td className="px-4 py-3 text-slate-600">{sub.phone || '-'}</td>
                   <td className="px-4 py-3 text-slate-500">{new Date(sub.subscribedAt).toLocaleString()}</td>

@@ -47,7 +47,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-24 bg-white text-slate-800 border-t border-slate-200">
+    <section id="contact" className="py-16 sm:py-24 bg-white text-crmisa-accentNavy border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -58,7 +58,7 @@ export default function ContactSection() {
               Get In Touch
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl">
             Contact Us
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 max-w-xl">
@@ -70,33 +70,33 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Card 1: Call Us */}
           <div data-aos="fade-up" data-aos-delay="100" className="bg-slate-50 rounded-xl border border-slate-200 p-6 flex items-start gap-4 hover:border-slate-400 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0">
               <Phone className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">Call Us</h3>
+              <h3 className="text-base font-bold text-crmisa-navy mb-1">Call Us</h3>
               <p className="text-sm text-slate-600 font-medium">+27 82 496 7256</p>
             </div>
           </div>
 
           {/* Card 2: Mail Us */}
           <div data-aos="fade-up" data-aos-delay="200" className="bg-slate-50 rounded-xl border border-slate-200 p-6 flex items-start gap-4 hover:border-slate-400 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0">
               <Mail className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">Mail Us</h3>
+              <h3 className="text-base font-bold text-crmisa-navy mb-1">Mail Us</h3>
               <p className="text-sm text-slate-600 font-medium">info@crmisa.co.za</p>
             </div>
           </div>
 
           {/* Card 3: Location */}
           <div data-aos="fade-up" data-aos-delay="300" className="bg-slate-50 rounded-xl border border-slate-200 p-6 flex items-start gap-4 hover:border-slate-400 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0">
               <MapPin className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">Visit Us</h3>
+              <h3 className="text-base font-bold text-crmisa-navy mb-1">Visit Us</h3>
               <p className="text-sm text-slate-600 font-medium">Pivot office Montecasino Fourways, 2191</p>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function ContactSection() {
               href="https://www.google.com/maps/search/?api=1&query=The+Pivot+Conference+Centre,+1+Montecasino+Blvd,+Fourways,+Sandton,+2191,+South+Africa"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute bottom-4 left-4 right-4 sm:right-auto bg-slate-900/90 hover:bg-slate-900 text-white backdrop-blur-md px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 shadow-lg transition-all border border-white/10 group-hover:scale-105"
+              className="absolute bottom-4 left-4 right-4 sm:right-auto bg-crmisa-navy/90 hover:bg-crmisa-navy text-white backdrop-blur-md px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 shadow-lg transition-all border border-white/10 group-hover:scale-105"
             >
               <MapPin className="w-4 h-4 text-yellow-400" />
               <span>Open Location in Google Maps</span>
@@ -137,7 +137,7 @@ export default function ContactSection() {
                 <div className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto">
                   <Check className="w-8 h-8" />
                 </div>
-                <h4 className="text-2xl font-bold text-slate-900">Message Sent!</h4>
+                <h4 className="text-2xl font-bold text-crmisa-navy">Message Sent!</h4>
                 <p className="text-sm text-slate-600 max-w-xs mx-auto">
                   Thank you for reaching out to CRMISA. Our trade advisors will contact you shortly.
                 </p>
@@ -156,7 +156,7 @@ export default function ContactSection() {
                       placeholder="John Doe"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
                     />
                   </div>
 
@@ -171,7 +171,7 @@ export default function ContactSection() {
                       placeholder="+27 82 000 0000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
                     />
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export default function ContactSection() {
                       placeholder="john@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
                     />
                   </div>
 
@@ -200,7 +200,7 @@ export default function ContactSection() {
                     <select
                       value={formData.course}
                       onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-900 bg-white focus:outline-none focus:border-slate-900 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-crmisa-navy bg-white focus:outline-none focus:border-crmisa-navy transition-colors"
                     >
                       <option value="Select a course">Select a course</option>
                       {courses.map((c) => (
@@ -223,7 +223,7 @@ export default function ContactSection() {
                     placeholder="Tell us how we can help you..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors resize-none"
+                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors resize-none"
                   />
                 </div>
 
@@ -231,7 +231,7 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={processing}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-semibold rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
                 >
                   {processing ? (
                     'Submitting...'

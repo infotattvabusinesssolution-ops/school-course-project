@@ -151,7 +151,7 @@ export default function DashboardPage({
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/40 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-crmisa-navy/40 z-40 md:hidden backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -160,18 +160,18 @@ export default function DashboardPage({
       <aside className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-slate-200 z-50 transform transition-transform duration-300 md:relative md:translate-x-0 flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-slate-200 text-center relative">
           <button 
-            className="md:hidden absolute top-4 right-4 text-slate-400 hover:text-slate-900"
+            className="md:hidden absolute top-4 right-4 text-slate-400 hover:text-crmisa-navy"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <X className="w-5 h-5"/>
           </button>
           <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 border-2 border-blue-600 mb-3 overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => handleTabChange('profile')}>
             <img src={user?.avatar || "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png"} className="w-full h-full object-cover" alt="Profile" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute inset-0 bg-crmisa-darkNavy/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Camera className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h2 className="text-base font-bold text-slate-900 truncate">{user?.name || "Student"}</h2>
+          <h2 className="text-base font-bold text-crmisa-navy truncate">{user?.name || "Student"}</h2>
           <p className="text-xs text-slate-500 font-medium">{user?.email}</p>
         </div>
         
@@ -186,7 +186,7 @@ export default function DashboardPage({
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
                   activeTab === tab.id 
                     ? 'bg-blue-50 text-blue-700' 
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-crmisa-navy'
                 }`}
               >
                 <Icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-blue-600' : 'text-slate-400'}`} />
@@ -204,7 +204,7 @@ export default function DashboardPage({
         <div className="p-4 border-t border-slate-200">
           <button
             onClick={onLogout}
-            className="w-full py-2.5 px-4 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors"
+            className="w-full py-2.5 px-4 bg-crmisa-navy text-white font-bold text-sm rounded-xl hover:bg-crmisa-accentNavy transition-colors"
           >
             Sign Out
           </button>
@@ -222,7 +222,7 @@ export default function DashboardPage({
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h1 className="font-bold text-lg text-slate-900">Student Portal</h1>
+            <h1 className="font-bold text-lg text-crmisa-navy">Student Portal</h1>
           </div>
         </div>
 
@@ -230,7 +230,7 @@ export default function DashboardPage({
           
           {/* Header Title */}
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight">
               {tabs.find(t => t.id === activeTab)?.label}
             </h1>
           </div>
@@ -245,7 +245,7 @@ export default function DashboardPage({
                     <BookOpenIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-2xl font-black text-slate-900">{stats.enrolledCourses}</h3>
+                    <h3 className="text-lg sm:text-2xl font-black text-crmisa-navy">{stats.enrolledCourses}</h3>
                     <p className="text-[10px] sm:text-xs font-semibold text-slate-500">Enrolled Courses</p>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ export default function DashboardPage({
                     <AwardBadgeIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-2xl font-black text-slate-900">{stats.certificatesEarned}</h3>
+                    <h3 className="text-lg sm:text-2xl font-black text-crmisa-navy">{stats.certificatesEarned}</h3>
                     <p className="text-[10px] sm:text-xs font-semibold text-amber-700">Certificates Earned</p>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function DashboardPage({
                     <CheckIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-2xl font-black text-slate-900">{stats.completedCourses}</h3>
+                    <h3 className="text-lg sm:text-2xl font-black text-crmisa-navy">{stats.completedCourses}</h3>
                     <p className="text-[10px] sm:text-xs font-semibold text-slate-500">Courses Completed</p>
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function DashboardPage({
                     <UserIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-2xl font-black text-slate-900 uppercase">{user?.role || "Student"}</h3>
+                    <h3 className="text-lg sm:text-2xl font-black text-crmisa-navy uppercase">{user?.role || "Student"}</h3>
                     <p className="text-[10px] sm:text-xs font-semibold text-slate-500">Account Type</p>
                   </div>
                 </div>
@@ -282,13 +282,13 @@ export default function DashboardPage({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {loading ? (
                   <div className="col-span-full py-16 flex justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy"></div>
                   </div>
                 ) : enrolledCourses.length === 0 ? (
                   <div className="col-span-full text-center py-20 border border-slate-200 bg-white rounded-2xl shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-900 mb-2">No courses yet</h3>
+                    <h3 className="text-lg font-bold text-crmisa-navy mb-2">No courses yet</h3>
                     <p className="text-slate-500 mb-6 text-sm">You haven't enrolled in any courses yet.</p>
-                    <button onClick={() => navigate("/courses")} className="px-6 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-xl transition-colors hover:bg-slate-800">Browse Courses</button>
+                    <button onClick={() => navigate("/courses")} className="px-6 py-2.5 bg-crmisa-navy text-white font-bold text-sm rounded-xl transition-colors hover:bg-crmisa-accentNavy">Browse Courses</button>
                   </div>
                 ) : (
                   enrolledCourses.map((course) => {
@@ -301,14 +301,14 @@ export default function DashboardPage({
                           ) : (
                             <div className="w-full h-full flex items-center justify-center"><PlayCircle className="w-10 h-10 text-slate-300" /></div>
                           )}
-                          <span className="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 uppercase bg-white/90 backdrop-blur-sm text-slate-900 rounded-md shadow-sm">
+                          <span className="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 uppercase bg-white/90 backdrop-blur-sm text-crmisa-navy rounded-md shadow-sm">
                             {courseComplete ? "Completed" : "In Progress"}
                           </span>
                         </div>
                         <div className="p-5 flex-1 flex flex-col">
                           <div className="space-y-1 mb-6">
                             <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">{course.category}</span>
-                            <h3 className="font-bold text-base text-slate-900 leading-snug line-clamp-2">{course.title}</h3>
+                            <h3 className="font-bold text-base text-crmisa-navy leading-snug line-clamp-2">{course.title}</h3>
                           </div>
                           <div className="mt-auto space-y-4">
                             <div className="space-y-1.5">
@@ -321,7 +321,7 @@ export default function DashboardPage({
                               </div>
                             </div>
                             <div className="flex gap-2">
-                              <button className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors border ${courseComplete ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" : "bg-slate-900 border-slate-900 text-white hover:bg-slate-800"}`} onClick={(e) => { e.stopPropagation(); navigate(`/course-premium/${course.courseId}`); }}>
+                              <button className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors border ${courseComplete ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100" : "bg-crmisa-navy border-crmisa-navy text-white hover:bg-crmisa-accentNavy"}`} onClick={(e) => { e.stopPropagation(); navigate(`/course-premium/${course.courseId}`); }}>
                                 {courseComplete ? "Review Course" : "Continue Learning"}
                               </button>
                               {courseComplete && reviewStatuses[course.courseId] === false && (
@@ -345,9 +345,9 @@ export default function DashboardPage({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {purchasedEbooks.length === 0 ? (
                 <div className="col-span-full text-center py-20 border border-slate-200 bg-white rounded-2xl shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">No Purchased E-Books</h3>
+                  <h3 className="text-lg font-bold text-crmisa-navy mb-2">No Purchased E-Books</h3>
                   <p className="text-slate-500 mb-6 text-sm">You haven't purchased any digital handbooks yet.</p>
-                  <button onClick={() => navigate("/ebooks")} className="px-6 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-xl transition-colors hover:bg-slate-800">Browse E-Book Store</button>
+                  <button onClick={() => navigate("/ebooks")} className="px-6 py-2.5 bg-crmisa-navy text-white font-bold text-sm rounded-xl transition-colors hover:bg-crmisa-accentNavy">Browse E-Book Store</button>
                 </div>
               ) : (
                 purchasedEbooks.map((purchase) => {
@@ -358,18 +358,18 @@ export default function DashboardPage({
                         {book.coverImage ? (
                           <img src={book.coverImage} alt={book.title} className="w-16 h-22 object-cover rounded-lg border border-slate-200 flex-shrink-0" />
                         ) : (
-                          <div className="w-16 h-22 bg-slate-900 text-white font-bold text-xs flex items-center justify-center rounded-lg p-2 text-center flex-shrink-0">PDF</div>
+                          <div className="w-16 h-22 bg-crmisa-navy text-white font-bold text-xs flex items-center justify-center rounded-lg p-2 text-center flex-shrink-0">PDF</div>
                         )}
                         <div className="space-y-1">
                           <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Unlocked</span>
-                          <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">{book.title || "Trade E-Book"}</h3>
+                          <h3 className="font-bold text-sm text-crmisa-navy leading-snug line-clamp-2">{book.title || "Trade E-Book"}</h3>
                           <p className="text-[11px] text-slate-500 font-medium">Purchased: {new Date(purchase.purchasedAt || purchase.createdAt).toLocaleDateString()}</p>
                         </div>
                       </div>
                       <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <div className="text-xs font-bold text-slate-500">Paid: <span className="font-black text-slate-900">R{purchase.amountPaid || book.price}</span></div>
+                        <div className="text-xs font-bold text-slate-500">Paid: <span className="font-black text-crmisa-navy">R{purchase.amountPaid || book.price}</span></div>
                         {book.pdfUrl ? (
-                          <button onClick={() => downloadPdf(book.pdfUrl, `${book.title || "Handbook"}.pdf`)} className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer">Download PDF</button>
+                          <button onClick={() => downloadPdf(book.pdfUrl, `${book.title || "Handbook"}.pdf`)} className="px-4 py-2 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold rounded-lg text-xs transition-colors cursor-pointer">Download PDF</button>
                         ) : (
                           <span className="text-xs text-slate-400 font-semibold italic">PDF Processing</span>
                         )}
@@ -387,7 +387,7 @@ export default function DashboardPage({
               {enrolledCourses.length === 0 ? (
                 <div className="col-span-full text-center py-20 border border-slate-200 bg-white rounded-2xl shadow-sm">
                   <Award className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">No Exams Available</h3>
+                  <h3 className="text-lg font-bold text-crmisa-navy mb-2">No Exams Available</h3>
                   <p className="text-slate-500 mb-6 text-sm">Enroll in a course and complete it to unlock exams.</p>
                 </div>
               ) : (
@@ -415,7 +415,7 @@ export default function DashboardPage({
                             <span className="bg-slate-100 text-slate-500 border border-slate-200 text-[10px] font-bold px-2 py-1 rounded-md">Locked</span>
                           )}
                         </div>
-                        <h3 className="font-bold text-sm text-slate-900 line-clamp-2 pt-2">{course.title} Final Exam</h3>
+                        <h3 className="font-bold text-sm text-crmisa-navy line-clamp-2 pt-2">{course.title} Final Exam</h3>
                         <p className="text-xs font-medium text-slate-500">{courseComplete ? 'Course completed. You can now take the exam.' : `Complete course to unlock (${course.completionPercentage}% done)`}</p>
                       </div>
 
@@ -453,7 +453,7 @@ export default function DashboardPage({
 
               {/* Profile Photo Update */}
               <div className="space-y-4">
-                <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-2">Profile Picture</h3>
+                <h3 className="text-lg font-black text-crmisa-navy border-b border-slate-100 pb-2">Profile Picture</h3>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <div className="w-24 h-24 rounded-full bg-slate-100 border-2 border-slate-200 overflow-hidden shrink-0">
                     <img src={profilePhoto ? URL.createObjectURL(profilePhoto) : user?.avatar || "https://res.cloudinary.com/demo/image/upload/v1583247012/user-placeholder.png"} className="w-full h-full object-cover" alt="Avatar Preview" />
@@ -468,7 +468,7 @@ export default function DashboardPage({
                     <button 
                       onClick={handleUpdateProfilePhoto}
                       disabled={!profilePhoto}
-                      className="px-5 py-2 bg-slate-900 text-white text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-slate-800 transition-colors"
+                      className="px-5 py-2 bg-crmisa-navy text-white text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-crmisa-accentNavy transition-colors"
                     >
                       Upload New Photo
                     </button>
@@ -478,7 +478,7 @@ export default function DashboardPage({
 
               {/* Password Reset */}
               <div className="space-y-4">
-                <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-2">Change Password</h3>
+                <h3 className="text-lg font-black text-crmisa-navy border-b border-slate-100 pb-2">Change Password</h3>
                 <div className="space-y-4 max-w-md">
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">Current Password</label>

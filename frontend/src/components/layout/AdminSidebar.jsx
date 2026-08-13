@@ -17,6 +17,9 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
     { id: 8, icon: "mark_email_read", label: "Newsletter Subscribers" },
     { id: 9, icon: "local_offer", label: "Coupons" },
     { id: 10, icon: "campaign", label: "Referrals & Influencers" },
+    { id: 11, icon: "format_quote", label: "Testimonials" },
+    { id: 12, icon: "reviews", label: "Course Reviews" },
+    { id: 13, icon: "forward_to_inbox", label: "Email Testing" },
   ];
 
   return (
@@ -48,7 +51,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          className="md:hidden fixed inset-0 bg-crmisa-darkNavy/50 z-40"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -84,8 +87,8 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
                 }}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 w-full text-left ${
                   isActive
-                    ? "bg-slate-900 text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium"
+                    ? "bg-crmisa-navy text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-crmisa-navy font-medium"
                 }`}
               >
                 <span
@@ -148,8 +151,8 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
                 onClick={() => setActiveTab(item.id)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 w-full text-left ${
                   isActive
-                    ? "bg-slate-900 text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium"
+                    ? "bg-crmisa-navy text-white font-bold shadow-md border-l-4 border-yellow-400 translate-x-1"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-crmisa-navy font-medium"
                 }`}
               >
                 <span

@@ -29,7 +29,7 @@ export default function BlogListPage() {
       <main className="flex-grow pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
+            <h1 className="text-4xl md:text-5xl font-black text-crmisa-navy tracking-tight mb-4">
               Our Blog
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
@@ -67,7 +67,7 @@ export default function BlogListPage() {
                       <span className="material-symbols-outlined text-[16px] mr-1">calendar_today</span>
                       {new Date(blog.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </div>
-                    <h2 className="text-xl font-bold text-slate-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-xl font-bold text-crmisa-navy mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
                       {blog.title}
                     </h2>
                     <p className="text-slate-600 line-clamp-3 mb-4 flex-grow">

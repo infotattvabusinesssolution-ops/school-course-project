@@ -45,7 +45,7 @@ export default function BlogDetailPage() {
         <Navbar />
         <main className="flex-grow pt-32 pb-20 flex flex-col items-center justify-center text-center px-4">
           <span className="material-symbols-outlined text-6xl text-slate-300 mb-4">article</span>
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">{error || 'Blog not found'}</h1>
+          <h1 className="text-2xl font-bold text-crmisa-accentNavy mb-4">{error || 'Blog not found'}</h1>
           <Link to="/blogs" className="text-blue-600 font-bold hover:underline flex items-center">
             <span className="material-symbols-outlined mr-1">arrow_back</span> Back to Blogs
           </Link>
@@ -68,7 +68,7 @@ export default function BlogDetailPage() {
           </div>
 
           <header className="mb-10 text-center sm:text-left">
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-black text-crmisa-navy tracking-tight mb-6 leading-tight">
               {blog.title}
             </h1>
             <div className="flex items-center justify-center sm:justify-start text-slate-500 font-medium gap-4">

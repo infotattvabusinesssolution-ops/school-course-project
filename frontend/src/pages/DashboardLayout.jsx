@@ -88,13 +88,13 @@ export default function DashboardLayout({ onLogout }) {
       {/* Desktop Sidebar (Hidden on Mobile) */}
       <aside className="hidden md:flex fixed top-[112px] bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-[40] flex-col">
         <div className="p-6 border-b border-slate-200 text-center relative">
-          <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 border-2 border-black mb-3 overflow-hidden relative group cursor-pointer" onClick={() => navigate('/dashboard/profile')}>
+          <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 border-2 border-crmisa-darkNavy mb-3 overflow-hidden relative group cursor-pointer" onClick={() => navigate('/dashboard/profile')}>
             <img src={user?.avatar && user.avatar.includes('http') && !user.avatar.includes('user-placeholder.png') ? user.avatar : "https://ui-avatars.com/api/?name=User&background=000&color=fff&size=128"} className="w-full h-full object-cover" alt="Profile" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute inset-0 bg-crmisa-darkNavy/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Camera className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h2 className="text-base font-bold text-slate-900 truncate">{user?.name || "Student"}</h2>
+          <h2 className="text-base font-bold text-crmisa-navy truncate">{user?.name || "Student"}</h2>
           <p className="text-xs text-slate-500 font-medium">{user?.email}</p>
         </div>
         
@@ -108,8 +108,8 @@ export default function DashboardLayout({ onLogout }) {
                 to={tab.path}
                 className={({ isActive }) => `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
                   isActive || (tab.id === 'courses' && location.pathname === '/dashboard')
-                    ? 'bg-black text-white' 
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-crmisa-darkNavy text-white' 
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-crmisa-navy'
                 }`}
               >
                 {({ isActive }) => (
@@ -131,7 +131,7 @@ export default function DashboardLayout({ onLogout }) {
         <div className="p-4 border-t border-slate-200">
           <button
             onClick={onLogout}
-            className="w-full py-2.5 px-4 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2.5 px-4 bg-crmisa-navy text-white font-bold text-sm rounded-xl hover:bg-crmisa-accentNavy transition-colors flex items-center justify-center gap-2"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
@@ -146,7 +146,7 @@ export default function DashboardLayout({ onLogout }) {
           {/* Header Title & Mobile User Info */}
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight">
                 {currentTab.label}
               </h1>
             </div>
@@ -154,7 +154,7 @@ export default function DashboardLayout({ onLogout }) {
             {/* Quick Mobile Profile Snippet */}
             <div className="md:hidden flex items-center gap-3 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
               <div className="flex flex-col text-right">
-                 <span className="text-xs font-bold text-slate-900 leading-tight truncate max-w-[80px]">{user?.name?.split(' ')[0]}</span>
+                 <span className="text-xs font-bold text-crmisa-navy leading-tight truncate max-w-[80px]">{user?.name?.split(' ')[0]}</span>
                  <button onClick={onLogout} className="text-[9px] font-bold text-red-600 uppercase">Sign Out</button>
               </div>
               <img onClick={() => navigate('/dashboard/profile')} src={user?.avatar && user.avatar.includes('http') && !user.avatar.includes('user-placeholder.png') ? user.avatar : "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128"} className="w-8 h-8 rounded-full border border-slate-200 object-cover cursor-pointer" alt="Profile" />
@@ -183,7 +183,7 @@ export default function DashboardLayout({ onLogout }) {
               key={tab.id}
               to={tab.path}
               className={`flex flex-col items-center justify-center w-full h-full relative transition-colors ${
-                active ? 'text-blue-600' : 'text-slate-500 hover:text-slate-900'
+                active ? 'text-blue-600' : 'text-slate-500 hover:text-crmisa-navy'
               }`}
             >
               <div className={`p-1.5 rounded-full transition-colors ${active ? 'bg-blue-50' : ''}`}>

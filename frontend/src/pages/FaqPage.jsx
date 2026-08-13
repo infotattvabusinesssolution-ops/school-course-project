@@ -150,13 +150,13 @@ export default function FaqPage() {
   }, {});
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-crmisa-navy mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -165,12 +165,12 @@ export default function FaqPage() {
         {/* Header */}
         <div className="border-b border-slate-200 pb-8 mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-crmisa-navy text-white flex items-center justify-center">
               <HelpCircle className="w-5 h-5" />
             </div>
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Support & Help</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-crmisa-navy tracking-tight mb-4">
             Frequently Asked Questions
           </h1>
           <p className="text-slate-600 text-base leading-relaxed">
@@ -187,7 +187,7 @@ export default function FaqPage() {
           ) : (
             Object.keys(groupedFaqs).map((category, catIdx) => (
               <div key={catIdx} className="space-y-4">
-                <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-2">{category}</h2>
+                <h2 className="text-2xl font-bold text-crmisa-navy border-b border-slate-100 pb-2">{category}</h2>
                 <div className="space-y-3">
                   {groupedFaqs[category].map((faq, i) => {
                     const uniqueId = `${catIdx}-${i}`;
@@ -199,12 +199,12 @@ export default function FaqPage() {
                       >
                         <button
                           onClick={() => setOpenIdx(isOpen ? null : uniqueId)}
-                          className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-slate-900 text-base hover:bg-slate-50 transition-colors"
+                          className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-semibold text-crmisa-navy text-base hover:bg-slate-50 transition-colors"
                         >
                           <span>{faq.q}</span>
                           <ChevronDown
                             className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                              isOpen ? "rotate-180 text-slate-900" : ""
+                              isOpen ? "rotate-180 text-crmisa-navy" : ""
                             }`}
                           />
                         </button>

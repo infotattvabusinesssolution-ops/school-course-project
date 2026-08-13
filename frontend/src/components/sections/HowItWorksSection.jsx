@@ -31,7 +31,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
   ];
 
   return (
-    <section className="py-20 lg:py-32 bg-white text-slate-800 relative overflow-hidden">
+    <section className="py-20 lg:py-32 bg-white text-crmisa-accentNavy relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -43,7 +43,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
                 How It Works
               </span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl">
               Master Global Trade<br />in Four Steps
             </h2>
           </div>
@@ -59,7 +59,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
               key={item.step}
               data-aos="zoom-in"
               data-aos-delay={(idx + 1) * 100}
-              className="relative bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden h-[240px] sm:h-[280px] lg:h-[320px] p-6 sm:p-10 flex items-center group cursor-pointer"
+              className="relative bg-crmisa-navy rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden h-[240px] sm:h-[280px] lg:h-[320px] p-6 sm:p-10 flex items-center group cursor-pointer"
               onClick={onOpenRegister}
             >
               {/* Background Image & Overlay */}
@@ -68,7 +68,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
                 alt={item.title}
                 className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-crmisa-navy/90 via-slate-900/60 to-transparent pointer-events-none"></div>
               
               {/* Content */}
               <div className="relative z-10 flex items-center h-full w-full">
@@ -96,7 +96,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
         {/* Footer CTA */}
         <div className="mt-20 sm:mt-28 flex flex-col md:flex-row items-start md:items-center justify-between border-t border-slate-200 pt-12 gap-8" data-aos="fade-up">
           <div>
-            <h4 className="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-widest mb-2">
+            <h4 className="text-lg sm:text-xl font-bold text-crmisa-navy uppercase tracking-widest mb-2">
               Ready to get started?
             </h4>
             <p className="text-slate-500 text-sm sm:text-base font-medium max-w-md">
@@ -105,7 +105,7 @@ export default function HowItWorksSection({ onOpenRegister }) {
           </div>
           <button 
             onClick={() => navigate('/courses')} 
-            className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold px-10 py-4 sm:py-5 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(250,204,21,0.4)] hover:shadow-[0_12px_25px_rgba(250,204,21,0.5)] hover:-translate-y-1 text-sm sm:text-base tracking-wide"
+            className="w-full md:w-auto bg-crmisa-navy text-white font-bold px-10 py-4 sm:py-5 rounded-full transition-all duration-300 tracking-wide"
           >
             Enrol Now
           </button>

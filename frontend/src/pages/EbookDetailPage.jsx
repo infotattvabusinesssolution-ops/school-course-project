@@ -62,9 +62,9 @@ export default function EbookDetailPage({ onAddToCart }) {
   if (!ebook) {
     return (
       <div className="min-h-screen bg-white pt-28 flex flex-col items-center justify-center p-8 text-center">
-        <h2 className="text-xl font-bold text-slate-900 mb-2">E-book Not Found</h2>
+        <h2 className="text-xl font-bold text-crmisa-navy mb-2">E-book Not Found</h2>
         <p className="text-slate-500 text-sm mb-6">The trade handbook you are looking for does not exist.</p>
-        <Link to="/ebooks" className="px-6 py-2.5 bg-slate-900 text-white font-semibold text-sm rounded-lg">
+        <Link to="/ebooks" className="px-6 py-2.5 bg-crmisa-navy text-white font-semibold text-sm rounded-lg">
           Back to E-books
         </Link>
       </div>
@@ -72,12 +72,12 @@ export default function EbookDetailPage({ onAddToCart }) {
   }
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Back Link */}
         <button
           onClick={() => navigate("/ebooks")}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-crmisa-navy transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to E-books
@@ -87,24 +87,24 @@ export default function EbookDetailPage({ onAddToCart }) {
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start shadow-xs">
           {/* Left Column: 3D Ebook Cover Graphic */}
           <div className="md:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-[280px] aspect-[3/4] rounded-r-2xl rounded-l-md overflow-hidden bg-slate-900 border-l-[20px] border-slate-800 shadow-[6px_6px_0px_#f8fafc,12px_12px_0px_#f1f5f9,18px_18px_0px_#e2e8f0,19px_19px_0px_#cbd5e1] flex flex-col justify-between group">
+            <div className="relative w-full max-w-[280px] aspect-[3/4] rounded-r-2xl rounded-l-md overflow-hidden bg-crmisa-navy border-l-[20px] border-slate-800 shadow-[6px_6px_0px_#f8fafc,12px_12px_0px_#f1f5f9,18px_18px_0px_#e2e8f0,19px_19px_0px_#cbd5e1] flex flex-col justify-between group">
               {/* Book Spine Highlight */}
               <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white/20 to-transparent z-20 mix-blend-overlay"></div>
               
               {ebook.coverImage ? (
                 <img src={ebook.coverImage} alt={ebook.title} className="absolute inset-0 w-full h-full object-cover z-0" />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 font-bold text-sm z-0">No Cover</div>
+                <div className="absolute inset-0 flex items-center justify-center bg-crmisa-accentNavy text-slate-500 font-bold text-sm z-0">No Cover</div>
               )}
               
               {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-slate-900/40 z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/90 via-transparent to-crmisa-navy/40 z-10"></div>
 
 
 
               {/* Bottom Notice */}
               <div className="relative z-20 p-5 text-[11px] font-bold text-slate-100 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1.5 rounded-md backdrop-blur-md shadow-sm">
+                <span className="flex items-center gap-1.5 bg-crmisa-navy/80 px-2.5 py-1.5 rounded-md backdrop-blur-md shadow-sm">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant PDF
                 </span>
               </div>
@@ -117,7 +117,7 @@ export default function EbookDetailPage({ onAddToCart }) {
               <span className="bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1 rounded-md">
                 {ebook.category || "Digital Book"}
               </span>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-crmisa-navy leading-tight">
                 {ebook.title}
               </h1>
               {ebook.subtitle && (
@@ -131,7 +131,7 @@ export default function EbookDetailPage({ onAddToCart }) {
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               <div className="space-y-0.5">
                 <span className="text-xs text-slate-500 font-medium">Digital PDF Price</span>
-                <div className="text-3xl font-black text-slate-900">R{ebook.price}</div>
+                <div className="text-3xl font-black text-crmisa-navy">R{ebook.price}</div>
               </div>
 
               <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-md">
@@ -144,7 +144,7 @@ export default function EbookDetailPage({ onAddToCart }) {
               {isAdmin ? (
                 <button
                   onClick={() => navigate(`/admin/ebook/${id}/edit`)}
-                  className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2"
+                  className="px-8 py-3.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Edit E-book (Admin)</span>
@@ -191,7 +191,7 @@ export default function EbookDetailPage({ onAddToCart }) {
 
         {/* Description Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 space-y-4 shadow-xs">
-          <h3 className="text-lg font-bold text-slate-900">Handbook Description</h3>
+          <h3 className="text-lg font-bold text-crmisa-navy">Handbook Description</h3>
           <p className="text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
             {ebook.description || "Learn the core practices, procedures and documents required in any international merchandise transaction."}
           </p>

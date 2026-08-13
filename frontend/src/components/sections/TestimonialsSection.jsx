@@ -1,62 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../lib/axios";
 
 export default function TestimonialsSection() {
-  const testimonials = [
-    {
-      id: 1,
-      quote:
-        "After 8 years working for a logistics company, I thought I knew exports. Boy, was I wrong! The market expansion strategies course showed me how to find buyers directly. Quit my job last year and now run my own export consultancy. Lifechanging!",
-      name: "Thandi M",
-      role: "Export Consultant & Business Owner",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      quote:
-        "I nearly gave up on exporting after my first failed shipment to Zambia. Then I found CRMISA. Their step-by-step customs documentation training saved me thousands in losses. Now I'm shipping spices to 12 countries - all because I learned how to do it properly.",
-      name: "David K",
-      role: "Agricultural Spice Exporter",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      quote:
-        "My handmade crafts business was stuck at local markets until I took the 'Export Starter' program. Learned how to price for international buyers, handle shipping, and even got introduced to my first overseas client through the school's network. 42 international orders this quarter!",
-      name: "Aisha B",
-      role: "Handcrafts & Textile Artisan",
-      avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      quote:
-        "CRMISA's free company registration and free website setup were the icing on the cake. I was fully operational within 3 weeks of starting the course! Highly recommended for any new entrepreneur.",
-      name: "Kabo N",
-      role: "Tech Hardware Importer",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      quote:
-        "The knowledge I gained here gave me the confidence to expand my supply chain globally. The mentors are top-notch and the community support is unmatched. Best investment I've made for my career.",
-      name: "Lerato S",
-      role: "Supply Chain Manager",
-      avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1bf98c?q=80&w=400&auto=format&fit=crop",
-    },
-  ];
-
+  const [testimonials, setTestimonials] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await api.get("/testimonials/active");
+        setTestimonials(res.data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch testimonials:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
+  }, []);
 
   const nextTestimonial = () => {
+    if (testimonials.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
+    if (testimonials.length === 0) return;
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   // Helper to get 3 items for the desktop circular view
   const getVisibleTestimonials = () => {
+    if (testimonials.length === 0) return [];
+    if (testimonials.length === 1) return [testimonials[0]];
+    if (testimonials.length === 2) return [testimonials[currentIndex], testimonials[(currentIndex + 1) % 2]];
     return [
       testimonials[currentIndex],
       testimonials[(currentIndex + 1) % testimonials.length],
@@ -84,7 +63,7 @@ export default function TestimonialsSection() {
 
         {/* Quote Text */}
         <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-medium mb-8">
-          "{item.quote}"
+          "{item.description || item.quote}"
         </p>
       </div>
 
@@ -92,7 +71,7 @@ export default function TestimonialsSection() {
       <div className="flex items-center gap-4 pt-5 sm:pt-6 relative z-10 mt-auto border-t border-slate-100">
         <div className="relative">
           <img
-            src={item.avatar}
+            src={item.photo || item.avatar}
             alt={item.name}
             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm"
           />
@@ -103,11 +82,11 @@ export default function TestimonialsSection() {
           </div>
         </div>
         <div>
-          <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-tight">
+          <h4 className="font-bold text-crmisa-navy text-sm sm:text-base leading-tight">
             {item.name}
           </h4>
           <p className="text-[10px] sm:text-xs text-sky-600 font-bold uppercase tracking-wider mt-0.5 sm:mt-1">
-            {item.role}
+            Student / Alumnus
           </p>
         </div>
       </div>
@@ -115,7 +94,7 @@ export default function TestimonialsSection() {
   );
 
   return (
-    <section className="py-20 lg:py-32 bg-slate-50 text-slate-800 relative overflow-hidden">
+    <section className="py-20 lg:py-32 bg-slate-50 text-crmisa-accentNavy relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-crmisa-lightBlue rounded-full blur-[120px] opacity-60 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200 rounded-full blur-[100px] opacity-40 translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
@@ -131,7 +110,7 @@ export default function TestimonialsSection() {
                 Success Stories
               </span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1]">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1]">
               Hear from our
               <br className="hidden sm:block" />
               global alumni
@@ -142,13 +121,13 @@ export default function TestimonialsSection() {
           <div className="flex items-center gap-3">
             <button
               onClick={prevTestimonial}
-              className="w-12 h-12 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm flex items-center justify-center transition-all"
+              className="w-12 h-12 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-crmisa-navy hover:border-slate-300 hover:shadow-sm flex items-center justify-center transition-all"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="w-12 h-12 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm flex items-center justify-center transition-all"
+              className="w-12 h-12 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-crmisa-navy hover:border-slate-300 hover:shadow-sm flex items-center justify-center transition-all"
             >
               <ChevronRight className="w-6 h-6" />
             </button>

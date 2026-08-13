@@ -104,7 +104,7 @@ export default function ForumPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10" data-aos="fade-up">
@@ -116,7 +116,7 @@ export default function ForumPage() {
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <h1 className="text-4xl sm:text-5xl lg:text-4xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+              <h1 className="text-4xl sm:text-5xl lg:text-4xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl">
                 Trade Discussions & Insights
               </h1>
               <p className="text-slate-600 text-base sm:text-lg mt-3 max-w-xl">
@@ -129,7 +129,7 @@ export default function ForumPage() {
                 if (!isLoggedIn) openLogin();
                 else setIsCreateModalOpen(true);
               }}
-              className="shrink-0 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg text-sm font-semibold shadow-sm transition-colors"
+              className="shrink-0 flex items-center justify-center gap-2 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white px-6 py-3 rounded-lg text-sm font-semibold shadow-sm transition-colors"
             >
               <PlusCircle className="w-4 h-4" />
               <span>New Discussion</span>
@@ -147,7 +147,7 @@ export default function ForumPage() {
               placeholder="Search discussions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
             />
           </form>
 
@@ -160,8 +160,8 @@ export default function ForumPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                   activeCategory === cat.id
-                    ? "bg-slate-900 text-white"
-                    : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300"
+                    ? "bg-crmisa-navy text-white"
+                    : "bg-white border border-slate-200 text-slate-600 hover:text-crmisa-navy hover:border-slate-300"
                 }`}
               >
                 {cat.label}
@@ -185,11 +185,11 @@ export default function ForumPage() {
               }
               value={quickQuestion}
               onChange={(e) => setQuickQuestion(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+              className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-crmisa-navy placeholder:text-slate-400 focus:outline-none focus:border-crmisa-navy focus:bg-white transition-colors"
             />
             <button
               type="submit"
-              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
             >
               <span>Post</span>
               <Send className="w-3.5 h-3.5" />
@@ -205,14 +205,14 @@ export default function ForumPage() {
         ) : posts.length === 0 ? (
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-12 text-center">
             <MessageSquare className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-base font-bold text-slate-900 mb-1">No discussions found</h3>
+            <h3 className="text-base font-bold text-crmisa-navy mb-1">No discussions found</h3>
             <p className="text-xs text-slate-500 mb-4">Be the first to start a conversation in this category.</p>
             <button
               onClick={() => {
                 if (!isLoggedIn) openLogin();
                 else setIsCreateModalOpen(true);
               }}
-              className="px-5 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors"
+              className="px-5 py-2 bg-crmisa-navy text-white text-xs font-semibold rounded-lg hover:bg-crmisa-accentNavy transition-colors"
             >
               Start Discussion
             </button>
@@ -237,7 +237,7 @@ export default function ForumPage() {
                         <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold flex items-center justify-center text-[10px]">
                           {(post.authorName || post.author?.name || "A")[0].toUpperCase()}
                         </div>
-                        <span className="font-semibold text-slate-900">
+                        <span className="font-semibold text-crmisa-navy">
                           {post.authorName || post.author?.name || "Student"}
                         </span>
                         <span className="text-slate-300">•</span>
@@ -253,7 +253,7 @@ export default function ForumPage() {
                     </div>
 
                     {/* Question Title */}
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2 leading-snug">
+                    <h3 className="text-lg font-bold text-crmisa-navy group-hover:text-blue-600 transition-colors mb-2 leading-snug">
                       {post.title}
                     </h3>
 
@@ -284,7 +284,7 @@ export default function ForumPage() {
                         className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
                           isLiked
                             ? "bg-blue-50 text-blue-600"
-                            : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"
+                            : "hover:bg-slate-100 text-slate-500 hover:text-crmisa-navy"
                         }`}
                       >
                         <ThumbsUp className={`w-3.5 h-3.5 ${isLiked ? "fill-blue-600" : ""}`} />

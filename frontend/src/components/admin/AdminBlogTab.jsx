@@ -139,8 +139,8 @@ export default function AdminBlogTab() {
             <label htmlFor="isPublished" className="text-sm font-semibold">Publish immediately</label>
           </div>
           <div className="flex gap-4">
-            <button type="submit" className="px-6 py-2 bg-slate-900 text-white rounded-lg font-bold">Save</button>
-            <button type="button" onClick={() => setIsEditing(false)} className="px-6 py-2 bg-slate-200 text-slate-800 rounded-lg font-bold">Cancel</button>
+            <button type="submit" className="px-6 py-2 bg-crmisa-navy text-white rounded-lg font-bold">Save</button>
+            <button type="button" onClick={() => setIsEditing(false)} className="px-6 py-2 bg-slate-200 text-crmisa-accentNavy rounded-lg font-bold">Cancel</button>
           </div>
         </form>
       </div>
@@ -150,7 +150,7 @@ export default function AdminBlogTab() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-headline-sm font-bold text-slate-900">Blog Posts</h2>
+        <h2 className="text-headline-sm font-bold text-crmisa-navy">Blog Posts</h2>
         <button 
           onClick={() => { setCurrentBlog({ title: '', content: '', coverImage: '', isPublished: true }); setIsEditing(true); }}
           className="px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
@@ -184,7 +184,7 @@ export default function AdminBlogTab() {
                   </div>
                 )}
                 {/* Floating Status Badge */}
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold uppercase tracking-wide border border-white/50 shadow-sm text-slate-900">
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold uppercase tracking-wide border border-white/50 shadow-sm text-crmisa-navy">
                   {blog.isPublished ? 'PUBLISHED' : 'DRAFT'}
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function AdminBlogTab() {
                   {new Date(blog.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-900 leading-tight mb-4 line-clamp-2 group-hover:text-blue-700 transition-colors">
+                <h3 className="text-xl font-bold text-crmisa-navy leading-tight mb-4 line-clamp-2 group-hover:text-blue-700 transition-colors">
                   {blog.title}
                 </h3>
                 

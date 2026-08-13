@@ -84,3 +84,48 @@ export const getMyReview = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch your review" });
   }
 };
+
+// Admin: Get all reviews (with optional filtering)
+export const getAllReviewsAdmin = async (req, res) => {
+  try {
+    const { courseId } = req.query;
+    
+    let query = {};
+    if (courseId) {
+      query.course = courseId;
+    }
+
+    const reviews = await Review.find(query)
+      .populate("student", "name email")
+      .populate("course", "title")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: reviews,
+    });
+  } catch (error) {
+    console.error("Get all reviews error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch reviews" });
+  }
+};
+
+// Admin: Delete a review
+export const deleteReviewAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const review = await Review.findByIdAndDelete(id);
+
+    if (!review) {
+      return res.status(404).json({ success: false, message: "Review not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Review deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete review error:", error);
+    res.status(500).json({ success: false, message: "Failed to delete review" });
+  }
+};

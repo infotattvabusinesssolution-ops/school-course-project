@@ -66,7 +66,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
   if (loading) {
     return (
       <section className="py-12 lg:py-24 bg-white flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-crmisa-navy"></div>
       </section>
     );
   }
@@ -101,7 +101,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
           )}
           {/* Floating Category Badge */}
           <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10">
-            <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm">
+            <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/90 backdrop-blur-sm text-crmisa-navy text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm">
               {course.category}
             </span>
           </div>
@@ -121,7 +121,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
             </div>
           </div>
 
-          <h3 className="text-base sm:text-xl font-bold text-slate-900 leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
+          <h3 className="text-base sm:text-xl font-bold text-crmisa-navy leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
             {course.title}
           </h3>
           
@@ -133,7 +133,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
           
           <div className="flex items-center gap-1 mb-2 sm:mb-4 text-amber-500">
             <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
-            <span className="text-xs sm:text-sm font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+            <span className="text-xs sm:text-sm font-bold text-crmisa-navy">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
             <span className="text-xs sm:text-sm text-slate-500 ml-1">({course.reviewCount || 0})</span>
           </div>
 
@@ -147,7 +147,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
 
           {/* Footer Actions */}
           <div className="pt-3 sm:pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
-            <span className="text-lg sm:text-2xl font-bold text-slate-900">R{course.price}</span>
+            <span className="text-lg sm:text-2xl font-bold text-crmisa-navy">R{course.price}</span>
             
             {isCompleted ? (
               <button 
@@ -166,7 +166,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
                   e.stopPropagation();
                   navigate(`/course-premium/${course._id}`);
                 }}
-                className="bg-slate-900 text-white hover:bg-slate-800 px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+                className="bg-crmisa-navy text-white hover:bg-crmisa-accentNavy px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
               >
                 <span>Continue</span>
                 <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -177,7 +177,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
                   e.stopPropagation();
                   if (onOpenEnrol) onOpenEnrol(course.title, `R${course.price}`, course._id);
                 }}
-                className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-semibold transition-colors flex items-center gap-1"
+                className="bg-white border border-crmisa-navy hover:bg-crmisa-navy hover:text-white text-crmisa-navy px-2 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-semibold transition-colors flex items-center gap-1"
               >
                 <span>Enrol</span>
                 <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -190,7 +190,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
   };
 
   return (
-    <section className="py-12 lg:py-24 bg-white text-slate-800">
+    <section className="py-12 lg:py-24 bg-white text-crmisa-accentNavy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
@@ -202,7 +202,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
             </span>
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl">
               Certificate program in<br />import and export management
             </h2>
             <div className="hidden md:flex gap-2">
@@ -232,7 +232,7 @@ export default function CourseModulesSection({ onOpenEnrol }) {
         <div className="mt-4 md:mt-8 flex items-center justify-center">
           <button
             onClick={() => navigate('/courses')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-slate-900 bg-slate-900 text-white px-8 py-3 font-semibold hover:bg-slate-800 transition-colors"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-crmisa-navy bg-crmisa-navy text-white px-8 py-3 font-semibold hover:bg-crmisa-accentNavy transition-colors"
           >
             View All Courses
             <ChevronRight className="w-5 h-5" />

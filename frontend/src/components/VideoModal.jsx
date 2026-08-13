@@ -6,7 +6,7 @@ export default function VideoModal({ isOpen, onClose, videoUrl, title }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title || "Course Video"} maxWidth="max-w-4xl">
-      <div className="w-full aspect-video bg-black rounded-lg overflow-hidden mt-4">
+      <div className="w-full aspect-video bg-crmisa-darkNavy rounded-lg overflow-hidden mt-4">
         {videoUrl ? (
           <video 
             src={videoUrl} 

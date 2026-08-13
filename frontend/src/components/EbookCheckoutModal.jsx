@@ -133,9 +133,9 @@ export default function EbookCheckoutModal({
           <div className="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto animate-bounce">
             <CheckIcon className="w-10 h-10" />
           </div>
-          <h4 className="text-2xl font-bold text-slate-900">Purchase Successful!</h4>
+          <h4 className="text-2xl font-bold text-crmisa-navy">Purchase Successful!</h4>
           <p className="text-sm text-slate-600 max-w-xs mx-auto">
-            You now own <span className="font-bold text-slate-900">{safeTitle}</span>. Access your handbook from your Dashboard...
+            You now own <span className="font-bold text-crmisa-navy">{safeTitle}</span>. Access your handbook from your Dashboard...
           </p>
         </div>
       ) : (
@@ -145,7 +145,7 @@ export default function EbookCheckoutModal({
             {ebook.coverImage ? (
               <img src={ebook.coverImage} alt={safeTitle} className="w-16 h-20 object-cover rounded-md border border-slate-300" />
             ) : (
-              <div className="w-16 h-20 bg-slate-900 text-white font-bold text-xs flex items-center justify-center rounded-md p-2 text-center">
+              <div className="w-16 h-20 bg-crmisa-navy text-white font-bold text-xs flex items-center justify-center rounded-md p-2 text-center">
                 PDF
               </div>
             )}
@@ -153,7 +153,7 @@ export default function EbookCheckoutModal({
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Digital E-Book (PDF)
               </span>
-              <h3 className="text-base font-bold text-slate-900 leading-snug line-clamp-2">
+              <h3 className="text-base font-bold text-crmisa-navy leading-snug line-clamp-2">
                 {safeTitle}
               </h3>
               <div className="text-xs text-slate-500 font-semibold">
@@ -164,7 +164,7 @@ export default function EbookCheckoutModal({
 
           <form onSubmit={handleProceed} className="space-y-6">
             
-            <div className="bg-slate-900 p-4 rounded-xl text-left text-white space-y-2">
+            <div className="bg-crmisa-navy p-4 rounded-xl text-left text-white space-y-2">
               <div className="flex justify-between items-center text-slate-300">
                 <span className="text-xs font-semibold uppercase tracking-wider">
                   Handbook Price
@@ -225,7 +225,7 @@ export default function EbookCheckoutModal({
                     type="button"
                     onClick={handleApplyCoupon}
                     disabled={validatingCoupon || !couponCode.trim()}
-                    className="px-4 py-2 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 bg-crmisa-navy text-white font-bold rounded-lg text-xs hover:bg-crmisa-accentNavy disabled:opacity-50 transition-colors"
                   >
                     {validatingCoupon ? 'Applying...' : 'Apply'}
                   </button>
@@ -255,7 +255,7 @@ export default function EbookCheckoutModal({
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                  className="mt-1 w-4 h-4 text-crmisa-navy border-slate-300 focus:ring-slate-900 rounded-sm"
                 />
                 <span className="text-xs text-slate-600 leading-snug">
                   I agree to the <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a> for digital handbook access.
@@ -267,7 +267,7 @@ export default function EbookCheckoutModal({
                   type="checkbox"
                   checked={agreePrivacy}
                   onChange={(e) => setAgreePrivacy(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                  className="mt-1 w-4 h-4 text-crmisa-navy border-slate-300 focus:ring-slate-900 rounded-sm"
                 />
                 <span className="text-xs text-slate-600 leading-snug">
                   I consent to processing my order and receiving instant digital PDF access.
@@ -281,7 +281,7 @@ export default function EbookCheckoutModal({
                 disabled={!isFormValid}
                 className={`w-full py-3.5 font-bold text-sm rounded-xl transition-all shadow-sm ${
                   isFormValid 
-                    ? 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer' 
+                    ? 'bg-crmisa-navy hover:bg-crmisa-accentNavy text-white cursor-pointer' 
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >

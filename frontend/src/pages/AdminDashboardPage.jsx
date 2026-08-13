@@ -12,6 +12,9 @@ import AdminNewsletterTab from "../components/admin/AdminNewsletterTab";
 import AdminCouponTab from "../components/admin/AdminCouponTab";
 import AdminReferralTab from "../components/admin/AdminReferralTab";
 import AdminCourseTab from "../components/admin/AdminCourseTab";
+import AdminTestimonialsTab from "../components/admin/AdminTestimonialsTab";
+import AdminReviewsTab from "../components/admin/AdminReviewsTab";
+import AdminEmailsTab from "../components/admin/AdminEmailsTab";
 export default function AdminDashboardPage({ onLogout }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTabState] = useState(() => {
@@ -133,7 +136,7 @@ export default function AdminDashboardPage({ onLogout }) {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h1 className="text-display-lg-mobile md:text-display-lg font-bold text-on-background">
-              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : activeTab === 7 ? 'Blog Management' : activeTab === 8 ? 'Newsletter Subscribers' : activeTab === 9 ? 'Coupons' : activeTab === 10 ? 'Referrals & Influencers' : 'Course Management'}
+              {activeTab === 0 ? 'Overview' : activeTab === 1 ? 'User Management' : activeTab === 2 ? 'Enrollments & Financials' : activeTab === 3 ? 'Forum Management' : activeTab === 4 ? 'E-book Management' : activeTab === 6 ? 'Exam Management' : activeTab === 7 ? 'Blog Management' : activeTab === 8 ? 'Newsletter Subscribers' : activeTab === 9 ? 'Coupons' : activeTab === 10 ? 'Referrals & Influencers' : activeTab === 11 ? 'Testimonials' : activeTab === 12 ? 'Course Reviews' : activeTab === 13 ? 'Email Testing' : 'Course Management'}
             </h1>
             {activeTab === 5 && (
               <button 
@@ -147,7 +150,7 @@ export default function AdminDashboardPage({ onLogout }) {
             {activeTab === 4 && (
               <button 
                 onClick={() => navigate("/admin/ebook/create")}
-                className="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-crmisa-navy text-white font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
               >
                 <span className="material-symbols-outlined">add</span>
                 Add New E-book
@@ -172,12 +175,12 @@ export default function AdminDashboardPage({ onLogout }) {
                     <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Revenue</span>
-                        <div className="w-10 h-10 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-crmisa-navy text-yellow-400 flex items-center justify-center shrink-0">
                           <span className="material-symbols-outlined text-[22px]">payments</span>
                         </div>
                       </div>
                       <div>
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate" title={`R${Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}`}>
+                        <div className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight truncate" title={`R${Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}`}>
                           R{Math.round(analytics.totalRevenue || 0).toLocaleString("en-ZA")}
                         </div>
                         <div className="text-[11px] font-semibold text-emerald-600 mt-1 flex items-center gap-1">
@@ -195,7 +198,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         </div>
                       </div>
                       <div>
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                        <div className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight truncate">
                           {(analytics.totalUsers || 0).toLocaleString("en-IN")}
                         </div>
                         <div className="text-[11px] font-semibold text-slate-500 mt-1">
@@ -213,7 +216,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         </div>
                       </div>
                       <div>
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                        <div className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight truncate">
                           {analytics.totalCourses || 0}
                         </div>
                         <div className="text-[11px] font-semibold text-slate-500 mt-1">
@@ -231,7 +234,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         </div>
                       </div>
                       <div>
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                        <div className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight truncate">
                           {(analytics.totalEnrollments || 0).toLocaleString("en-IN")}
                         </div>
                         <div className="text-[11px] font-semibold text-slate-500 mt-1">
@@ -249,7 +252,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         </div>
                       </div>
                       <div>
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">
+                        <div className="text-2xl sm:text-3xl font-black text-crmisa-navy tracking-tight truncate">
                           {analytics.totalEbooksSold || 0}
                         </div>
                         <div className="text-[11px] font-semibold text-emerald-600 mt-1 truncate">
@@ -269,7 +272,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">video_library</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{analytics.totalCourses || 0}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">{analytics.totalCourses || 0}</p>
                         <p className="text-xs text-slate-500 truncate">Manage Courses →</p>
                       </div>
                     </div>
@@ -281,7 +284,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">group</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{analytics.totalUsers || 0}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">{analytics.totalUsers || 0}</p>
                         <p className="text-xs text-slate-500 truncate">Manage Users →</p>
                       </div>
                     </div>
@@ -293,7 +296,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">school</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{analytics.totalEnrollments || 0}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">{analytics.totalEnrollments || 0}</p>
                         <p className="text-xs text-slate-500 truncate">Enrollments →</p>
                       </div>
                     </div>
@@ -305,7 +308,7 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">auto_stories</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{analytics.totalEbooksSold || 0}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">{analytics.totalEbooksSold || 0}</p>
                         <p className="text-xs text-slate-500 truncate">E-books Sold →</p>
                       </div>
                     </div>
@@ -317,16 +320,16 @@ export default function AdminDashboardPage({ onLogout }) {
                         <span className="material-symbols-outlined text-[24px]">forum</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{forumPosts.length}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">{forumPosts.length}</p>
                         <p className="text-xs text-slate-500 truncate">Discussions →</p>
                       </div>
                     </div>
                     <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-crmisa-navy text-yellow-400 flex items-center justify-center shrink-0">
                         <span className="material-symbols-outlined text-[24px]">payments</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">R{Math.round((analytics.totalRevenue || 0)).toLocaleString('en-ZA')}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-crmisa-navy truncate">R{Math.round((analytics.totalRevenue || 0)).toLocaleString('en-ZA')}</p>
                         <p className="text-xs text-slate-500 truncate">Total Revenue</p>
                       </div>
                     </div>
@@ -335,7 +338,7 @@ export default function AdminDashboardPage({ onLogout }) {
                   {/* Recent Enrollments Preview */}
                   <div className="bg-white rounded-2xl border border-slate-200 p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="font-bold text-slate-900 text-lg">Recent Enrollments</h2>
+                      <h2 className="font-bold text-crmisa-navy text-lg">Recent Enrollments</h2>
                       <button onClick={() => setActiveTab(2)} className="text-xs font-semibold text-blue-600 hover:underline">View All →</button>
                     </div>
                     {enrollments.length === 0 ? (
@@ -345,11 +348,11 @@ export default function AdminDashboardPage({ onLogout }) {
                         {enrollments.slice(0, 5).map(e => (
                           <div key={e._id} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
                             <div>
-                              <p className="font-semibold text-slate-900 text-sm">{e.student?.name || 'Student'}</p>
+                              <p className="font-semibold text-crmisa-navy text-sm">{e.student?.name || 'Student'}</p>
                               <p className="text-xs text-slate-500">{e.course?.title || 'Course'}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-slate-900 text-sm">R{e.amountPaid}</p>
+                              <p className="font-bold text-crmisa-navy text-sm">R{e.amountPaid}</p>
                               <p className="text-xs text-slate-400">{new Date(e.enrolledAt).toLocaleDateString()}</p>
                             </div>
                           </div>
@@ -602,7 +605,7 @@ export default function AdminDashboardPage({ onLogout }) {
                     <h2 className="text-headline-sm font-bold text-on-surface">E-book Library</h2>
                     <button
                       onClick={() => navigate("/admin/ebook/create")}
-                      className="px-4 py-2 bg-slate-900 text-white rounded-lg font-bold text-body-sm hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+                      className="px-4 py-2 bg-crmisa-navy text-white rounded-lg font-bold text-body-sm hover:bg-crmisa-accentNavy transition-colors flex items-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[18px]">add</span>
                       Upload E-book
@@ -722,6 +725,15 @@ export default function AdminDashboardPage({ onLogout }) {
               
               {/* Tab 10: Referrals */}
               {activeTab === 10 && <AdminReferralTab />}
+              
+              {/* Tab 11: Testimonials */}
+              {activeTab === 11 && <AdminTestimonialsTab />}
+              
+              {/* Tab 12: Reviews */}
+              {activeTab === 12 && <AdminReviewsTab />}
+
+              {/* Tab 13: Emails */}
+              {activeTab === 13 && <AdminEmailsTab />}
             </>
           )}
         </div>

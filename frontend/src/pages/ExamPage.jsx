@@ -132,8 +132,8 @@ export default function ExamPage() {
   // ─── Loading / Error ──────────────────────────────────────────────────────────
   if (loading)
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-900 text-lg font-semibold">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 mr-3"></div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-crmisa-navy text-lg font-semibold">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy mr-3"></div>
         Loading exam…
       </div>
     );
@@ -142,11 +142,11 @@ export default function ExamPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-center p-8">
         <AlertTriangle className="w-12 h-12 text-amber-500 mb-4" />
-        <p className="text-slate-900 text-xl font-bold mb-2">Cannot Start Exam</p>
+        <p className="text-crmisa-navy text-xl font-bold mb-2">Cannot Start Exam</p>
         <p className="text-slate-600 mb-6">{error}</p>
         <button
           onClick={() => navigate(`/course-premium/${courseId}`)}
-          className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors"
+          className="px-6 py-3 bg-crmisa-navy text-white font-bold rounded-xl hover:bg-crmisa-accentNavy transition-colors"
         >
           Return to Course
         </button>
@@ -157,7 +157,7 @@ export default function ExamPage() {
   const currentQuestion = questions[currentQ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-sky-400 selection:text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-crmisa-navy flex flex-col font-sans selection:bg-sky-400 selection:text-crmisa-navy">
       {/* ── Tab Switch Warning Modal ─────────────────────────────────────────── */}
       <AnimatePresence>
         {showTabWarning && (
@@ -165,7 +165,7 @@ export default function ExamPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-crmisa-navy/40 backdrop-blur-sm p-4"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -210,7 +210,7 @@ export default function ExamPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-crmisa-navy/40 backdrop-blur-sm p-4"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -219,7 +219,7 @@ export default function ExamPage() {
               className="bg-white border border-slate-200 rounded-2xl p-8 max-w-sm w-full text-center shadow-xl"
             >
               <Send className="w-10 h-10 text-blue-600 mx-auto mb-4" />
-              <h2 className="text-xl font-black text-slate-900 mb-2">Submit Exam?</h2>
+              <h2 className="text-xl font-black text-crmisa-navy mb-2">Submit Exam?</h2>
               
               {submitError && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 text-left">
@@ -229,8 +229,8 @@ export default function ExamPage() {
               )}
 
               <p className="text-slate-600 text-sm mb-2">
-                You have answered <span className="text-slate-900 font-bold">{answeredCount}</span> of{" "}
-                <span className="text-slate-900 font-bold">{totalQuestions}</span> questions.
+                You have answered <span className="text-crmisa-navy font-bold">{answeredCount}</span> of{" "}
+                <span className="text-crmisa-navy font-bold">{totalQuestions}</span> questions.
               </p>
               {answeredCount < totalQuestions && (
                 <p className="text-amber-600 text-xs mb-4 font-semibold">
@@ -265,7 +265,7 @@ export default function ExamPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Final Exam</p>
-            <p className="text-sm font-extrabold text-slate-900">Attempt #{attemptNumber}</p>
+            <p className="text-sm font-extrabold text-crmisa-navy">Attempt #{attemptNumber}</p>
           </div>
         </div>
 
@@ -280,7 +280,7 @@ export default function ExamPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-mono font-black text-base ${
                 timeLeft <= 60
                   ? "bg-red-50 text-red-600 border border-red-200"
-                  : "bg-slate-100 text-slate-900 border border-slate-200"
+                  : "bg-slate-100 text-crmisa-navy border border-slate-200"
               }`}
             >
               <Clock className="w-4 h-4" />
@@ -291,7 +291,7 @@ export default function ExamPage() {
           <button
             onClick={() => { setShowSubmitConfirm(true); setSubmitError(null); }}
             disabled={submitting}
-            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition-colors text-sm disabled:opacity-50 shadow-xs"
+            className="px-5 py-2.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-extrabold rounded-xl transition-colors text-sm disabled:opacity-50 shadow-xs"
           >
             Submit Exam
           </button>
@@ -330,7 +330,7 @@ export default function ExamPage() {
               <p className="text-xs font-extrabold text-blue-600 uppercase tracking-widest mb-4">
                 Question {currentQ + 1}
               </p>
-              <h2 className="text-base sm:text-xl font-bold text-slate-900 leading-relaxed mb-8">
+              <h2 className="text-base sm:text-xl font-bold text-crmisa-navy leading-relaxed mb-8">
                 {currentQuestion.questionText}
               </h2>
 
@@ -384,7 +384,7 @@ export default function ExamPage() {
             <button
               onClick={() => setCurrentQ((q) => Math.min(q + 1, totalQuestions - 1))}
               disabled={currentQ === totalQuestions - 1}
-              className="flex items-center gap-2 px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white shadow-sm font-extrabold rounded-xl transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white shadow-sm font-extrabold rounded-xl transition-colors disabled:opacity-50"
             >
               Next <ChevronRight className="w-4 h-4" />
             </button>
@@ -431,7 +431,7 @@ export default function ExamPage() {
 
             <button
               onClick={() => { setShowSubmitConfirm(true); setSubmitError(null); }}
-              className="w-full mt-6 py-3 bg-slate-900 hover:bg-slate-800 shadow-sm text-white font-extrabold rounded-xl text-sm transition-colors"
+              className="w-full mt-6 py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy shadow-sm text-white font-extrabold rounded-xl text-sm transition-colors"
             >
               Submit Exam
             </button>

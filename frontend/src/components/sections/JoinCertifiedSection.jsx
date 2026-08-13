@@ -44,7 +44,7 @@ export default function JoinCertifiedSection() {
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-white text-slate-800 border-t border-slate-200 relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-white text-crmisa-accentNavy border-t border-slate-200 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Title, Description & Dynamic CTA Button */}
@@ -60,7 +60,7 @@ export default function JoinCertifiedSection() {
                   Join & Get Certified
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl mb-4">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl mb-4">
                 Unlimited access to
                 <br />
                 structured courses
@@ -74,7 +74,7 @@ export default function JoinCertifiedSection() {
             <div className="pt-2">
               <button
                 onClick={handleButtonClick}
-                className="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2 group"
+                className="px-8 py-3.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-semibold rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2 group"
               >
                 <span>{isLoggedIn ? "Courses" : "Register Now"}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -95,11 +95,11 @@ export default function JoinCertifiedSection() {
                     className="bg-white rounded-xl p-3 sm:p-6 border border-slate-200 hover:border-slate-400 transition-colors flex items-center gap-3 sm:gap-4 group cursor-pointer"
                     onClick={handleButtonClick}
                   >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                       <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                      <h3 className="text-xl sm:text-3xl font-bold text-crmisa-navy tracking-tight">
                         {stat.number}
                       </h3>
                       <p className="text-[9px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mt-0.5 leading-tight">

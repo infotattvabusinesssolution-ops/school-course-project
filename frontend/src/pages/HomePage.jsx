@@ -28,7 +28,7 @@ export default function HomePage({ onOpenRegister, onOpenLogin, onOpenEnrol, onV
   }, []);
 
   return (
-    <div className="animate-fade-in bg-slate-900">
+    <div className="animate-fade-in bg-crmisa-navy">
         <main className="animate-fade-in relative z-10">
           <div className="relative">
             <NewsletterModal />

@@ -80,12 +80,12 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
   }, [courses, selectedCategory, selectedLevel, searchQuery]);
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       
       {/* Page Header (Flat, Light) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <div className="flex flex-col items-start gap-4 mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl font-bold text-crmisa-navy tracking-tight">
             Explore Our Courses
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
@@ -105,7 +105,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
               placeholder="Search courses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-4 py-2.5 bg-transparent border-none text-sm text-slate-900 focus:ring-0 outline-none placeholder:text-slate-500"
+              className="block w-full pl-10 pr-4 py-2.5 bg-transparent border-none text-sm text-crmisa-navy focus:ring-0 outline-none placeholder:text-slate-500"
             />
           </div>
 
@@ -113,7 +113,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
           <div className="relative w-full sm:w-auto" ref={filterRef}>
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-900 text-white font-medium text-sm transition-colors hover:bg-slate-800"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-crmisa-navy text-white font-medium text-sm transition-colors hover:bg-crmisa-accentNavy"
             >
               <Filter className="w-4 h-4" />
               Filters {(selectedCategory !== 'All' || selectedLevel !== 'All') && '(Active)'}
@@ -134,12 +134,12 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                           onClick={() => setSelectedCategory(cat)}
                           className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
                             selectedCategory === cat 
-                              ? 'bg-slate-100 text-slate-900 font-semibold' 
-                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                              ? 'bg-slate-100 text-crmisa-navy font-semibold' 
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-crmisa-navy'
                           }`}
                         >
                           <span>{cat === 'other' ? 'Other' : cat}</span>
-                          {selectedCategory === cat && <Check className="w-4 h-4 text-slate-900" />}
+                          {selectedCategory === cat && <Check className="w-4 h-4 text-crmisa-navy" />}
                         </button>
                       ))}
                     </div>
@@ -157,12 +157,12 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                           onClick={() => setSelectedLevel(lvl)}
                           className={`w-full flex items-center justify-between px-3 py-2 text-sm capitalize transition-colors ${
                             selectedLevel === lvl 
-                              ? 'bg-slate-100 text-slate-900 font-semibold' 
-                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                              ? 'bg-slate-100 text-crmisa-navy font-semibold' 
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-crmisa-navy'
                           }`}
                         >
                           <span>{lvl}</span>
-                          {selectedLevel === lvl && <Check className="w-4 h-4 text-slate-900" />}
+                          {selectedLevel === lvl && <Check className="w-4 h-4 text-crmisa-navy" />}
                         </button>
                       ))}
                     </div>
@@ -191,16 +191,16 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crmisa-navy"></div>
           </div>
         ) : filteredCourses.length === 0 ? (
           <div className="bg-slate-50 p-12 text-center border border-slate-200 flex flex-col items-center justify-center min-h-[300px]">
             <Search className="w-10 h-10 text-slate-400 mb-4" />
-            <h3 className="text-lg font-bold text-slate-800 mb-2">No courses found</h3>
+            <h3 className="text-lg font-bold text-crmisa-accentNavy mb-2">No courses found</h3>
             <p className="text-slate-500 mb-6">Try adjusting your filters or search query.</p>
             <button 
               onClick={() => { setSelectedCategory('All'); setSelectedLevel('All'); setSearchQuery(''); setIsFilterOpen(false); }}
-              className="px-6 py-2 bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors"
+              className="px-6 py-2 bg-crmisa-navy text-white font-medium hover:bg-crmisa-accentNavy transition-colors"
             >
               Reset All
             </button>
@@ -232,7 +232,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                     </div>
                   )}
                   {/* Floating Level Badge */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-slate-900 uppercase tracking-wide border border-white/50 shadow-sm">
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-crmisa-navy uppercase tracking-wide border border-white/50 shadow-sm">
                     {course.category}
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
+                  <h3 className="text-xl font-bold text-crmisa-navy leading-tight mb-1 group-hover:text-blue-700 transition-colors line-clamp-2">
                     {course.title}
                   </h3>
                   
@@ -264,7 +264,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                   
                   <div className="flex items-center gap-1 mb-4 text-amber-500">
                     <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm font-bold text-slate-900">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
+                    <span className="text-sm font-bold text-crmisa-navy">{course.averageRating ? course.averageRating.toFixed(1) : '0.0'}</span>
                     <span className="text-sm text-slate-500 ml-1">({course.reviewCount || 0})</span>
                   </div>
 
@@ -274,7 +274,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
 
                   {/* Footer Actions */}
                   <div className="pt-5 border-t border-slate-100 flex items-center justify-between mt-auto">
-                    <span className="text-2xl font-bold text-slate-900">R{course.price}</span>
+                    <span className="text-2xl font-bold text-crmisa-navy">R{course.price}</span>
                     
                     {isCompleted ? (
                       <button 
@@ -293,7 +293,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                           e.stopPropagation();
                           navigate(`/course-premium/${course._id}`);
                         }}
-                        className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="bg-crmisa-navy text-white hover:bg-crmisa-accentNavy px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <span>Continue</span>
                         <ChevronRight className="w-4 h-4" />
@@ -305,7 +305,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                             e.stopPropagation();
                             if (onOpenEnrol) onOpenEnrol(course.title, `R${course.price}`, course._id);
                           }}
-                          className="bg-white border border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
+                          className="bg-white border border-crmisa-navy hover:bg-crmisa-navy hover:text-white text-crmisa-navy px-4 py-2 text-sm font-semibold transition-colors flex items-center gap-1"
                         >
                           <span>Enrol</span>
                           <ChevronRight className="w-4 h-4" />
@@ -320,7 +320,7 @@ export default function CoursesPage({ onOpenEnrol, onAddToCart, onAddToWishlist 
                               navigate('/cart');
                             }
                           }}
-                          className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-2 text-sm font-semibold transition-colors border border-slate-300 flex items-center justify-center"
+                          className="bg-slate-100 hover:bg-slate-200 text-crmisa-navy px-3 py-2 text-sm font-semibold transition-colors border border-slate-300 flex items-center justify-center"
                           title="Add to Cart"
                         >
                           <span className="material-symbols-outlined text-[18px]">

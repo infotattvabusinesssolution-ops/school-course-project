@@ -18,7 +18,7 @@ export default function CartModal({
         {cartItems.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-500 py-12">
             <ShoppingBag className="w-16 h-16 text-slate-200 mb-4" />
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Your cart is empty</h3>
+            <h3 className="text-xl font-bold text-crmisa-navy mb-2">Your cart is empty</h3>
             <p className="text-sm mb-6 text-center max-w-sm">
               Looks like you haven't added any courses or e-books to your cart yet.
             </p>
@@ -64,12 +64,12 @@ export default function CartModal({
                             <TrashIcon className="w-4 h-4" />
                           </button>
                         </div>
-                        <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-tight pr-6">
+                        <h4 className="font-bold text-crmisa-navy text-sm sm:text-base leading-tight pr-6">
                           {item.title}
                         </h4>
                       </div>
                       
-                      <div className="font-black text-slate-900 mt-2">
+                      <div className="font-black text-crmisa-navy mt-2">
                         R{typeof item.price === 'number' ? item.price : String(item.price).replace(/[^0-9]/g, '') || 0}
                       </div>
                     </div>
@@ -82,7 +82,7 @@ export default function CartModal({
             <div className="border-t border-slate-100 pt-6 mt-auto">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-slate-500 font-medium">Total</span>
-                <span className="text-3xl font-black text-slate-900">
+                <span className="text-3xl font-black text-crmisa-navy">
                   R{getCartTotal()}
                 </span>
               </div>

@@ -30,7 +30,7 @@ export default function EnrolModal({ isOpen, onClose, onEnrolSuccess }) {
           </div>
           <h4 className="text-2xl font-extrabold text-crmisa-navy">Congratulations! You're Enrolled!</h4>
           <p className="text-sm text-slate-600 max-w-sm mx-auto">
-            You are officially registered for the <span className="font-bold text-slate-800">CRMISA Import & Export Full Course</span>. Access details have been sent to your email.
+            You are officially registered for the <span className="font-bold text-crmisa-accentNavy">CRMISA Import & Export Full Course</span>. Access details have been sent to your email.
           </p>
           <div className="p-4 bg-crmisa-lightBlue rounded-xl text-xs text-crmisa-navy font-bold space-y-1">
             <div>✓ Course Portal Activated</div>
@@ -55,7 +55,7 @@ export default function EnrolModal({ isOpen, onClose, onEnrolSuccess }) {
 
           {/* Included Features List matching Image 4 */}
           <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <div className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">What's Included in R15,000:</div>
+            <div className="text-xs font-bold text-crmisa-accentNavy uppercase tracking-wider mb-2">What's Included in R15,000:</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700 font-semibold">
               <div className="flex items-center space-x-2">
                 <CheckIcon className="w-4 h-4 text-crmisa-navy" />

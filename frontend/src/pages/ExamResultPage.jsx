@@ -13,11 +13,11 @@ export default function ExamResultPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-center p-8">
         <AlertTriangle className="w-12 h-12 text-amber-500 mb-4" />
-        <p className="text-slate-900 text-xl font-bold mb-2">No Result Found</p>
+        <p className="text-crmisa-navy text-xl font-bold mb-2">No Result Found</p>
         <p className="text-slate-600 mb-6">Please take the exam first.</p>
         <button
           onClick={() => navigate(`/course-premium/${courseId}`)}
-          className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl shadow-sm hover:bg-slate-800 transition-colors"
+          className="px-6 py-3 bg-crmisa-navy text-white font-bold rounded-xl shadow-sm hover:bg-crmisa-accentNavy transition-colors"
         >
           Go to Course
         </button>
@@ -37,7 +37,7 @@ export default function ExamResultPage() {
   } = result;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 py-12 px-4 font-sans">
+    <div className="min-h-screen bg-slate-50 text-crmisa-navy py-12 px-4 font-sans">
       <div className="max-w-3xl mx-auto">
 
         {/* ── Score Hero ──────────────────────────────────────────────────────── */}
@@ -81,7 +81,7 @@ export default function ExamResultPage() {
               <div className="inline-flex items-center gap-2 bg-emerald-100 px-5 py-2 rounded-full text-sm font-black text-emerald-700 uppercase tracking-wider mb-4 border border-emerald-200">
                 <CheckCircle2 className="w-4 h-4" /> PASSED
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-3">
+              <h1 className="text-3xl sm:text-4xl font-black text-crmisa-navy mb-3">
                 🎉 Congratulations!
               </h1>
               <p className="text-emerald-700 text-base font-semibold mb-2">
@@ -96,14 +96,14 @@ export default function ExamResultPage() {
               <div className="inline-flex items-center gap-2 bg-red-100 px-5 py-2 rounded-full text-sm font-black text-red-700 uppercase tracking-wider mb-4 border border-red-200">
                 <XCircle className="w-4 h-4" /> NOT PASSED
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-3">
+              <h1 className="text-3xl sm:text-4xl font-black text-crmisa-navy mb-3">
                 Keep Going!
               </h1>
               <p className="text-red-700 text-base font-semibold mb-2">
                 You scored {score} out of {totalQuestions} ({percentage}%)
               </p>
               <p className="text-slate-600 text-sm mb-1">
-                Minimum required: <span className="font-bold text-slate-900">{passingPercentage}%</span>
+                Minimum required: <span className="font-bold text-crmisa-navy">{passingPercentage}%</span>
               </p>
               <p className="text-slate-500 text-xs">
                 This was attempt #{attemptNumber}. You may retake the exam.
@@ -120,7 +120,7 @@ export default function ExamResultPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               onClick={() => navigate(`/certificate/${certificate.certificateId}`)}
-              className="flex-1 flex items-center justify-center gap-2 py-4 bg-amber-400 hover:bg-amber-500 text-slate-900 shadow-sm font-black rounded-2xl transition-colors text-base"
+              className="flex-1 flex items-center justify-center gap-2 py-4 bg-amber-400 hover:bg-amber-500 text-crmisa-navy shadow-sm font-black rounded-2xl transition-colors text-base"
             >
               <Award className="w-5 h-5" /> View & Download Certificate
             </motion.button>
@@ -154,7 +154,7 @@ export default function ExamResultPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <h2 className="text-xl font-black text-slate-900 mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-black text-crmisa-navy mb-4 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-500" />
               Detailed Question Review
             </h2>
@@ -174,7 +174,7 @@ export default function ExamResultPage() {
                     ) : (
                       <XCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                     )}
-                    <p className="text-slate-900 font-bold text-sm leading-relaxed">
+                    <p className="text-crmisa-navy font-bold text-sm leading-relaxed">
                       Q{idx + 1}. {qr.questionText}
                     </p>
                   </div>

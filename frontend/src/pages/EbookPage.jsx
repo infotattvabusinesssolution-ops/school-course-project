@@ -58,7 +58,7 @@ export default function EbookPage({ onAddToCart }) {
       : ebooks.filter((b) => b.category === activeCategory);
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         
         {/* Header */}
@@ -71,7 +71,7 @@ export default function EbookPage({ onAddToCart }) {
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <h1 className="text-4xl sm:text-5xl font-medium text-slate-900 tracking-tight leading-tight">
+              <h1 className="text-4xl sm:text-5xl font-medium text-crmisa-navy tracking-tight leading-tight">
                 Master Global Trade <br className="hidden sm:block" /> At Your Own Pace
               </h1>
               <p className="text-slate-600 text-base sm:text-lg mt-3 max-w-2xl">
@@ -83,7 +83,7 @@ export default function EbookPage({ onAddToCart }) {
 
         {/* Browse Section Title */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6" data-aos="fade-up">
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Browse E-Books</h2>
+          <h2 className="text-2xl font-bold text-crmisa-navy tracking-tight">Browse E-Books</h2>
         </div>
 
         {/* Ebooks Grid */}
@@ -105,7 +105,7 @@ export default function EbookPage({ onAddToCart }) {
                 {/* 3D Ebook Graphic Cover */}
                 <div
                   onClick={() => navigate(`/ebook/${item._id || item.id}`)}
-                  className="relative aspect-[3/4] w-[80%] mx-auto rounded-r-xl rounded-l-sm overflow-hidden bg-slate-900 border-l-[14px] border-slate-800 shadow-[4px_0px_0px_#f8fafc,8px_0px_0px_#f1f5f9,12px_0px_0px_#e2e8f0,13px_0px_0px_#cbd5e1] flex flex-col justify-between transition-all duration-300"
+                  className="relative aspect-[3/4] w-[80%] mx-auto rounded-r-xl rounded-l-sm overflow-hidden bg-crmisa-navy border-l-[14px] border-slate-800 shadow-[4px_0px_0px_#f8fafc,8px_0px_0px_#f1f5f9,12px_0px_0px_#e2e8f0,13px_0px_0px_#cbd5e1] flex flex-col justify-between transition-all duration-300"
                 >
                   {/* Book Spine Highlight */}
                   <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-white/30 to-transparent z-20 mix-blend-overlay"></div>
@@ -113,17 +113,17 @@ export default function EbookPage({ onAddToCart }) {
                   {item.coverImage ? (
                     <img src={item.coverImage} alt={item.title} className="absolute inset-0 w-full h-full object-cover z-0" />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 font-bold text-sm z-0">No Cover</div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-crmisa-accentNavy text-slate-500 font-bold text-sm z-0">No Cover</div>
                   )}
 
                   {/* Fallback overlay if no image or to darken */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/40 z-10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/80 via-transparent to-crmisa-navy/40 z-10"></div>
 
 
 
                   {/* Stock Indicator */}
                   <div className="relative z-20 p-3 flex items-center justify-between text-[10px] font-bold text-slate-100">
-                    <span className="flex items-center gap-1.5 bg-slate-900/80 px-2 py-1 rounded-md backdrop-blur-md">
+                    <span className="flex items-center gap-1.5 bg-crmisa-navy/80 px-2 py-1 rounded-md backdrop-blur-md">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant PDF
                     </span>
                   </div>
@@ -135,7 +135,7 @@ export default function EbookPage({ onAddToCart }) {
                     onClick={() => navigate(`/ebook/${item._id || item.id}`)}
                     className="space-y-2"
                   >
-                    <h3 className="font-extrabold text-base text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h3 className="font-extrabold text-base text-crmisa-navy leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
                       {item.title}
                     </h3>
                     <div className="text-sm font-bold text-slate-500">

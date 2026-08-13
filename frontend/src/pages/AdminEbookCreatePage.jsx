@@ -104,19 +104,19 @@ export default function AdminEbookCreatePage() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-slate-50 min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Top Header & Back Button */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-crmisa-navy transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Admin Dashboard
           </button>
-          <span className="bg-slate-900 text-white font-bold text-xs px-3 py-1 rounded-md">
+          <span className="bg-crmisa-navy text-white font-bold text-xs px-3 py-1 rounded-md">
             Admin Portal
           </span>
         </div>
@@ -124,11 +124,11 @@ export default function AdminEbookCreatePage() {
         {/* Page Title */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-lg bg-crmisa-navy text-white flex items-center justify-center font-bold">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-crmisa-navy">
                 {isEditMode ? "Edit E-book" : "Upload New E-book"}
               </h1>
               <p className="text-xs text-slate-500 font-medium">
@@ -152,7 +152,7 @@ export default function AdminEbookCreatePage() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g. CRMISA – Shipping Containers & Customs Clearance"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
               />
             </div>
 
@@ -163,7 +163,7 @@ export default function AdminEbookCreatePage() {
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm font-semibold text-slate-900 bg-white focus:outline-none focus:border-slate-900 transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm font-semibold text-crmisa-navy bg-white focus:outline-none focus:border-crmisa-navy transition-colors"
               >
                 <option value="Export Marketing">Export Marketing</option>
                 <option value="Shipping & Logistics">Shipping & Logistics</option>
@@ -184,7 +184,7 @@ export default function AdminEbookCreatePage() {
                 required
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
               />
             </div>
 
@@ -197,7 +197,7 @@ export default function AdminEbookCreatePage() {
                 value={formData.coverTitle}
                 onChange={(e) => setFormData({ ...formData, coverTitle: e.target.value })}
                 placeholder="e.g. HOW TO WIN BUYERS ACROSS BORDERS"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
               />
             </div>
           </div>
@@ -212,7 +212,7 @@ export default function AdminEbookCreatePage() {
               value={formData.subtitle}
               onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
               placeholder="e.g. Learn essential documentation & container shipping procedures"
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
             />
           </div>
 
@@ -226,21 +226,21 @@ export default function AdminEbookCreatePage() {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Provide a comprehensive breakdown of chapters, trade topics, and compliance guidelines..."
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-slate-900 transition-colors resize-none"
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors resize-none"
             />
           </div>
 
           {/* Cloudinary File Uploads Section */}
           <div className="pt-4 border-t border-slate-200 space-y-4">
             <div className="flex items-center gap-2">
-              <Upload className="w-5 h-5 text-slate-900" />
-              <h3 className="font-bold text-slate-900 text-base">Cloudinary File Assets</h3>
+              <Upload className="w-5 h-5 text-crmisa-navy" />
+              <h3 className="font-bold text-crmisa-navy text-base">Cloudinary File Assets</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Cover Image Upload */}
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                <div className="flex items-center gap-2 text-xs font-bold text-crmisa-navy">
                   <ImageIcon className="w-4 h-4 text-slate-600" />
                   <span>Cover Image File</span>
                 </div>
@@ -251,14 +251,14 @@ export default function AdminEbookCreatePage() {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setFormData({ ...formData, coverImageFile: e.target.files[0] })}
-                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-800 cursor-pointer"
+                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-crmisa-accentNavy cursor-pointer"
                 />
                 <p className="text-[11px] text-slate-400">{isEditMode ? "Choose file to replace current cover" : "JPG or PNG cover graphic"}</p>
               </div>
 
               {/* Sample PDF Upload */}
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                <div className="flex items-center gap-2 text-xs font-bold text-crmisa-navy">
                   <FileText className="w-4 h-4 text-slate-600" />
                   <span>Sample Preview PDF</span>
                 </div>
@@ -269,14 +269,14 @@ export default function AdminEbookCreatePage() {
                   type="file"
                   accept="application/pdf"
                   onChange={(e) => setFormData({ ...formData, samplePdfFile: e.target.files[0] })}
-                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-800 cursor-pointer"
+                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-crmisa-accentNavy cursor-pointer"
                 />
                 <p className="text-[11px] text-slate-400">{isEditMode ? "Choose file to replace sample PDF" : "Free preview PDF sample"}</p>
               </div>
 
               {/* Full E-book PDF Upload */}
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                <div className="flex items-center gap-2 text-xs font-bold text-crmisa-navy">
                   <BookOpen className="w-4 h-4 text-slate-600" />
                   <span>Full E-book PDF File</span>
                 </div>
@@ -287,7 +287,7 @@ export default function AdminEbookCreatePage() {
                   type="file"
                   accept="application/pdf"
                   onChange={(e) => setFormData({ ...formData, pdfFile: e.target.files[0] })}
-                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-800 cursor-pointer"
+                  className="w-full text-xs text-slate-500 border border-slate-200 rounded-lg file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-crmisa-accentNavy cursor-pointer"
                 />
                 <p className="text-[11px] text-slate-400">{isEditMode ? "Choose file to replace full PDF" : "Complete handbook file"}</p>
               </div>
@@ -306,7 +306,7 @@ export default function AdminEbookCreatePage() {
             <button
               type="submit"
               disabled={uploading}
-              className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg shadow-sm transition-colors text-xs flex items-center gap-2"
+              className="px-8 py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold rounded-lg shadow-sm transition-colors text-xs flex items-center gap-2"
             >
               {uploading ? (
                 "Saving Assets to Cloudinary..."

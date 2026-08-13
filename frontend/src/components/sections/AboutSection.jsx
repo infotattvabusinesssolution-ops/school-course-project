@@ -15,7 +15,7 @@ export default function AboutSection({ onGetStarted }) {
 
             {/* Main Image */}
             <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/5] sm:aspect-square lg:aspect-[4/5] group border border-slate-100">
-              <div className="absolute inset-0 bg-slate-900/10 z-10"></div>
+              <div className="absolute inset-0 bg-crmisa-navy/10 z-10"></div>
               <img
                 src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1000&auto=format&fit=crop"
                 alt="Logistics and Trade"
@@ -25,9 +25,9 @@ export default function AboutSection({ onGetStarted }) {
               {/* Floating Stat Card */}
               <div className="absolute bottom-6 right-6 sm:bottom-10 sm:-right-6 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl max-w-[220px] border border-white z-20 group-hover:-translate-y-2 transition-transform duration-500">
                 <div className="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
-                  <GlobeIcon className="w-6 h-6 text-slate-900" />
+                  <GlobeIcon className="w-6 h-6 text-crmisa-navy" />
                 </div>
-                <p className="text-4xl font-black text-slate-900 tracking-tight">
+                <p className="text-4xl font-black text-crmisa-navy tracking-tight">
                   #1
                 </p>
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">
@@ -49,7 +49,7 @@ export default function AboutSection({ onGetStarted }) {
                   About CRMISA
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-2xl text-left">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-2xl text-left">
                 Empowering African
                 <br />
                 Entrepreneurs
@@ -62,7 +62,7 @@ export default function AboutSection({ onGetStarted }) {
               data-aos-delay="100"
             >
               <p>
-                <strong className="text-slate-900 font-bold">CRMISA</strong> is
+                <strong className="text-crmisa-navy font-bold">CRMISA</strong> is
                 South Africa’s leading online academy for Import & Export
                 education.
               </p>
@@ -85,7 +85,7 @@ export default function AboutSection({ onGetStarted }) {
                   <PackageIcon className="w-7 h-7" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 text-lg">
+                  <h4 className="font-bold text-crmisa-navy text-lg">
                     FREE Registered Company
                   </h4>
                   <p className="text-sm font-medium text-slate-500">
@@ -99,7 +99,7 @@ export default function AboutSection({ onGetStarted }) {
                   <GlobeIcon className="w-7 h-7" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 text-lg">
+                  <h4 className="font-bold text-crmisa-navy text-lg">
                     Professional Website
                   </h4>
                   <p className="text-sm font-medium text-slate-500">

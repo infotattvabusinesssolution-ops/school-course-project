@@ -57,7 +57,7 @@ export default function AdminReferralTab() {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-800">Influencer & Referral Management</h2>
+        <h2 className="text-lg font-bold text-crmisa-accentNavy">Influencer & Referral Management</h2>
         <button 
           onClick={() => setIsCreating(!isCreating)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
@@ -68,7 +68,7 @@ export default function AdminReferralTab() {
       
       {isCreating && (
         <div className="p-6 border-b border-slate-200 bg-blue-50/50">
-          <h3 className="text-md font-bold text-slate-800 mb-4">Generate New Referral Code</h3>
+          <h3 className="text-md font-bold text-crmisa-accentNavy mb-4">Generate New Referral Code</h3>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1">Influencer / Partner Name</label>
@@ -108,7 +108,7 @@ export default function AdminReferralTab() {
             <tbody className="divide-y divide-slate-100">
               {referrals.map(referral => (
                 <tr key={referral._id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-bold text-slate-900">{referral.influencerName}</td>
+                  <td className="px-4 py-3 font-bold text-crmisa-navy">{referral.influencerName}</td>
                   <td className="px-4 py-3 text-blue-600 font-semibold">{referral.referralCode}</td>
                   <td className="px-4 py-3 text-slate-600">{referral.userDiscountPercentage}%</td>
                   <td className="px-4 py-3 text-center font-bold text-emerald-600">

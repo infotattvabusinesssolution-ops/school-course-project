@@ -59,7 +59,7 @@ export default function AdminCouponTab() {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-800">Coupons Management</h2>
+        <h2 className="text-lg font-bold text-crmisa-accentNavy">Coupons Management</h2>
         <button 
           onClick={() => setIsCreating(!isCreating)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
@@ -70,7 +70,7 @@ export default function AdminCouponTab() {
       
       {isCreating && (
         <div className="p-6 border-b border-slate-200 bg-blue-50/50">
-          <h3 className="text-md font-bold text-slate-800 mb-4">Create New Coupon</h3>
+          <h3 className="text-md font-bold text-crmisa-accentNavy mb-4">Create New Coupon</h3>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1">Coupon Code</label>
@@ -121,7 +121,7 @@ export default function AdminCouponTab() {
             <tbody className="divide-y divide-slate-100">
               {coupons.map(coupon => (
                 <tr key={coupon._id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-bold text-slate-900">{coupon.code}</td>
+                  <td className="px-4 py-3 font-bold text-crmisa-navy">{coupon.code}</td>
                   <td className="px-4 py-3 text-emerald-600 font-semibold">
                     {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `R ${coupon.discountValue}`}
                   </td>

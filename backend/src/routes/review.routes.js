@@ -1,19 +1,19 @@
 import express from "express";
-import { addReview, getCourseReviews, getMyReview } from "../controllers/review.controller.js";
-import { protect } from "../middleware/auth.middleware.js";
+import { addReview, getCourseReviews, getMyReview, getAllReviewsAdmin, deleteReviewAdmin } from "../controllers/review.controller.js";
+import { protect, authorize } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// Public route to get all reviews for a course
+// Public routes
 router.get("/course/:courseId", getCourseReviews);
 
-// Protected routes
+// Protected routes for students
 router.use(protect);
-
-// Get logged-in user's review for a course
 router.get("/course/:courseId/me", getMyReview);
-
-// Add or update a review
 router.post("/course/:courseId", addReview);
+
+// Admin routes
+router.get("/admin/all", authorize('ADMIN'), getAllReviewsAdmin);
+router.delete("/admin/:id", authorize('ADMIN'), deleteReviewAdmin);
 
 export default router;

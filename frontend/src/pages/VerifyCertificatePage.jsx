@@ -59,14 +59,14 @@ export default function VerifyCertificatePage() {
           <div className="w-14 h-14 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-crmisa-navy">
             Certificate Verification Failed
           </h2>
           <p className="text-sm text-slate-600 leading-relaxed">{error}</p>
           <div className="pt-2">
             <Link
               to="/"
-              className="px-6 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl inline-flex items-center gap-2 hover:bg-slate-800 transition-colors"
+              className="px-6 py-2.5 bg-crmisa-navy text-white font-bold text-xs rounded-xl inline-flex items-center gap-2 hover:bg-crmisa-accentNavy transition-colors"
             >
               <ArrowLeft className="w-4 h-4" /> Return to Home
             </Link>
@@ -116,7 +116,7 @@ export default function VerifyCertificatePage() {
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Certificate ID
             </span>
-            <span className="font-mono font-black text-sm text-slate-900 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
+            <span className="font-mono font-black text-sm text-crmisa-navy bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
               {certificateId}
             </span>
           </div>
@@ -130,7 +130,7 @@ export default function VerifyCertificatePage() {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Certificate Awarded To
                 </p>
-                <p className="text-xl font-black text-slate-900">
+                <p className="text-xl font-black text-crmisa-navy">
                   {studentName}
                 </p>
               </div>
@@ -144,7 +144,7 @@ export default function VerifyCertificatePage() {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Course Completed
                 </p>
-                <p className="text-lg font-bold text-slate-900 leading-snug">
+                <p className="text-lg font-bold text-crmisa-navy leading-snug">
                   {courseTitle}
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default function VerifyCertificatePage() {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Date of Issuance
                 </p>
-                <p className="text-base font-bold text-slate-800">
+                <p className="text-base font-bold text-crmisa-accentNavy">
                   {formattedDate}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export default function VerifyCertificatePage() {
 
           {/* Official Verification Statement */}
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-600 leading-relaxed">
-            <span className="font-bold text-slate-900">
+            <span className="font-bold text-crmisa-navy">
               Platform Statement:{" "}
             </span>
             This official Certificate of Completion was generated and
@@ -179,7 +179,7 @@ export default function VerifyCertificatePage() {
           <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => navigate(`/certificate/${certificateId}`)}
-              className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+              className="flex-1 py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer"
             >
               <Award className="w-4 h-4 text-amber-400" />
               <span>View / Print Certificate Document</span>
@@ -187,7 +187,7 @@ export default function VerifyCertificatePage() {
 
             <Link
               to="/courses"
-              className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5"
+              className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-crmisa-accentNavy font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5"
             >
               <span>Explore All Courses</span>
             </Link>

@@ -36,11 +36,11 @@ export default function CreatePostModal({ isOpen, onClose, onSubmitPost }) {
     <Modal isOpen={isOpen} onClose={onClose} title="Start Discussion" maxWidth="max-w-lg">
       <div className="py-2 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-crmisa-navy text-white flex items-center justify-center shrink-0">
             <MessageSquare className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+            <h3 className="text-xl font-bold text-crmisa-navy tracking-tight">
               Start a Discussion
             </h3>
             <p className="text-xs text-slate-500 font-medium">
@@ -58,7 +58,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmitPost }) {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-slate-900 transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-xs font-semibold text-crmisa-navy bg-white focus:outline-none focus:border-crmisa-navy transition-colors"
             >
               <option value="General">General</option>
               <option value="Import">Import</option>
@@ -79,7 +79,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmitPost }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. What documents are needed for Durban customs clearance?"
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-900 transition-colors"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors"
             />
           </div>
 
@@ -93,7 +93,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmitPost }) {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Provide background information, context, or specific questions..."
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-900 transition-colors resize-none"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-crmisa-navy focus:outline-none focus:border-crmisa-navy transition-colors resize-none"
             />
           </div>
 
@@ -102,7 +102,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmitPost }) {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2"
+              className="w-full py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-semibold rounded-lg shadow-sm transition-colors text-sm flex items-center justify-center gap-2"
             >
               {processing ? (
                 "Publishing..."

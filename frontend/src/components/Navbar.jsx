@@ -137,7 +137,7 @@ export default function Navbar({
                           onClick={() => handleDropdownItemClick(item)}
                           className={`w-full text-left px-5 py-3.5 text-sm font-normal transition-colors duration-150 ${
                             idx === 0
-                              ? 'text-slate-900 font-medium hover:bg-crmisa-lightBlue hover:text-crmisa-navy'
+                              ? 'text-crmisa-navy font-medium hover:bg-crmisa-lightBlue hover:text-crmisa-navy'
                               : 'text-slate-700 hover:bg-slate-50 hover:text-crmisa-navy'
                           }`}
                         >
@@ -216,7 +216,7 @@ export default function Navbar({
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[70] lg:hidden"
+          className="fixed inset-0 bg-crmisa-navy/40 backdrop-blur-sm z-[70] lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -226,7 +226,7 @@ export default function Navbar({
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex items-center justify-between p-4 border-b border-slate-100">
-          <span className="font-bold text-lg text-slate-900">Menu</span>
+          <span className="font-bold text-lg text-crmisa-navy">Menu</span>
           <button 
             onClick={() => setMobileMenuOpen(false)}
             className="p-2 text-slate-500 hover:text-crmisa-navy focus:outline-none rounded-lg hover:bg-slate-50 transition-colors"
@@ -286,7 +286,7 @@ export default function Navbar({
                       navigate('/dashboard');
                     }
                   }}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-center transition-colors"
+                  className="w-full py-3 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-bold rounded-xl text-center transition-colors"
                 >
                   {user?.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}
                 </button>

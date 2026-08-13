@@ -31,6 +31,7 @@ export default function AdminExamManagementPage() {
   // Form state
   const [passingPercentage, setPassingPercentage] = useState(40);
   const [timeLimitMinutes, setTimeLimitMinutes] = useState(0);
+  const [reExamFee, setReExamFee] = useState(500);
   const [shuffleQuestions, setShuffleQuestions] = useState(true);
   const [questions, setQuestions] = useState([emptyQuestion()]);
 
@@ -68,6 +69,7 @@ export default function AdminExamManagementPage() {
         setExistingExam(exam);
         setPassingPercentage(exam.passingPercentage);
         setTimeLimitMinutes(exam.timeLimitMinutes);
+        setReExamFee(exam.reExamFee ?? 500);
         setShuffleQuestions(exam.shuffleQuestions);
         setQuestions(
           exam.questions.length > 0
@@ -85,6 +87,7 @@ export default function AdminExamManagementPage() {
         setExistingExam(null);
         setPassingPercentage(40);
         setTimeLimitMinutes(0);
+        setReExamFee(500);
         setShuffleQuestions(true);
         setQuestions([emptyQuestion()]);
       })
@@ -166,6 +169,7 @@ export default function AdminExamManagementPage() {
         questions,
         passingPercentage: Number(passingPercentage),
         timeLimitMinutes: Number(timeLimitMinutes),
+        reExamFee: Number(reExamFee),
         shuffleQuestions,
       };
       if (existingExam) {
@@ -203,7 +207,7 @@ export default function AdminExamManagementPage() {
       {/* ── Page Header ────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-900">Exam Management</h2>
+          <h2 className="text-2xl font-black text-crmisa-navy">Exam Management</h2>
           <p className="text-sm text-slate-500 mt-0.5">
             Create and manage final exams for each course. Students must pass to receive their certificate.
           </p>
@@ -221,9 +225,9 @@ export default function AdminExamManagementPage() {
           <select
             value={selectedCourseId}
             onChange={(e) => { setSelectedCourseId(e.target.value); setActiveView("editor"); }}
-            className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+            className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm font-semibold text-crmisa-accentNavy bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
           >
-            <option value="">— Choose a course —</option>
+            <option value="">— View All Exams —</option>
             {courses.map((c) => (
               <option key={c._id} value={c._id}>
                 {c.title}
@@ -233,11 +237,35 @@ export default function AdminExamManagementPage() {
         )}
       </div>
 
-      {/* ── No Course Selected ───────────────────────────────────────────────── */}
-      {!selectedCourseId && (
-        <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-12 text-center">
-          <span className="material-symbols-outlined text-[48px] text-slate-300 block mb-3">quiz</span>
-          <p className="text-slate-500 font-semibold">Select a course above to manage its exam</p>
+      {/* ── Default View: All Courses/Exams ──────────────────────────────────── */}
+      {!selectedCourseId && !loadingCourses && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {courses.map((c) => (
+            <div key={c._id} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+               <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                      <span className="material-symbols-outlined">quiz</span>
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-crmisa-navy text-lg line-clamp-2">{c.title}</h3>
+               </div>
+               <div className="mt-5 pt-4 border-t border-slate-100">
+                  <button 
+                    onClick={() => { setSelectedCourseId(c._id); setActiveView("editor"); }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 text-crmisa-navy border border-slate-200 rounded-xl font-bold text-sm hover:bg-crmisa-navy hover:text-white transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">settings</span>
+                    Manage Exam
+                  </button>
+               </div>
+            </div>
+          ))}
+          {courses.length === 0 && (
+            <div className="col-span-full bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-12 text-center">
+              <p className="text-slate-500 font-semibold">No courses found to manage exams for.</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -270,7 +298,7 @@ export default function AdminExamManagementPage() {
                 onClick={() => setActiveView("editor")}
                 className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-colors ${
                   activeView === "editor"
-                    ? "bg-slate-900 text-white"
+                    ? "bg-crmisa-navy text-white"
                     : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-50"
                 }`}
               >
@@ -281,7 +309,7 @@ export default function AdminExamManagementPage() {
                 onClick={() => setActiveView("stats")}
                 className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-colors ${
                   activeView === "stats"
-                    ? "bg-slate-900 text-white"
+                    ? "bg-crmisa-navy text-white"
                     : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-50"
                 }`}
               >
@@ -296,7 +324,7 @@ export default function AdminExamManagementPage() {
             <div className="space-y-5">
               {/* Settings Card */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-5">
+                <h3 className="text-sm font-black text-crmisa-navy uppercase tracking-widest mb-5">
                   Exam Settings
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -311,7 +339,7 @@ export default function AdminExamManagementPage() {
                       max="100"
                       value={passingPercentage}
                       onChange={(e) => setPassingPercentage(e.target.value)}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-crmisa-accentNavy focus:outline-none focus:ring-2 focus:ring-slate-900"
                     />
                     <p className="text-xs text-slate-400 mt-1">Min score to pass & get certificate</p>
                   </div>
@@ -326,9 +354,24 @@ export default function AdminExamManagementPage() {
                       min="0"
                       value={timeLimitMinutes}
                       onChange={(e) => setTimeLimitMinutes(e.target.value)}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-crmisa-accentNavy focus:outline-none focus:ring-2 focus:ring-slate-900"
                     />
                     <p className="text-xs text-slate-400 mt-1">Set 0 for no time limit</p>
+                  </div>
+
+                  {/* Re-Exam Fee */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                      Re-Exam Fee (ZAR)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={reExamFee}
+                      onChange={(e) => setReExamFee(e.target.value)}
+                      className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-crmisa-accentNavy focus:outline-none focus:ring-2 focus:ring-slate-900"
+                    />
+                    <p className="text-xs text-slate-400 mt-1">Fee for retaking a failed exam</p>
                   </div>
 
                   {/* Shuffle */}
@@ -368,7 +411,7 @@ export default function AdminExamManagementPage() {
                       className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="w-7 h-7 rounded-lg bg-slate-900 text-white text-xs font-black flex items-center justify-center shrink-0">
+                        <span className="w-7 h-7 rounded-lg bg-crmisa-navy text-white text-xs font-black flex items-center justify-center shrink-0">
                           {qIdx + 1}
                         </span>
                         <span className="text-sm font-semibold text-slate-700 truncate">
@@ -402,7 +445,7 @@ export default function AdminExamManagementPage() {
                             value={q.questionText}
                             onChange={(e) => updateQuestion(qIdx, "questionText", e.target.value)}
                             placeholder="Enter question here…"
-                            className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-slate-900"
+                            className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm text-crmisa-accentNavy resize-none focus:outline-none focus:ring-2 focus:ring-slate-900"
                           />
                         </div>
 
@@ -431,7 +474,7 @@ export default function AdminExamManagementPage() {
                                   value={opt}
                                   onChange={(e) => updateOption(qIdx, oIdx, e.target.value)}
                                   placeholder={`Option ${String.fromCharCode(65 + oIdx)}`}
-                                  className={`flex-1 border rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 transition-colors ${
+                                  className={`flex-1 border rounded-xl px-4 py-2.5 text-sm text-crmisa-accentNavy focus:outline-none focus:ring-2 transition-colors ${
                                     q.correctAnswerIndex === oIdx
                                       ? "border-emerald-400 bg-emerald-50 focus:ring-emerald-500"
                                       : "border-slate-300 focus:ring-slate-900"
@@ -495,7 +538,7 @@ export default function AdminExamManagementPage() {
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="w-full py-4 border-2 border-dashed border-slate-300 rounded-2xl text-slate-500 hover:border-slate-900 hover:text-slate-900 font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-4 border-2 border-dashed border-slate-300 rounded-2xl text-slate-500 hover:border-crmisa-navy hover:text-crmisa-navy font-bold text-sm transition-colors flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[20px]">add_circle</span>
                   Add New Question ({questions.length} total)
@@ -528,7 +571,7 @@ export default function AdminExamManagementPage() {
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="w-full sm:w-auto sm:ml-auto px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-xl transition-colors text-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto sm:ml-auto px-8 py-3.5 bg-crmisa-navy hover:bg-crmisa-accentNavy text-white font-black rounded-xl transition-colors text-sm disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     <><span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span> Saving…</>
@@ -565,7 +608,7 @@ export default function AdminExamManagementPage() {
                         <div className={`w-9 h-9 rounded-xl bg-${card.color}-50 text-${card.color}-600 border border-${card.color}-100 flex items-center justify-center mb-3`}>
                           <span className="material-symbols-outlined text-[20px]">{card.icon}</span>
                         </div>
-                        <div className="text-2xl font-black text-slate-900">{card.value}</div>
+                        <div className="text-2xl font-black text-crmisa-navy">{card.value}</div>
                         <div className="text-xs text-slate-500 font-semibold mt-0.5">{card.label}</div>
                       </div>
                     ))}
@@ -574,7 +617,7 @@ export default function AdminExamManagementPage() {
                   {/* Per-student breakdown */}
                   <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                     <div className="px-6 py-4 border-b border-slate-100">
-                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Student Attempt Log</h3>
+                      <h3 className="text-sm font-black text-crmisa-navy uppercase tracking-widest">Student Attempt Log</h3>
                     </div>
                     {stats.studentBreakdown.length === 0 ? (
                       <div className="p-8 text-center text-slate-400 text-sm">No attempts recorded yet</div>
@@ -584,11 +627,11 @@ export default function AdminExamManagementPage() {
                           <div key={i} className="px-6 py-4">
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full bg-crmisa-navy text-white font-bold text-xs flex items-center justify-center">
                                   {entry.student?.name?.charAt(0).toUpperCase() || "?"}
                                 </div>
                                 <div>
-                                  <p className="text-sm font-bold text-slate-800">{entry.student?.name || "Unknown"}</p>
+                                  <p className="text-sm font-bold text-crmisa-accentNavy">{entry.student?.name || "Unknown"}</p>
                                   <p className="text-xs text-slate-400">{entry.student?.email}</p>
                                 </div>
                               </div>

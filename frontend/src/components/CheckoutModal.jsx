@@ -136,16 +136,16 @@ export default function CheckoutModal({
           <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto animate-bounce">
             <CheckIcon className="w-10 h-10" />
           </div>
-          <h4 className="text-2xl font-bold text-slate-900">Payment Successful!</h4>
+          <h4 className="text-2xl font-bold text-crmisa-navy">Payment Successful!</h4>
           <p className="text-sm text-slate-600 max-w-xs mx-auto">
-            You are enrolled in <span className="font-bold text-slate-900">{safeTitle}</span>. Redirecting to the course player...
+            You are enrolled in <span className="font-bold text-crmisa-navy">{safeTitle}</span>. Redirecting to the course player...
           </p>
         </div>
       ) : (
         <div className="py-2 space-y-6">
           
           <div className="text-center space-y-1">
-            <h3 className="text-2xl font-bold text-slate-900 leading-tight">
+            <h3 className="text-2xl font-bold text-crmisa-navy leading-tight">
               Checkout
             </h3>
             <p className="text-sm text-slate-500 font-medium">
@@ -160,7 +160,7 @@ export default function CheckoutModal({
                 <span className="text-sm font-medium text-slate-500">
                   Course Price
                 </span>
-                <span className={`text-base font-medium ${appliedCoupon ? 'text-slate-400 line-through' : 'text-slate-900'}`}>
+                <span className={`text-base font-medium ${appliedCoupon ? 'text-slate-400 line-through' : 'text-crmisa-navy'}`}>
                   R{safePrice}
                 </span>
               </div>
@@ -180,10 +180,10 @@ export default function CheckoutModal({
               )}
 
               <div className="flex justify-between items-center pt-2 border-t border-slate-200 mt-2">
-                <span className="text-base font-bold text-slate-900">
+                <span className="text-base font-bold text-crmisa-navy">
                   Total Payable
                 </span>
-                <span className="text-2xl font-bold text-slate-900">
+                <span className="text-2xl font-bold text-crmisa-navy">
                   R{appliedCoupon 
                     ? Math.max(0, parseFloat(safePrice) - (appliedCoupon.discountType === 'percentage' ? parseFloat(safePrice) * (appliedCoupon.discountValue / 100) : appliedCoupon.discountValue)).toFixed(2)
                     : safePrice}
@@ -216,7 +216,7 @@ export default function CheckoutModal({
                     type="button"
                     onClick={handleApplyCoupon}
                     disabled={validatingCoupon || !couponCode.trim()}
-                    className="px-4 py-2 bg-slate-900 text-white font-bold rounded-md text-sm hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 bg-crmisa-navy text-white font-bold rounded-md text-sm hover:bg-crmisa-accentNavy disabled:opacity-50 transition-colors"
                   >
                     {validatingCoupon ? 'Applying...' : 'Apply'}
                   </button>
@@ -246,7 +246,7 @@ export default function CheckoutModal({
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                  className="mt-1 w-4 h-4 text-crmisa-navy border-slate-300 focus:ring-slate-900 rounded-sm"
                 />
                 <span className="text-sm text-slate-600 leading-snug">
                   I have read and agree to the <a href="#" className="text-blue-600 hover:underline">Terms & Conditions</a> of this platform.
@@ -258,7 +258,7 @@ export default function CheckoutModal({
                   type="checkbox"
                   checked={agreePrivacy}
                   onChange={(e) => setAgreePrivacy(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-slate-900 border-slate-300 focus:ring-slate-900 rounded-sm"
+                  className="mt-1 w-4 h-4 text-crmisa-navy border-slate-300 focus:ring-slate-900 rounded-sm"
                 />
                 <span className="text-sm text-slate-600 leading-snug">
                   I agree to the <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a> and consent to the processing of my data.
@@ -272,7 +272,7 @@ export default function CheckoutModal({
                 disabled={!isFormValid}
                 className={`w-full py-3.5 font-bold text-base transition-colors ${
                   isFormValid 
-                    ? 'bg-slate-900 hover:bg-slate-800 text-white' 
+                    ? 'bg-crmisa-navy hover:bg-crmisa-accentNavy text-white' 
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >

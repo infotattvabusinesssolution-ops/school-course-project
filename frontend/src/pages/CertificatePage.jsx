@@ -77,9 +77,9 @@ export default function CertificatePage() {
       `}} />
 
       {/* Top Control Bar */}
-      <div className="w-full max-w-[1122px] flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-white border border-slate-200 text-slate-800 gap-4 rounded-t-2xl shadow-sm print:hidden">
+      <div className="w-full max-w-[1122px] flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-white border border-slate-200 text-crmisa-accentNavy gap-4 rounded-t-2xl shadow-sm print:hidden">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-lg text-slate-400 hover:text-crmisa-accentNavy hover:bg-slate-100 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2 text-sm font-bold text-red-800">
@@ -146,11 +146,11 @@ export default function CertificatePage() {
               <h1 className="text-6xl font-playfair text-[#5e0a17] font-bold uppercase tracking-wide mb-1 drop-shadow-sm" style={{textShadow: "1px 1px 0px rgba(0,0,0,0.1)"}}>
                 CERTIFICATE
               </h1>
-              <h2 className="text-2xl font-playfair text-slate-800 uppercase tracking-[0.2em] mb-10">
+              <h2 className="text-2xl font-playfair text-crmisa-accentNavy uppercase tracking-[0.2em] mb-10">
                 Of Achievement
               </h2>
               
-              <p className="text-lg font-playfair font-bold text-slate-800 mb-6">
+              <p className="text-lg font-playfair font-bold text-crmisa-accentNavy mb-6">
                 This Certificate Is Proudly Presented To
               </p>
             </div>
@@ -173,8 +173,8 @@ export default function CertificatePage() {
                  <div className="p-1.5 bg-white border-2 border-[#d4af37] rounded-sm shadow-sm mb-2">
                    <img src={qrCodeUrl} alt="QR Code for Verification" className="w-20 h-20 object-contain" />
                  </div>
-                 <p className="text-[12px] text-slate-900 font-mono mt-1 font-bold tracking-wider">ID: {certificateId}</p>
-                 <p className="text-[14px] text-slate-900 font-playfair font-bold mt-1">Issued: {formattedDate}</p>
+                 <p className="text-[12px] text-crmisa-navy font-mono mt-1 font-bold tracking-wider">ID: {certificateId}</p>
+                 <p className="text-[14px] text-crmisa-navy font-playfair font-bold mt-1">Issued: {formattedDate}</p>
               </div>
 
               <div className="text-center w-56 pb-2 z-10 relative">

@@ -105,9 +105,9 @@ export default function PostDetailPage() {
   if (!post) {
     return (
       <div className="min-h-screen bg-white pt-28 flex flex-col items-center justify-center p-8 text-center">
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Discussion Not Found</h2>
+        <h2 className="text-xl font-bold text-crmisa-navy mb-2">Discussion Not Found</h2>
         <p className="text-slate-500 text-sm mb-6">The discussion topic you are looking for does not exist or was removed.</p>
-        <Link to="/forum" className="px-6 py-2.5 bg-slate-900 text-white font-semibold text-sm rounded-lg">
+        <Link to="/forum" className="px-6 py-2.5 bg-crmisa-navy text-white font-semibold text-sm rounded-lg">
           Back to Forum
         </Link>
       </div>
@@ -120,12 +120,12 @@ export default function PostDetailPage() {
   const isPostAdminOrAuthor = isLoggedIn && (user?.role === "ADMIN" || user?._id === (post.author?._id || post.author));
 
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-slate-800">
+    <div className="bg-white min-h-screen pt-24 pb-20 font-sans text-crmisa-accentNavy">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
         {/* Back Link */}
         <button
           onClick={() => navigate("/forum")}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-crmisa-navy mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Discussions
@@ -136,11 +136,11 @@ export default function PostDetailPage() {
           {/* Post Header */}
           <div className="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-sm shadow-xs">
+              <div className="w-10 h-10 rounded-full bg-crmisa-navy text-white font-bold flex items-center justify-center text-sm shadow-xs">
                 {(post.authorName || post.author?.name || "A")[0].toUpperCase()}
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-base leading-tight">
+                <h3 className="font-bold text-crmisa-navy text-base leading-tight">
                   {post.authorName || post.author?.name || "Student"}
                 </h3>
                 <span className="text-xs text-slate-400 font-medium flex items-center gap-1 mt-0.5">
@@ -167,7 +167,7 @@ export default function PostDetailPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-crmisa-navy leading-tight mb-4">
             {post.title}
           </h1>
 
@@ -201,7 +201,7 @@ export default function PostDetailPage() {
 
         {/* Replies List */}
         <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-lg font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2">
+          <h2 className="text-lg font-bold text-crmisa-navy pb-3 border-b border-slate-100 flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-slate-400" />
             Discussion Responses ({replies.length})
           </h2>
@@ -225,7 +225,7 @@ export default function PostDetailPage() {
                         <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-[10px] border border-slate-200">
                           {(reply.authorName || reply.author?.name || "R")[0].toUpperCase()}
                         </div>
-                        <span className="font-bold text-slate-900">
+                        <span className="font-bold text-crmisa-navy">
                           {reply.authorName || reply.author?.name || "Student"}
                         </span>
                       </div>
@@ -265,13 +265,13 @@ export default function PostDetailPage() {
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   placeholder="Write your professional response or advice..."
-                  className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 transition-colors resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 text-sm text-crmisa-navy placeholder:text-slate-400 focus:outline-none focus:border-crmisa-navy transition-colors resize-none"
                 />
                 <div className="flex justify-end">
                   <button
                     type="submit"
                     disabled={submittingReply || !replyText.trim()}
-                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+                    className="px-6 py-2.5 bg-crmisa-navy hover:bg-crmisa-accentNavy disabled:opacity-40 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span>{submittingReply ? "Posting..." : "Post Reply"}</span>
                     <Send className="w-3.5 h-3.5" />
@@ -283,7 +283,7 @@ export default function PostDetailPage() {
                 <p className="text-xs font-semibold text-slate-700">Want to join this discussion?</p>
                 <button
                   onClick={openLogin}
-                  className="px-5 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors"
+                  className="px-5 py-2 bg-crmisa-navy text-white text-xs font-semibold rounded-lg hover:bg-crmisa-accentNavy transition-colors"
                 >
                   Log In to Reply
                 </button>

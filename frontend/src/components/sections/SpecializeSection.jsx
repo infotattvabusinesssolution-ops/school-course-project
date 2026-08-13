@@ -18,7 +18,7 @@ export default function SpecializeSection() {
               Our Expertise
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-slate-900 tracking-tight leading-[1.1] max-w-3xl">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-crmisa-navy tracking-tight leading-[1.1] max-w-3xl">
             We Specialize in<br />Global Trade Pillars
           </h2>
           <p className="text-slate-500 font-medium mt-6 max-w-xl text-lg">
@@ -42,7 +42,7 @@ export default function SpecializeSection() {
                 <GlobeIcon className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
               
-              <h3 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-5 group-hover:text-sky-600 transition-colors leading-[1.15]">
+              <h3 className="text-3xl sm:text-4xl font-bold text-crmisa-navy tracking-tight mb-5 group-hover:text-sky-600 transition-colors leading-[1.15]">
                 Customs Procedures &<br />Documentation Mastery
               </h3>
               <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-lg">
@@ -72,7 +72,7 @@ export default function SpecializeSection() {
                 <PackageIcon className="w-7 h-7" />
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-slate-900 tracking-tight mb-3 group-hover:text-yellow-500 transition-colors leading-snug">
+                <h3 className="text-2xl font-bold text-crmisa-navy tracking-tight mb-3 group-hover:text-yellow-500 transition-colors leading-snug">
                   Calculating Landed Costs<br />& Pricing Strategies
                 </h3>
                 <p className="text-slate-500 font-medium">
@@ -93,7 +93,7 @@ export default function SpecializeSection() {
                 <SpeedometerIcon className="w-7 h-7" />
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-slate-900 tracking-tight mb-3 group-hover:text-indigo-500 transition-colors leading-snug">
+                <h3 className="text-2xl font-bold text-crmisa-navy tracking-tight mb-3 group-hover:text-indigo-500 transition-colors leading-snug">
                   Setting Up Trade<br />Networks & Agents
                 </h3>
                 <p className="text-slate-500 font-medium">

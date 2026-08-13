@@ -43,7 +43,7 @@ export default function NewsletterModal() {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-crmisa-navy/40 backdrop-blur-sm animate-fade-in"
       onClick={() => setIsOpen(false)}
     >
       <div 
@@ -62,7 +62,7 @@ export default function NewsletterModal() {
             <span className="material-symbols-outlined text-xl">mail</span>
           </div>
           
-          <h3 className="text-lg font-bold text-slate-900 mb-2">
+          <h3 className="text-lg font-bold text-crmisa-navy mb-2">
             Join Newsletter
           </h3>
           <p className="text-sm text-slate-500 mb-6 px-2 leading-relaxed">

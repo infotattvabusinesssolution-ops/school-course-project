@@ -16,7 +16,7 @@ export default function HeadlineTicker() {
   const duplicatedHeadlines = [...headlines, ...headlines];
 
   return (
-    <div className="w-full bg-slate-900 border-y border-slate-800 py-3 overflow-hidden">
+    <div className="w-full bg-crmisa-navy border-y border-slate-800 py-3 overflow-hidden">
       <div className="animate-marquee-scroll flex items-center space-x-12 px-6">
         {duplicatedHeadlines.map((text, index) => (
           <div key={index} className="flex items-center space-x-4 whitespace-nowrap">
