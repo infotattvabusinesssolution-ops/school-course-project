@@ -67,7 +67,7 @@ export default function CartCheckoutModal({
 
     try {
       const { data } = await api.post("/payments/create-cart-order", {
-        items: cartItems,
+        items: cartItems.map(i => ({ ...i, id: i._id || i.id })),
         couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       });
 
@@ -80,8 +80,8 @@ export default function CartCheckoutModal({
       // SIMULATION MODE BYPASS
       if (import.meta.env.VITE_SIMULATE_PAYMENT === 'true') {
         const verifyRes = await api.post("/payments/verify-cart-payment", {
-          items: cartItems,
-          m_payment_id: data.payload.m_payment_id
+          items: cartItems.map(i => ({ ...i, id: i._id || i.id })),
+          m_payment_id: data.m_payment_id || data.payload?.m_payment_id
         });
 
         if (verifyRes.data.success) {
@@ -91,7 +91,7 @@ export default function CartCheckoutModal({
           setTimeout(() => {
             setSuccess(false);
             onClose();
-            navigate(`/courses`);
+            navigate(`/dashboard/courses`);
           }, 2000);
         }
         setProcessing(false);
