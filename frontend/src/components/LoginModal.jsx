@@ -78,13 +78,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, switchToRe
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 pr-11 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1c3c78] focus:border-[#1c3c78] text-sm text-crmisa-navy font-medium"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
-              >
-                <EyeIcon className="w-5 h-5" />
-              </button>
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                >
+                  <EyeIcon className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
 

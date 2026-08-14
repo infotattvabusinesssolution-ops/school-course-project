@@ -80,10 +80,10 @@ const AdminRssTab = () => {
         <h2 className="text-xl font-bold text-slate-800">RSS Feeds Management</h2>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 bg-navy-600 hover:bg-navy-700 text-white px-4 py-2 rounded-lg transition-colors"
+          className="px-6 py-3 bg-blue-700 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
         >
-          <Plus size={20} />
-          <span>Add New Feed</span>
+          <span className="material-symbols-outlined">add</span>
+          <span>Add New RSS Feed</span>
         </button>
       </div>
 

@@ -33,8 +33,13 @@ const examSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
       required: true,
-      unique: true, // One exam per course
       index: true,
+    },
+    attemptNumber: {
+      type: Number,
+      required: true,
+      enum: [1, 2, 3],
+      default: 1,
     },
     questions: [questionSchema],
     passingPercentage: {
@@ -68,5 +73,7 @@ const examSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+examSchema.index({ course: 1, attemptNumber: 1 }, { unique: true });
 
 export default mongoose.model("Exam", examSchema);

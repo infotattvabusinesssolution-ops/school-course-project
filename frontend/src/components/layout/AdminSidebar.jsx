@@ -33,12 +33,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
           className="flex items-center gap-2 text-headline-sm font-headline-sm font-bold text-primary cursor-pointer"
           onClick={() => setActiveTab(0)}
         >
-          <span
-            className="material-symbols-outlined"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            shield_person
-          </span>
+          <img src="/image.png" alt="CRMISA Logo" className="h-8" />
           CRMISA Admin
         </div>
         <button
@@ -133,12 +128,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }) {
             className="flex items-center gap-2 text-headline-sm font-headline-sm font-bold text-primary cursor-pointer"
             onClick={() => setActiveTab(0)}
           >
-            <span
-              className="material-symbols-outlined text-[28px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              shield_person
-            </span>
+            <img src="/image.png" alt="CRMISA Logo" className="h-10" />
             CRMISA Admin
           </div>
         </div>

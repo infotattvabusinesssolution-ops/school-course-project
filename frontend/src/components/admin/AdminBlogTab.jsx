@@ -153,9 +153,9 @@ export default function AdminBlogTab() {
         <h2 className="text-headline-sm font-bold text-crmisa-navy">Blog Posts</h2>
         <button 
           onClick={() => { setCurrentBlog({ title: '', content: '', coverImage: '', isPublished: true }); setIsEditing(true); }}
-          className="px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+          className="px-6 py-3 bg-blue-700 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
         >
-          <span className="material-symbols-outlined">add</span> Create Post
+          <span className="material-symbols-outlined ">add</span> Create Post
         </button>
       </div>
       

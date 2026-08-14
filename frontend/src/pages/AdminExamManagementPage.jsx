@@ -25,6 +25,8 @@ export default function AdminExamManagementPage() {
   const [loadingCourses, setLoadingCourses] = useState(true);
 
   // Exam state
+  const [allExams, setAllExams] = useState([]);
+  const [selectedAttempt, setSelectedAttempt] = useState(1);
   const [existingExam, setExistingExam] = useState(null);
   const [loadingExam, setLoadingExam] = useState(false);
 
@@ -54,42 +56,72 @@ export default function AdminExamManagementPage() {
       .finally(() => setLoadingCourses(false));
   }, []);
 
+  // ── Helper ───────────────────────────────────────────────────────────────────
+  const populateExamData = (exam) => {
+    setExistingExam(exam);
+    setPassingPercentage(exam.passingPercentage);
+    setTimeLimitMinutes(exam.timeLimitMinutes);
+    setReExamFee(exam.reExamFee ?? 500);
+    setShuffleQuestions(exam.shuffleQuestions);
+    setQuestions(
+      exam.questions.length > 0
+        ? exam.questions.map((q) => ({
+            questionText: q.questionText,
+            options: [...q.options],
+            correctAnswerIndex: q.correctAnswerIndex,
+            explanation: q.explanation || "",
+          }))
+        : [emptyQuestion()]
+    );
+  };
+
+  const resetExamData = () => {
+    setExistingExam(null);
+    setPassingPercentage(40);
+    setTimeLimitMinutes(0);
+    setReExamFee(500);
+    setShuffleQuestions(true);
+    setQuestions([emptyQuestion()]);
+  };
+
+  const handleAttemptChange = (attemptNum) => {
+    setSelectedAttempt(attemptNum);
+    const exam = allExams.find(e => e.attemptNumber === attemptNum);
+    if (exam) {
+      populateExamData(exam);
+    } else {
+      resetExamData();
+    }
+  };
+
   // ── Load exam when course changes ────────────────────────────────────────────
   useEffect(() => {
     if (!selectedCourseId) {
-      setExistingExam(null);
-      setQuestions([emptyQuestion()]);
+      setAllExams([]);
+      resetExamData();
       setStats(null);
       return;
     }
 
     setLoadingExam(true);
     getExamForAdmin(selectedCourseId)
-      .then((exam) => {
-        setExistingExam(exam);
-        setPassingPercentage(exam.passingPercentage);
-        setTimeLimitMinutes(exam.timeLimitMinutes);
-        setReExamFee(exam.reExamFee ?? 500);
-        setShuffleQuestions(exam.shuffleQuestions);
-        setQuestions(
-          exam.questions.length > 0
-            ? exam.questions.map((q) => ({
-                questionText: q.questionText,
-                options: [...q.options],
-                correctAnswerIndex: q.correctAnswerIndex,
-                explanation: q.explanation || "",
-              }))
-            : [emptyQuestion()]
-        );
+      .then((examsData) => {
+        const exams = Array.isArray(examsData) ? examsData : [examsData];
+        setAllExams(exams);
+        
+        const exam = exams.find(e => e.attemptNumber === selectedAttempt) || exams.find(e => e.attemptNumber === 1) || exams[0] || null;
+        if (exam) {
+          setSelectedAttempt(exam.attemptNumber || 1);
+          populateExamData(exam);
+        } else {
+          setSelectedAttempt(1);
+          resetExamData();
+        }
       })
       .catch(() => {
-        // No exam yet — fresh
-        setExistingExam(null);
-        setPassingPercentage(40);
-        setTimeLimitMinutes(0);
-        setReExamFee(500);
-        setShuffleQuestions(true);
-        setQuestions([emptyQuestion()]);
+        setAllExams([]);
+        setSelectedAttempt(1);
+        resetExamData();
       })
       .finally(() => setLoadingExam(false));
   }, [selectedCourseId]);
@@ -166,6 +198,7 @@ export default function AdminExamManagementPage() {
     try {
       const payload = {
         courseId: selectedCourseId,
+        attemptNumber: selectedAttempt,
         questions,
         passingPercentage: Number(passingPercentage),
         timeLimitMinutes: Number(timeLimitMinutes),
@@ -174,11 +207,15 @@ export default function AdminExamManagementPage() {
       };
       if (existingExam) {
         await updateExam(existingExam._id, payload);
-        setSaveMsg({ type: "success", text: "Exam updated successfully!" });
+        const fresh = await getExamForAdmin(selectedCourseId).catch(() => []);
+        setAllExams(Array.isArray(fresh) ? fresh : [fresh]);
+        setSaveMsg({ type: "success", text: `Attempt ${selectedAttempt} updated successfully!` });
       } else {
         const created = await createExam(payload);
         setExistingExam(created);
-        setSaveMsg({ type: "success", text: "Exam created successfully!" });
+        const fresh = await getExamForAdmin(selectedCourseId).catch(() => []);
+        setAllExams(Array.isArray(fresh) ? fresh : [fresh]);
+        setSaveMsg({ type: "success", text: `Attempt ${selectedAttempt} created successfully!` });
       }
     } catch (err) {
       setSaveMsg({ type: "error", text: err?.response?.data?.message || "Save failed" });
@@ -190,12 +227,13 @@ export default function AdminExamManagementPage() {
   // ── Delete exam ──────────────────────────────────────────────────────────────
   const handleDelete = async () => {
     if (!existingExam) return;
-    if (!window.confirm("Are you sure you want to delete this entire exam? This cannot be undone.")) return;
+    if (!window.confirm(`Are you sure you want to delete Attempt ${selectedAttempt}? This cannot be undone.`)) return;
     try {
       await deleteExam(existingExam._id);
-      setExistingExam(null);
-      setQuestions([emptyQuestion()]);
-      setSaveMsg({ type: "success", text: "Exam deleted." });
+      const fresh = await getExamForAdmin(selectedCourseId).catch(() => []);
+      setAllExams(Array.isArray(fresh) ? fresh : [fresh]);
+      resetExamData();
+      setSaveMsg({ type: "success", text: `Attempt ${selectedAttempt} deleted.` });
     } catch (err) {
       setSaveMsg({ type: "error", text: "Failed to delete exam." });
     }
@@ -287,8 +325,8 @@ export default function AdminExamManagementPage() {
               {existingExam ? "check_circle" : "info"}
             </span>
             {existingExam
-              ? `Exam exists · ${existingExam.questions.length} questions · Pass: ${existingExam.passingPercentage}% · Timer: ${existingExam.timeLimitMinutes === 0 ? "No limit" : `${existingExam.timeLimitMinutes} min`}`
-              : "No exam found for this course — create one below"}
+              ? `Attempt ${selectedAttempt} exists · ${existingExam.questions.length} questions · Pass: ${existingExam.passingPercentage}% · Timer: ${existingExam.timeLimitMinutes === 0 ? "No limit" : `${existingExam.timeLimitMinutes} min`}`
+              : `No exam found for Attempt ${selectedAttempt} — create one below`}
           </div>
 
           {/* ── View Toggle ──────────────────────────────────────────────────── */}
@@ -322,6 +360,27 @@ export default function AdminExamManagementPage() {
           {/* ════ EDITOR VIEW ════════════════════════════════════════════════ */}
           {activeView === "editor" && (
             <div className="space-y-5">
+              
+              {/* ── Attempt Tabs ────────────────────────────────────────────────── */}
+              <div className="flex gap-2 border-b border-slate-200 pb-2">
+                 {[1, 2, 3].map(attempt => {
+                   const hasExam = allExams.some(e => e.attemptNumber === attempt);
+                   return (
+                     <button
+                       key={attempt}
+                       onClick={() => handleAttemptChange(attempt)}
+                       className={`px-5 py-2.5 rounded-t-xl font-bold text-sm transition-colors border-b-2 flex items-center gap-2 ${
+                          selectedAttempt === attempt 
+                          ? "bg-crmisa-navy text-white border-crmisa-navy" 
+                          : "bg-slate-50 text-slate-500 border-transparent hover:bg-slate-100"
+                       }`}
+                     >
+                       Attempt {attempt}
+                       {hasExam && <span className="w-2 h-2 rounded-full bg-emerald-500"></span>}
+                     </button>
+                   );
+                 })}
+              </div>
               {/* Settings Card */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                 <h3 className="text-sm font-black text-crmisa-navy uppercase tracking-widest mb-5">
@@ -576,7 +635,7 @@ export default function AdminExamManagementPage() {
                   {saving ? (
                     <><span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span> Saving…</>
                   ) : (
-                    <><span className="material-symbols-outlined text-[18px]">save</span> {existingExam ? "Save Changes" : "Create Exam"}</>
+                    <><span className="material-symbols-outlined text-[18px]">save</span> {existingExam ? `Save Attempt ${selectedAttempt}` : `Create Attempt ${selectedAttempt}`}</>
                   )}
                 </button>
               </div>

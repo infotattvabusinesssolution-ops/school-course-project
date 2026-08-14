@@ -25,19 +25,25 @@ const shuffleArray = (arr) => {
 //  ADMIN: Create Exam for a course
 // ─────────────────────────────────────────────
 export const createExam = asyncHandler(async (req, res) => {
-  const { courseId, questions, passingPercentage, timeLimitMinutes, shuffleQuestions } = req.body;
+  const { courseId, questions, passingPercentage, timeLimitMinutes, shuffleQuestions, attemptNumber } = req.body;
 
   if (!courseId) throw new ApiError(400, "courseId is required");
   if (!questions || questions.length < 1) throw new ApiError(400, "At least 1 question is required");
+  
+  const currentAttempt = attemptNumber || 1;
+  if (currentAttempt < 1 || currentAttempt > 3) {
+    throw new ApiError(400, "attemptNumber must be 1, 2, or 3");
+  }
 
   const course = await Course.findById(courseId);
   if (!course) throw new ApiError(404, "Course not found");
 
-  const existing = await Exam.findOne({ course: courseId });
-  if (existing) throw new ApiError(409, "An exam already exists for this course. Use update instead.");
+  const existing = await Exam.findOne({ course: courseId, attemptNumber: currentAttempt });
+  if (existing) throw new ApiError(409, `An exam already exists for attempt ${currentAttempt}. Use update instead.`);
 
   const exam = await Exam.create({
     course: courseId,
+    attemptNumber: currentAttempt,
     questions,
     passingPercentage: passingPercentage ?? 40,
     timeLimitMinutes: timeLimitMinutes ?? 0,
@@ -78,10 +84,10 @@ export const deleteExam = asyncHandler(async (req, res) => {
 // ─────────────────────────────────────────────
 export const getExamForAdmin = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
-  const exam = await Exam.findOne({ course: courseId });
-  if (!exam) throw new ApiError(404, "No exam found for this course");
+  const exams = await Exam.find({ course: courseId }).sort({ attemptNumber: 1 });
+  if (!exams || exams.length === 0) throw new ApiError(404, "No exams found for this course");
 
-  res.status(200).json(new ApiResponse(200, exam, "Exam fetched"));
+  res.status(200).json(new ApiResponse(200, exams, "Exams fetched"));
 });
 
 // ─────────────────────────────────────────────
@@ -142,8 +148,14 @@ export const getExamForStudent = asyncHandler(async (req, res) => {
   const studentId = req.user._id;
 
   // Ensure enrolled
-  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
-  if (!enrollment) throw new ApiError(403, "You are not enrolled in this course");
+  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId, status: "ACTIVE" });
+  if (!enrollment) throw new ApiError(403, "You are not actively enrolled in this course or have failed out.");
+
+  const previousAttempts = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
+  if (previousAttempts >= 3) {
+    throw new ApiError(403, "You have reached the maximum number of attempts (3). Please repurchase the course.");
+  }
+  const currentAttempt = previousAttempts + 1;
 
   // Check if already passed
   const passedAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId, passed: true });
@@ -157,8 +169,8 @@ export const getExamForStudent = asyncHandler(async (req, res) => {
 
   // Lessons completion requirement removed as per new flow
 
-  const exam = await Exam.findOne({ course: courseId, isActive: true });
-  if (!exam) throw new ApiError(404, "No active exam found for this course");
+  const exam = await Exam.findOne({ course: courseId, attemptNumber: currentAttempt, isActive: true });
+  if (!exam) throw new ApiError(404, `No active exam found for attempt ${currentAttempt}`);
 
   // Build question order (shuffled or original)
   let questionOrder = exam.questions.map((_, i) => i);
@@ -208,11 +220,17 @@ export const submitExam = asyncHandler(async (req, res) => {
   const passedAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId, passed: true });
   if (passedAttempt) throw new ApiError(400, "You have already passed this exam and cannot retake it");
 
-  const exam = await Exam.findOne({ course: courseId, isActive: true });
-  if (!exam) throw new ApiError(404, "No active exam found for this course");
-
   const enrollment = await Enrollment.findOne({ student: studentId, course: courseId });
-  if (!enrollment) throw new ApiError(403, "You are not enrolled in this course");
+  if (!enrollment || enrollment.status !== "ACTIVE") throw new ApiError(403, "You are not actively enrolled in this course");
+
+  const previousAttempts = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
+  if (previousAttempts >= 3) {
+    throw new ApiError(403, "Maximum attempts reached. You must repurchase the course.");
+  }
+  const currentAttempt = previousAttempts + 1;
+
+  const exam = await Exam.findOne({ course: courseId, attemptNumber: currentAttempt, isActive: true });
+  if (!exam) throw new ApiError(404, `No active exam found for attempt ${currentAttempt}`);
 
   // Grade answers
   let correctCount = 0;
@@ -238,17 +256,17 @@ export const submitExam = asyncHandler(async (req, res) => {
 
   // Consume the re-exam payment if they used it
   enrollment.reexamPaid = false;
+  
   if (passed) {
     enrollment.status = "COMPLETED";
     enrollment.completionPercentage = 100;
     enrollment.completedAt = new Date();
+  } else if (currentAttempt >= 3) {
+    enrollment.status = "DROPPED"; // Dropped due to failing all 3 attempts
   }
   await enrollment.save();
 
   // Save attempt
-  const attemptNumber =
-    (await ExamAttempt.countDocuments({ student: studentId, course: courseId })) + 1;
-
   const attempt = await ExamAttempt.create({
     student: studentId,
     course: courseId,
@@ -258,7 +276,7 @@ export const submitExam = asyncHandler(async (req, res) => {
     totalQuestions,
     percentage,
     passed,
-    attemptNumber,
+    attemptNumber: currentAttempt,
     tabSwitchCount: tabSwitchCount || 0,
     timeTakenSeconds: timeTakenSeconds || 0,
     submittedAt: new Date(),
@@ -356,18 +374,20 @@ export const getExamStatus = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
   const studentId = req.user._id;
 
-  const exam = await Exam.findOne({ course: courseId, isActive: true }).select("_id passingPercentage timeLimitMinutes questions reExamFee");
+  const attemptCount = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
+  const currentAttempt = attemptCount + 1;
+  const hasMaxAttemptsReached = attemptCount >= 3;
+
+  const exam = await Exam.findOne({ course: courseId, attemptNumber: hasMaxAttemptsReached ? 3 : currentAttempt, isActive: true }).select("_id passingPercentage timeLimitMinutes questions reExamFee");
   const hasExam = !!exam;
 
   const lastAttempt = await ExamAttempt.findOne({ student: studentId, course: courseId }).sort({ createdAt: -1 });
   const hasPassed = lastAttempt ? lastAttempt.passed : false;
   const hasFailed = lastAttempt ? !lastAttempt.passed : false;
   
-  const attemptCount = await ExamAttempt.countDocuments({ student: studentId, course: courseId });
   const certificate = await Certificate.findOne({ student: studentId, course: courseId }).select("certificateId examScore issueDate");
-  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId }).select("reexamPaid");
+  const enrollment = await Enrollment.findOne({ student: studentId, course: courseId }).select("reexamPaid status");
 
-  // Lessons completion requirement removed, so lessons are considered implicitly complete for exam access
   const lessonsComplete = true;
 
   res.status(200).json(
@@ -378,6 +398,9 @@ export const getExamStatus = asyncHandler(async (req, res) => {
       hasPassed,
       hasFailed,
       attemptCount,
+      maxAttempts: 3,
+      hasMaxAttemptsReached,
+      enrollmentStatus: enrollment?.status || "NONE",
       certificate: certificate || null,
       questionCount: exam?.questions?.length || 0,
       passingPercentage: exam?.passingPercentage || 40,

@@ -74,7 +74,11 @@ export default function DashboardExams() {
                 </div>
                 <h3 className="font-bold text-sm text-crmisa-navy line-clamp-2 pt-2">{course.title} Final Exam</h3>
                 <p className="text-xs font-medium text-slate-500">
-                  {es.hasPassed ? 'You have passed this exam.' : es.hasFailed ? 'You failed your last attempt.' : 'Available to take anytime.'}
+                  {es.hasPassed 
+                    ? 'You have passed this exam.' 
+                    : es.hasMaxAttemptsReached 
+                      ? 'Maximum attempts reached.'
+                      : `Attempt ${es.attemptCount + 1} of ${es.maxAttempts || 3}`}
                 </p>
               </div>
 
@@ -83,13 +87,17 @@ export default function DashboardExams() {
                    <button onClick={() => navigate(`/certificate/${es.certificate.certificateId}`)} className="w-full py-2.5 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 font-bold rounded-xl text-sm transition-colors flex justify-center items-center gap-2">
                      View Certificate <ExternalLink className="w-4 h-4"/>
                    </button>
+                ) : es.hasMaxAttemptsReached ? (
+                  <button onClick={() => navigate(`/course/${course.courseId}`)} className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-sm transition-colors flex justify-center items-center gap-2">
+                    Repurchase Course
+                  </button>
                 ) : es.hasFailed && !es.reexamPaid ? (
                   <button disabled={loadingPayment === course.courseId} onClick={() => handleEnrollReExam(course.courseId)} className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition-colors flex justify-center items-center gap-2 disabled:opacity-50">
-                    {loadingPayment === course.courseId ? <Loader2 className="w-4 h-4 animate-spin" /> : `Enroll for Re-Exam (R${es.reExamFee || 500})`}
+                    {loadingPayment === course.courseId ? <Loader2 className="w-4 h-4 animate-spin" /> : `Enroll for Attempt ${es.attemptCount + 1} (R${es.reExamFee || 500})`}
                   </button>
                 ) : (
                   <button onClick={() => navigate(`/course/${course.courseId}/exam`)} className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-colors">
-                    {es.hasFailed && es.reexamPaid ? 'Start Re-Exam' : 'Start Exam'}
+                    {es.hasFailed && es.reexamPaid ? `Start Attempt ${es.attemptCount + 1}` : 'Start Exam'}
                   </button>
                 )}
               </div>

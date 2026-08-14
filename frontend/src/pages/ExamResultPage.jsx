@@ -106,7 +106,10 @@ export default function ExamResultPage() {
                 Minimum required: <span className="font-bold text-crmisa-navy">{passingPercentage}%</span>
               </p>
               <p className="text-slate-500 text-xs">
-                This was attempt #{attemptNumber}. You may retake the exam.
+                This was attempt #{attemptNumber}. 
+                {attemptNumber >= 3 
+                  ? " You have exhausted all attempts. You must repurchase the course to try again." 
+                  : " You may retake the exam."}
               </p>
             </>
           )}
