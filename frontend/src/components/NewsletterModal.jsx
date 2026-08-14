@@ -58,9 +58,7 @@ export default function NewsletterModal() {
         </button>
         
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="w-12 h-12 bg-blue-50 flex items-center justify-center text-blue-600 mb-4 shrink-0 rounded-none">
-            <span className="material-symbols-outlined text-xl">mail</span>
-          </div>
+          <img src="/image.png" alt="CRMISA Logo" className="h-20 mb-4 object-contain" />
           
           <h3 className="text-lg font-bold text-crmisa-navy mb-2">
             Join Newsletter
