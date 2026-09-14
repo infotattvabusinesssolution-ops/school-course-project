@@ -1,0 +1,1 @@
+import mongoose from "mongoose"; export default mongoose.model("CoursePhase", new mongoose.Schema({}));

@@ -1,0 +1,21 @@
+// @desc    Upload course video (general utility for course videos)
+// @route   POST /api/courses/upload-video
+// @access  Private (Instructor)
+export const uploadCourseVideo = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, 'Please upload a video file');
+  }
+
+  const videoLocalPath = req.file.path;
+  // This will take longer for videos, so we await it
+  const video = await uploadOnCloudinary(videoLocalPath);
+
+  if (!video) {
+    throw new ApiError(500, 'Error uploading video to Cloudinary');
+  }
+
+  res.status(200).json(new ApiResponse(200, {
+    videoUrl: video.secure_url,
+    videoPublicId: video.public_id,
+  }, 'Video uploaded successfully'));
+});

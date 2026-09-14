@@ -1,0 +1,85 @@
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadOnCloudinary = async (localFilePath) => {
+  try {
+    if (!localFilePath) return null;
+    
+    // Upload the file on cloudinary
+    const response = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: 'auto',
+    });
+    
+    // File has been uploaded successfully
+    fs.unlinkSync(localFilePath); // Remove the locally saved temporary file
+    return response;
+  } catch (error) {
+    fs.unlinkSync(localFilePath); // Remove the locally saved temporary file as the upload operation failed
+    console.error('Error uploading to cloudinary', error);
+    return null;
+  }
+};
+
+const deleteFromCloudinary = async (publicId, resourceType = 'image') => {
+  try {
+    if (!publicId) return null;
+    const response = await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error deleting from cloudinary', error);
+    return null;
+  }
+};
+
+const uploadImageOnCloudinary = async (localFilePath) => {
+  try {
+    if (!localFilePath) return null;
+    const response = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: 'image',
+      transformation: [
+        { width: 500, height: 500, crop: "fill", gravity: "face" },
+        { quality: "auto", fetch_format: "auto" }
+      ]
+    });
+    fs.unlinkSync(localFilePath);
+    return response;
+  } catch (error) {
+    fs.unlinkSync(localFilePath);
+    console.error('Error uploading image to cloudinary', error);
+    return null;
+  }
+};
+
+const uploadBufferOnCloudinary = async (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: 'image',
+        folder: 'avatars',
+        transformation: [
+          { width: 500, height: 500, crop: "fill", gravity: "face" },
+          { quality: "auto", fetch_format: "auto" }
+        ]
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Error uploading buffer to cloudinary', error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary, uploadImageOnCloudinary, uploadBufferOnCloudinary };
