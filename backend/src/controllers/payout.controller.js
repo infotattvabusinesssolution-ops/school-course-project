@@ -1,1 +1,0 @@
-export const requestPayout = async (req, res) => {};

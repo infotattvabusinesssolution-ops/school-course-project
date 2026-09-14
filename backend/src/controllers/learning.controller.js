@@ -1,1 +1,0 @@
-export const getCourseProgress = async (req, res) => {};

@@ -1,2 +1,0 @@
-# Postman Notes
-Placeholder

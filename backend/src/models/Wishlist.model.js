@@ -1,1 +1,0 @@
-import mongoose from "mongoose"; export default mongoose.model("Wishlist", new mongoose.Schema({}));
