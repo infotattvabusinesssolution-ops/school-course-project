@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
+import 'dotenv/config';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,10 +18,14 @@ const uploadOnCloudinary = async (localFilePath) => {
     });
     
     // File has been uploaded successfully
-    fs.unlinkSync(localFilePath); // Remove the locally saved temporary file
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath); // Remove the locally saved temporary file
+    }
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // Remove the locally saved temporary file as the upload operation failed
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath); // Remove the locally saved temporary file as the upload operation failed
+    }
     console.error('Error uploading to cloudinary', error);
     return null;
   }
@@ -49,10 +54,14 @@ const uploadImageOnCloudinary = async (localFilePath) => {
         { quality: "auto", fetch_format: "auto" }
       ]
     });
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
     console.error('Error uploading image to cloudinary', error);
     return null;
   }
@@ -82,4 +91,4 @@ const uploadBufferOnCloudinary = async (buffer) => {
   });
 };
 
-export { uploadOnCloudinary, deleteFromCloudinary, uploadImageOnCloudinary, uploadBufferOnCloudinary };
+export { uploadOnCloudinary, deleteFromCloudinary, uploadImageOnCloudinary, uploadBufferOnCloudinary, cloudinary };
