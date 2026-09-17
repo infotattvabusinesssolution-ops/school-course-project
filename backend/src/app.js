@@ -32,9 +32,16 @@ app.set('trust proxy', 1); // Trust first proxy (Nginx) to correctly get client 
 
 // Security Middlewares
 app.use(helmet());
-const allowedOrigins = process.env.CORS_ORIGIN 
+const envOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',').map(url => url.trim()) 
-  : ['http://localhost:5173'];
+  : [];
+const devOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173',
+];
+const allowedOrigins = Array.from(new Set([...envOrigins, ...devOrigins]));
 
 app.use(cors({
   origin: function (origin, callback) {

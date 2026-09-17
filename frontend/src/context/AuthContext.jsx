@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
         setUser(data.data);
       } catch (error) {
         setUser(null);
+        localStorage.removeItem('token');
       } finally {
         setLoading(false);
       }
@@ -47,11 +48,21 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data } = await api.post('/auth/login', { email, password });
       setUser(data.data);
+      if (data.data?.token) {
+        localStorage.setItem('token', data.data.token);
+      }
       return { success: true, message: data.message, user: data.data };
     } catch (error) {
+      console.error('Login error:', error);
+      const message = 
+        error.response?.data?.message || 
+        (error.message === 'Network Error' 
+          ? 'Unable to reach the server. Please check your network or ensure backend server is running.' 
+          : error.message) || 
+        'Login failed';
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Login failed' 
+        message 
       };
     }
   };
@@ -64,11 +75,21 @@ export const AuthProvider = ({ children }) => {
         }
       });
       setUser(data.data);
+      if (data.data?.token) {
+        localStorage.setItem('token', data.data.token);
+      }
       return { success: true, message: data.message };
     } catch (error) {
+      console.error('Registration error:', error);
+      const message = 
+        error.response?.data?.message || 
+        (error.message === 'Network Error' 
+          ? 'Unable to reach the server. Please check your network or ensure backend server is running.' 
+          : error.message) || 
+        'Registration failed';
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Registration failed' 
+        message 
       };
     }
   };
@@ -76,9 +97,12 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await api.post('/auth/logout');
+      localStorage.removeItem('token');
       setUser(null);
     } catch (error) {
       console.error('Logout error', error);
+      localStorage.removeItem('token');
+      setUser(null);
     }
   };
 

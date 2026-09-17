@@ -50,13 +50,20 @@ export default function BlogListPage() {
                       <img 
                         src={blog.coverImage} 
                         alt={blog.title} 
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fb = e.currentTarget.nextElementSibling;
+                          if (fb) fb.style.display = 'flex';
+                        }}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-200 group-hover:scale-105 transition-transform duration-500">
-                        <span className="material-symbols-outlined text-6xl">article</span>
-                      </div>
-                    )}
+                    ) : null}
+                    <div 
+                      style={{ display: blog.coverImage ? 'none' : 'flex' }}
+                      className="w-full h-full items-center justify-center bg-blue-50 text-blue-200 group-hover:scale-105 transition-transform duration-500"
+                    >
+                      <span className="material-symbols-outlined text-6xl">article</span>
+                    </div>
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="flex items-center text-sm text-slate-500 mb-3 font-medium">

@@ -125,12 +125,23 @@ export default function EbookCheckoutModal({
           
           <div className="flex items-center gap-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
             {ebook.coverImage ? (
-              <img src={ebook.coverImage} alt={safeTitle} className="w-16 h-20 object-cover rounded-md border border-slate-300" />
-            ) : (
-              <div className="w-16 h-20 bg-crmisa-navy text-white font-bold text-xs flex items-center justify-center rounded-md p-2 text-center">
-                PDF
-              </div>
-            )}
+              <img 
+                src={ebook.coverImage} 
+                alt={safeTitle} 
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fb = e.currentTarget.nextElementSibling;
+                  if (fb) fb.style.display = 'flex';
+                }}
+                className="w-16 h-20 object-cover rounded-md border border-slate-300" 
+              />
+            ) : null}
+            <div 
+              style={{ display: ebook.coverImage ? 'none' : 'flex' }}
+              className="w-16 h-20 bg-crmisa-navy text-white font-bold text-xs flex items-center justify-center rounded-md p-2 text-center"
+            >
+              PDF
+            </div>
             <div className="space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Digital E-Book (PDF)

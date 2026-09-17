@@ -91,10 +91,25 @@ export default function EbookDetailPage({ onAddToCart }) {
               <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-white/30 to-transparent z-20 mix-blend-overlay"></div>
               
               {ebook.coverImage ? (
-                <img src={ebook.coverImage} alt={ebook.title} className="absolute inset-0 w-full h-full object-cover z-0" />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-crmisa-accentNavy text-slate-500 font-bold text-sm z-0">No Cover</div>
-              )}
+                <img 
+                  src={ebook.coverImage} 
+                  alt={ebook.title} 
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextElementSibling;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                  className="absolute inset-0 w-full h-full object-cover z-0" 
+                />
+              ) : null}
+              <div 
+                style={{ display: ebook.coverImage ? 'none' : 'flex' }}
+                className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#0D2240] to-[#1c3c78] text-white text-center z-0"
+              >
+                <BookOpen className="w-12 h-12 text-sky-400 mb-3" />
+                <span className="text-xs font-black uppercase tracking-wider text-sky-300">CRMISA EBOOK</span>
+                <p className="text-sm font-bold line-clamp-3 mt-1.5 text-slate-100 px-2 leading-snug">{ebook.title}</p>
+              </div>
               
               {/* Fallback overlay if no image or to darken */}
               <div className="absolute inset-0 bg-gradient-to-t from-crmisa-navy/80 via-transparent to-crmisa-navy/40 z-10"></div>

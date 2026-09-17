@@ -80,12 +80,25 @@ export default function BlogDetailPage() {
           </header>
 
           {blog.coverImage && (
-            <div className="w-full aspect-video rounded-3xl overflow-hidden mb-12 shadow-md">
+            <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-12 shadow-md bg-gradient-to-br from-[#0D2240] to-[#1c3c78]">
               <img 
                 src={blog.coverImage} 
                 alt={blog.title} 
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fb = e.currentTarget.nextElementSibling;
+                  if (fb) fb.style.display = 'flex';
+                }}
                 className="w-full h-full object-cover"
               />
+              <div 
+                style={{ display: 'none' }}
+                className="absolute inset-0 flex flex-col items-center justify-center p-8 text-white text-center"
+              >
+                <span className="material-symbols-outlined text-6xl text-sky-400 mb-3">article</span>
+                <span className="text-xs font-black uppercase tracking-wider text-sky-300">CRMISA ARTICLES & INSIGHTS</span>
+                <p className="text-xl font-bold mt-2 text-slate-100 max-w-lg">{blog.title}</p>
+              </div>
             </div>
           )}
 
